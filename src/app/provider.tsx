@@ -30,7 +30,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
                         {children}
                     </QueryClientProvider>
                 </HelmetProvider>
-
             </ErrorBoundary>
 
         </React.Suspense>

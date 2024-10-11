@@ -13,8 +13,8 @@ export const signInByEmailSchema = z.object({
     })
 })
 export type SignInByEmailInput = z.input<typeof signInByEmailSchema>
-export const signInByEmail = (
+export const signInByEmail = async (
     data: SignInByEmailInput,
 ): Promise<AuthResponse> => {
-    return api.post("/auth/sign-in/email", data);
+    return (await api.post("/auth/sign-in/email", data)).data;
 }

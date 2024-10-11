@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'; 
 import { useMemo } from "react";
 
-// import { AppRoot } from './routes/app/root';
+import { AppRoot } from './routes/app/root';
 import { routes } from "@/config";
 
 
@@ -34,19 +34,20 @@ export const createAppRouter = (queryClient: QueryClient) =>
         },
       },
       {
-        path: routes.AUTH.FORGOTPASSWORD,
+        path: routes.AUTH.FORGOT_PASSWORD,
         lazy: async () => {
           const { ForgotPasswordRoute } = await import('./routes/auth/forgot-password');
           return { Component: ForgotPasswordRoute };
         },
       },
-      // {
-      //   path: '/app',
-      //   element: (
-      //     <ProtectedRoute>
-      //       <AppRoot />
-      //     </ProtectedRoute>
-      //   ),
+      {
+        path: '/app',
+        element: (
+          // <ProtectedRoute>
+            <AppRoot />
+          // </ProtectedRoute>
+        ),
+      }
       //   children: [
       //     {
       //       path: 'discussions',
@@ -65,6 +66,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
       //     },
       //   ],
       // },
+      ,
       {
         path: '*',
         lazy: async () => {
