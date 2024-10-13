@@ -43,14 +43,15 @@ textarea {
 button {
   cursor: pointer;
   background-color: transparent;
-  outline: none;
-  border: 0;
+  /* outline: none; */
+  /* border: 0; */
 }
 body {
   min-height: 100vh;
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
+  overflow: hidden;
 }
 @media (prefers-color-scheme: light) {
   :root {

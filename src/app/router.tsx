@@ -194,6 +194,13 @@ export const createAppRouter = (queryClient: QueryClient) =>
       },
     },
     {
+      path: routes.ADMIN.CUSTOMER,
+      lazy: async () => {
+        const { CustomerRoute } = await import("./routes/admin/customer");
+        return { Component: CustomerRoute };
+      },
+    },
+    {
       path: "*",
       lazy: async () => {
         const { NotFoundRoute } = await import("./routes/not-found");

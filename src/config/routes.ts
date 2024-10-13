@@ -27,6 +27,7 @@ const routes = {
     INCOME_REPORT: "/datacenter/income/overview",
     ACCOUNT_PROFILE: "/admin/account/profile",
     CHANGE_PASSWORD: "/admin/account/password",
+    CUSTOMER: "/admin/customer",
   },
 };
 export default routes;
