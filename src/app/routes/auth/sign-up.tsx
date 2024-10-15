@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useSignUpByEmail from "@/features/auth/apis/sign-up";
+import { useSignUpByEmail } from "@/features/auth/apis/sign-up";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +16,7 @@ export const SignUpRoute = () => {
   const signUpByEmailMutation = useSignUpByEmail({
     mutationConfig: {
       onSuccess: () => {
-        navigate("/");
+        navigate("/auth/sign-in");
       },
     },
   });

@@ -15,7 +15,7 @@ export const signUpByEmail = (
   return api.post("/auth/sign-up/email", payload);
 };
 
-const useSignUpByEmail = ({
+export const useSignUpByEmail = ({
   mutationConfig,
 }: {
   mutationConfig: MutationConfig<typeof signUpByEmail>;
@@ -29,5 +29,3 @@ const useSignUpByEmail = ({
     mutationFn: signUpByEmail,
   });
 };
-
-export default useSignUpByEmail;

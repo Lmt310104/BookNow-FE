@@ -1,20 +1,28 @@
-import { AuthResponse, User } from "@/types/api";
+import { AuthResponse } from "@/types/api";
 import { api } from "@/lib/api-client";
-import { z } from "zod";
+import { MutationConfig } from "@/lib/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-export const getUser = async (): Promise<User> => {
-  const response = await api.get("/auth/get-me");
-  return response.data;
-};
-export const signInByEmailSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8, {
-    message: "Username must be at least 8 characters.",
-  }),
-});
-export type SignInByEmailInput = z.input<typeof signInByEmailSchema>;
-export const signInByEmail = (
-  data: SignInByEmailInput,
-): Promise<AuthResponse> => {
-  return api.post("/auth/sign-in/email", data);
+export interface SignInPayLoad {
+  email: string;
+  password: string;
+}
+
+export const signInWithEmail = (
+  payload: SignInPayLoad,
+): Promise<AuthResponse> => api.post("/auth/sign-in/email", payload);
+
+export const useSignInWithEmail = ({
+  mutationConfig,
+}: {
+  mutationConfig: MutationConfig<typeof signInWithEmail>;
+}) => {
+  const { onSuccess, ...restConfig } = mutationConfig || {};
+  return useMutation<AuthResponse, Error, SignInPayLoad>({
+    onSuccess: (...args) => {
+      onSuccess?.(...args);
+    },
+    ...restConfig,
+    mutationFn: signInWithEmail,
+  });
 };

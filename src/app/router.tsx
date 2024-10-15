@@ -1,9 +1,5 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import {
-  // LoaderFunctionArgs,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useMemo } from "react";
 
 import { routes } from "@/config";
