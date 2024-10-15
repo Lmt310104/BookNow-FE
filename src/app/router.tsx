@@ -239,7 +239,7 @@ export const createAppRouter = () =>
 export const AppRouter = () => {
   const queryClient = useQueryClient();
 
-  const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
+  const router = useMemo(() => createAppRouter(), [queryClient]);
 
   return <RouterProvider router={router} />;
 };

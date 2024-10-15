@@ -24,7 +24,11 @@ const inActive =
 const active =
   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary";
 
-export default function DashBoardLayout({ children }:{children: React.ReactNode}) {
+export default function DashBoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const location = useLocation();
   const { pathname } = location;
 
