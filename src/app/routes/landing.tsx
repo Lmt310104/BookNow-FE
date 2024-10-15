@@ -1,5 +1,5 @@
-import logo from '@/assets/logo.svg';
-import { Button } from '@/components/ui/button';
+import logo from "@/assets/logo.svg";
+import { Button } from "@/components/ui/button";
 
 export const LandingRoute = () => {
   return (
@@ -13,9 +13,7 @@ export const LandingRoute = () => {
           <p>Showcasing Best Practices For Building React Applications</p>
           <div className="mt-8 flex justify-center">
             <div className="inline-flex rounded-md shadow">
-              <Button>
-                Get started
-              </Button>
+              <Button>Get started</Button>
             </div>
             <div className="ml-3 inline-flex">
               <a
@@ -23,11 +21,7 @@ export const LandingRoute = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button
-                  variant="outline"
-                >
-                  Github Repo
-                </Button>
+                <Button variant="outline">Github Repo</Button>
               </a>
             </div>
           </div>

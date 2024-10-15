@@ -32,7 +32,7 @@ import ProductLayout from "@/components/layouts/product-layout";
 import { Button } from "@/components/ui/button";
 
 export const BookDetailRoute = () => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
 
   return (

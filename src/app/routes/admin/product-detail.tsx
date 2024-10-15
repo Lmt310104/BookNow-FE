@@ -1,4 +1,3 @@
 export const ProductDetailRoute = () => {
-    return <div>ProductDetailRoute</div>;
-  };
-  
+  return <div>ProductDetailRoute</div>;
+};

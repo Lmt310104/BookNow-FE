@@ -1,4 +1,3 @@
 export const CartRoute = () => {
-    return <div>CartRoute</div>;
-  };
-  
+  return <div>CartRoute</div>;
+};

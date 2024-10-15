@@ -1,4 +1,3 @@
 export const IncomeReportRoute = () => {
-    return <div>IncomeReportRoute</div>;
-  };
-  
+  return <div>IncomeReportRoute</div>;
+};

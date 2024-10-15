@@ -21,8 +21,6 @@ interface SignInFormProps {
 
 const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
   // const {setUser} = useUser();
-  const {toast} = useToast();
-
   const form = useForm<SignInByEmailInput>({
     resolver: zodResolver(signInByEmailSchema),
     defaultValues: {
@@ -33,8 +31,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
   async function onSubmit(values: SignInByEmailInput) {
     const res = await signInByEmail(values);
     console.log(res);
-    if(res) {
-      
+    if (res) {
       onSuccess();
     }
     console.log(values);
