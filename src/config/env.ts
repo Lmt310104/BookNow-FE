@@ -31,7 +31,7 @@ The following variables are missing or invalid:
 ${Object.entries(parsedEnv.error.flatten().fieldErrors)
   .map(([k, v]) => `- ${k}: ${v}`)
   .join("\n")}
-`
+`,
     );
   }
 

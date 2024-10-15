@@ -1,4 +1,3 @@
 export const CheckOutRoute = () => {
-    return <div>CheckOutRoute</div>;
-  };
-  
+  return <div>CheckOutRoute</div>;
+};

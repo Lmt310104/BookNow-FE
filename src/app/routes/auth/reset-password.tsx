@@ -1,5 +1,3 @@
-
 export const ResetPasswordRoute = () => {
-    return <div>ResetPasswordRoute</div>;
-  };
-  
+  return <div>ResetPasswordRoute</div>;
+};

@@ -1,4 +1,3 @@
 export const BookReportRoute = () => {
-    return <div>BookReportRoute</div>;
-  };
-  
+  return <div>BookReportRoute</div>;
+};
