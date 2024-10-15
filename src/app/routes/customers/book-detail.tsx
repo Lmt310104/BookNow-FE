@@ -3,19 +3,15 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { StarIcon } from "@heroicons/react/20/solid";
 
 const product = {
-  name: "Basic Tee 6-Pack ",
-  price: "$192",
+  name: "Cho Tôi Xin Một Vé Đi Tuổi Thơ (Bìa Mềm) (Tái Bản)",
+  price: "68.100d",
   rating: 3.9,
   reviewCount: 117,
   href: "#",
   imageSrc:
-    "https://tailwindui.com/plus/img/ecommerce-images/product-quick-preview-02-detail.jpg",
+    "https://salt.tikicdn.com/cache/750x750/ts/product/8f/63/5d/e17ddc42fbf8bf15b1958222ed1939dc.jpg.webp",
   imageAlt: "Two each of gray, white, and black shirts arranged on table.",
-  colors: [
-    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-  ],
+
   sizes: [
     { name: "XXS", inStock: true },
     { name: "XS", inStock: true },
@@ -33,121 +29,60 @@ function classNames(...classes: string[]) {
 }
 
 import ProductLayout from "@/components/layouts/product-layout";
+import { Button } from "@/components/ui/button";
 
 export const BookDetailRoute = () => {
   const [open, setOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
 
   return (
     <ProductLayout>
-      <div className="relative flex w-full items-center overflow-hidden bg-white  p-8">
-        <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
-          <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
+      <div className="relative flex w-full items-center overflow-hidden bg-white  p-8 mt-6">
+        <div className="grid w-full items-start gap-x-8 gap-y-8 grid-cols-12">
+          <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 col-span-5 border border-slate-200">
             <img
               alt={product.imageAlt}
               src={product.imageSrc}
               className="object-cover object-center"
             />
           </div>
-          <div className="sm:col-span-8 lg:col-span-7">
-            <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">
+          <div className="col-span-7 space-y-6">
+            <h2 className="text-xl font-medium text-gray-900 ">
               {product.name}
             </h2>
 
-            <section aria-labelledby="information-heading" className="mt-2">
-              <h3 id="information-heading" className="sr-only">
-                Product information
-              </h3>
-
-              <p className="text-2xl text-gray-900">{product.price}</p>
-
-              {/* Reviews */}
-              <div className="mt-6">
-                <h4 className="sr-only">Reviews</h4>
+            <div>
+              <div className="flex items-center ">
+                <p className=" text-sm">{product.rating}</p>
                 <div className="flex items-center">
-                  <div className="flex items-center">
-                    {[0, 1, 2, 3, 4].map((rating) => (
-                      <StarIcon
-                        key={rating}
-                        aria-hidden="true"
-                        className={classNames(
-                          product.rating > rating
-                            ? "text-gray-900"
-                            : "text-gray-200",
-                          "h-5 w-5 flex-shrink-0",
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <p className="sr-only">{product.rating} out of 5 stars</p>
-                  <a
-                    href="#"
-                    className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    {product.reviewCount} reviews
-                  </a>
+                  {[0, 1, 2, 3, 4].map((rating) => (
+                    <StarIcon
+                      key={rating}
+                      aria-hidden="true"
+                      className={classNames(
+                        product.rating > rating
+                          ? "text-gray-900"
+                          : "text-gray-200",
+                        "h-4 w-4 flex-shrink-0",
+                      )}
+                    />
+                  ))}
                 </div>
+                <p className="ml-3 text-sm">{product.reviewCount} danh gia</p>
               </div>
-            </section>
-
-            <section aria-labelledby="options-heading" className="mt-10">
-              <h3 id="options-heading" className="sr-only">
-                Product options
-              </h3>
-
-              <form>
-                {/* Colors */}
-                <fieldset aria-label="Choose a color">
-                  <legend className="text-sm font-medium text-gray-900">
-                    Color
-                  </legend>
-
-                  <RadioGroup
-                    value={selectedColor}
-                    onChange={setSelectedColor}
-                    className="mt-4 flex items-center space-x-3"
-                  >
-                    {product.colors.map((color) => (
-                      <Radio
-                        key={color.name}
-                        value={color}
-                        aria-label={color.name}
-                        className={classNames(
-                          color.selectedClass,
-                          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1",
-                        )}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={classNames(
-                            color.class,
-                            "h-8 w-8 rounded-full border border-black border-opacity-10",
-                          )}
-                        />
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset>
-
-                {/* Sizes */}
-                <fieldset aria-label="Choose a size" className="mt-10">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm font-medium text-gray-900">
-                      Size
-                    </div>
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Size guide
-                    </a>
-                  </div>
-
+            </div>
+            <p className="text-xl text-gray-900">{product.price}</p>
+            <section aria-labelledby="options-heading">
+              <form className="space-y-6">
+                <fieldset
+                  aria-label="Choose a size"
+                  className="grid grid-cols-[100px_1fr]"
+                >
+                  <div className="text-gray-900">Phan loai</div>
                   <RadioGroup
                     value={selectedSize}
                     onChange={setSelectedSize}
-                    className="mt-4 grid grid-cols-4 gap-4"
+                    className="grid grid-cols-5 gap-4"
                   >
                     {product.sizes.map((size) => (
                       <Radio
@@ -158,19 +93,19 @@ export const BookDetailRoute = () => {
                           size.inStock
                             ? "cursor-pointer bg-white text-gray-900 shadow-sm"
                             : "cursor-not-allowed bg-gray-50 text-gray-200",
-                          "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1",
+                          "group relative flex items-center justify-center rounded-sm border p-2 text-sm  uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:black ",
                         )}
                       >
                         <span>{size.name}</span>
                         {size.inStock ? (
                           <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
+                            className="pointer-events-none absolute -inset-px rounded-md border border-transparent group-data-[focus]:border group-data-[checked]:border-black"
                           />
                         ) : (
                           <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
+                            className="pointer-events-none absolute -inset-px rounded-md border-1 border-gray-200"
                           >
                             <svg
                               stroke="currentColor"
@@ -192,13 +127,66 @@ export const BookDetailRoute = () => {
                     ))}
                   </RadioGroup>
                 </fieldset>
-
-                <button
-                  type="submit"
-                  className="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                <fieldset
+                  aria-label="Choose a size"
+                  className="grid grid-cols-[100px_1fr]"
                 >
-                  Add to bag
-                </button>
+                  <div className="text-gray-900">Phan loai</div>
+                  <RadioGroup
+                    value={selectedSize}
+                    onChange={setSelectedSize}
+                    className="grid grid-cols-5 gap-4"
+                  >
+                    {product.sizes.map((size) => (
+                      <Radio
+                        key={size.name}
+                        value={size}
+                        disabled={!size.inStock}
+                        className={classNames(
+                          size.inStock
+                            ? "cursor-pointer bg-white text-gray-900 shadow-sm"
+                            : "cursor-not-allowed bg-gray-50 text-gray-200",
+                          "group relative flex items-center justify-center rounded-sm border p-2 text-sm  uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:black ",
+                        )}
+                      >
+                        <span>{size.name}</span>
+                        {size.inStock ? (
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-px rounded-md border border-transparent group-data-[focus]:border group-data-[checked]:border-black"
+                          />
+                        ) : (
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-px rounded-md border-1 border-gray-200"
+                          >
+                            <svg
+                              stroke="currentColor"
+                              viewBox="0 0 100 100"
+                              preserveAspectRatio="none"
+                              className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
+                            >
+                              <line
+                                x1={0}
+                                x2={100}
+                                y1={100}
+                                y2={0}
+                                vectorEffect="non-scaling-stroke"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                      </Radio>
+                    ))}
+                  </RadioGroup>
+                </fieldset>
+                <fieldset
+                  aria-label="Choose a size"
+                  className="grid grid-cols-[100px_1fr]"
+                >
+                  <div className="text-gray-900">So luong</div>
+                </fieldset>
+                <Button>Them vao gio hang</Button>
               </form>
             </section>
           </div>
