@@ -43,6 +43,27 @@ export const createAppRouter = (queryClient: QueryClient) =>
       },
     },
     {
+      path: routes.AUTH.VERIFICATION,
+      lazy: async() => {
+        const { VerificationRoute } = await import("./routes/auth/verification/verification");
+        return { Component: VerificationRoute };
+      }
+    },
+    {
+      path: routes.AUTH.VERIFICATION_SUCCESS,
+      lazy: async() => {
+        const { VerificationSuccess } = await import("./routes/auth/verification/verification_success");
+        return { Component: VerificationSuccess };
+      }
+    },
+    {
+      path: routes.AUTH.VERIFICATION_FAILED,
+      lazy: async() => {
+        const { VerificationFailed } = await import("./routes/auth/verification/verification_failed");
+        return { Component: VerificationFailed };
+      }
+    },
+    {
       path: routes.CUSTOMER.HOME,
       lazy: async () => {
         const { LandingRoute } = await import("./routes/landing");

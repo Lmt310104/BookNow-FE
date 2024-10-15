@@ -4,6 +4,9 @@ const routes = {
     SIGN_UP: "/auth/sign-up",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
+    VERIFICATION: "/verification",
+    VERIFICATION_SUCCESS: "/verification/success",
+    VERIFICATION_FAILED: "/verification/failed",
   },
   CUSTOMER: {
     HOME: "/",
