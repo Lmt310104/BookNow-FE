@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Radio, RadioGroup } from "@headlessui/react";
+import { RadioGroup } from "@headlessui/react";
 import { StarIcon } from "@heroicons/react/20/solid";
+import { EmblaOptionsType } from "embla-carousel";
 
 const product = {
   name: "Cho Tôi Xin Một Vé Đi Tuổi Thơ (Bìa Mềm) (Tái Bản)",
@@ -24,176 +25,134 @@ const product = {
   ],
 };
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 import ProductLayout from "@/components/layouts/product-layout";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import EmblaCarousel from "@/components/shared/embla-carousel";
+import { CounterInput } from "@/components/shared/counter-input";
+import { ProductVariation } from "@/features/product/components/product-variation";
+
+const OPTIONS: EmblaOptionsType = {};
+const SLIDE_COUNT = 10;
+const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export const BookDetailRoute = () => {
-  const [open, setOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
 
   return (
     <ProductLayout>
-      <div className="relative flex w-full items-center overflow-hidden bg-white  p-8 mt-6">
-        <div className="grid w-full items-start gap-x-8 gap-y-8 grid-cols-12">
-          <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 col-span-5 border border-slate-200">
-            <img
-              alt={product.imageAlt}
-              src={product.imageSrc}
-              className="object-cover object-center"
-            />
-          </div>
-          <div className="col-span-7 space-y-6">
-            <h2 className="text-xl font-medium text-gray-900 ">
-              {product.name}
-            </h2>
-
-            <div>
-              <div className="flex items-center ">
-                <p className=" text-sm">{product.rating}</p>
-                <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
-                      key={rating}
-                      aria-hidden="true"
-                      className={classNames(
-                        product.rating > rating
-                          ? "text-gray-900"
-                          : "text-gray-200",
-                        "h-4 w-4 flex-shrink-0",
-                      )}
-                    />
-                  ))}
-                </div>
-                <p className="ml-3 text-sm">{product.reviewCount} danh gia</p>
-              </div>
-            </div>
-            <p className="text-xl text-gray-900">{product.price}</p>
-            <section aria-labelledby="options-heading">
-              <form className="space-y-6">
-                <fieldset
-                  aria-label="Choose a size"
-                  className="grid grid-cols-[100px_1fr]"
-                >
-                  <div className="text-gray-900">Phan loai</div>
-                  <RadioGroup
-                    value={selectedSize}
-                    onChange={setSelectedSize}
-                    className="grid grid-cols-5 gap-4"
-                  >
-                    {product.sizes.map((size) => (
-                      <Radio
-                        key={size.name}
-                        value={size}
-                        disabled={!size.inStock}
-                        className={classNames(
-                          size.inStock
-                            ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                            : "cursor-not-allowed bg-gray-50 text-gray-200",
-                          "group relative flex items-center justify-center rounded-sm border p-2 text-sm  uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:black ",
-                        )}
-                      >
-                        <span>{size.name}</span>
-                        {size.inStock ? (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border border-transparent group-data-[focus]:border group-data-[checked]:border-black"
-                          />
-                        ) : (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-1 border-gray-200"
-                          >
-                            <svg
-                              stroke="currentColor"
-                              viewBox="0 0 100 100"
-                              preserveAspectRatio="none"
-                              className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                            >
-                              <line
-                                x1={0}
-                                x2={100}
-                                y1={100}
-                                y2={0}
-                                vectorEffect="non-scaling-stroke"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset>
-                <fieldset
-                  aria-label="Choose a size"
-                  className="grid grid-cols-[100px_1fr]"
-                >
-                  <div className="text-gray-900">Phan loai</div>
-                  <RadioGroup
-                    value={selectedSize}
-                    onChange={setSelectedSize}
-                    className="grid grid-cols-5 gap-4"
-                  >
-                    {product.sizes.map((size) => (
-                      <Radio
-                        key={size.name}
-                        value={size}
-                        disabled={!size.inStock}
-                        className={classNames(
-                          size.inStock
-                            ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                            : "cursor-not-allowed bg-gray-50 text-gray-200",
-                          "group relative flex items-center justify-center rounded-sm border p-2 text-sm  uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:black ",
-                        )}
-                      >
-                        <span>{size.name}</span>
-                        {size.inStock ? (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border border-transparent group-data-[focus]:border group-data-[checked]:border-black"
-                          />
-                        ) : (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-1 border-gray-200"
-                          >
-                            <svg
-                              stroke="currentColor"
-                              viewBox="0 0 100 100"
-                              preserveAspectRatio="none"
-                              className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                            >
-                              <line
-                                x1={0}
-                                x2={100}
-                                y1={100}
-                                y2={0}
-                                vectorEffect="non-scaling-stroke"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset>
-                <fieldset
-                  aria-label="Choose a size"
-                  className="grid grid-cols-[100px_1fr]"
-                >
-                  <div className="text-gray-900">So luong</div>
-                </fieldset>
-                <Button>Them vao gio hang</Button>
-              </form>
-            </section>
-          </div>
+      <Card className="mt-6 grid grid-cols-5 gap-12 p-6">
+        <div className="w-full col-span-2">
+          <EmblaCarousel slides={SLIDES} options={OPTIONS} />
         </div>
-      </div>
-      <div className="border border-black h-96"></div>
-      <div className="border border-black h-96"></div>
+        <div className="space-y-6  col-span-3">
+          <h2 className="text-xl font-medium text-gray-900 ">{product.name}</h2>
+
+          <div>
+            <div className="flex items-center ">
+              <p className=" text-sm">{product.rating}</p>
+              <div className="flex items-center">
+                {[0, 1, 2, 3, 4].map((rating) => (
+                  <StarIcon
+                    key={rating}
+                    aria-hidden="true"
+                    className={(product.rating > rating
+                      ? "text-gray-900"
+                      : "text-gray-200"
+                    ).concat(" h-4 w-4 flex-shrink-0")}
+                  />
+                ))}
+              </div>
+              <p className="ml-3 text-sm">{product.reviewCount} danh gia</p>
+            </div>
+          </div>
+          <p className="text-xl text-gray-900">{product.price}</p>
+          <section aria-labelledby="options-heading">
+            <form className="space-y-6">
+              <fieldset
+                aria-label="Choose a size"
+                className="grid grid-cols-[100px_1fr]"
+              >
+                <div className="text-gray-900">Phan loai</div>
+                <RadioGroup
+                  value={selectedSize}
+                  onChange={setSelectedSize}
+                  className="grid grid-cols-5 gap-4"
+                >
+                  {product.sizes.map((size) => (
+                    <ProductVariation size={size} />
+                  ))}
+                </RadioGroup>
+              </fieldset>
+              <fieldset
+                aria-label="Choose a size"
+                className="grid grid-cols-[100px_1fr]"
+              >
+                <div className="text-gray-900">Phan loai</div>
+                <RadioGroup
+                  value={selectedSize}
+                  onChange={setSelectedSize}
+                  className="grid grid-cols-5 gap-4"
+                >
+                  {product.sizes.map((size) => (
+                    <ProductVariation size={size} />
+                  ))}
+                </RadioGroup>
+              </fieldset>
+              <fieldset
+                aria-label="Choose a size"
+                className="grid grid-cols-[100px_1fr]"
+              >
+                <div className="text-gray-900">So luong</div>
+                <CounterInput />
+              </fieldset>
+              <Button>Them vao gio hang</Button>
+            </form>
+          </section>
+        </div>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Mo Ta San Pham</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>{" "}
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>{" "}
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>{" "}
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>{" "}
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>{" "}
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
+            ultricies nunc nisl nec nunc.
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Danh Gia San Pham</CardTitle>
+        </CardHeader>
+      </Card>
     </ProductLayout>
   );
 };

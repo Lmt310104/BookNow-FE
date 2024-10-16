@@ -8,13 +8,17 @@ const inActive =
 const active =
   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary";
 
-export default function CustomerLayout({ children }) {
+export default function CustomerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const location = useLocation();
   const { pathname } = location;
 
   return (
     <ProductLayout>
-      <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
+      <div className="grid min-h-screen w-full grid-cols-[220px_1fr]">
         <div className=" border-r bg-white">
           <div className="flex-1">
             <nav className="grid items-start  text-sm font-medium px-4 mt-6">

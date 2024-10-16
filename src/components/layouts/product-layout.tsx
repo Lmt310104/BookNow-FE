@@ -11,7 +11,11 @@ import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Link } from "react-router-dom";
 import { routes } from "@/config";
 
-export default function ProductLayout({ children }) {
+export default function ProductLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="h-screen w-full overflow-y-auto">
       <div className="px-40 h-24 w-full flex flex-row items-center bg-black gap-16">

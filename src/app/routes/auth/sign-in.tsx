@@ -48,7 +48,7 @@ export function SignInRoute() {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="email@example.com"
                 required
                 value={userInfo.email}
                 onChange={(e) =>

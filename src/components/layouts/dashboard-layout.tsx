@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,15 +24,19 @@ const inActive =
 const active =
   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary";
 
-export default function DashBoardLayout({ children }) {
+export default function DashBoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const location = useLocation();
   const { pathname } = location;
 
   return (
-    <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
+    <div className="grid min-h-screen w-full grid-cols-[220px_1fr]">
       <div className=" border-r">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <div className="flex  items-center border-b h-[60px] px-6">
             <a
               href={routes.ADMIN.DASHBOAD}
               className="flex items-center gap-2 font-semibold"
