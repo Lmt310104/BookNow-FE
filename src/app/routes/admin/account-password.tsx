@@ -11,7 +11,7 @@ import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export const AdminPasswordRoute = () => {
+export default function AdminPasswordRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -42,4 +42,4 @@ export const AdminPasswordRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export const ForgotPasswordRoute = () => {
+export default function ForgotPasswordRoute() {
   return (
     <div className="justify-center items-center flex h-screen">
       <Card className="w-full max-w-sm">
@@ -33,4 +33,4 @@ export const ForgotPasswordRoute = () => {
       </Card>
     </div>
   );
-};
+}

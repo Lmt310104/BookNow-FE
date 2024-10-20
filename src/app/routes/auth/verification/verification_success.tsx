@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-export const VerificationSuccess = () => {
+export default function VerificationSuccess() {
   return (
     <div className="h-[100vh] flex flex-col items-center justify-center gap-10">
       <span className="font-bold text-2xl">Verification Success</span>
@@ -16,4 +16,4 @@ export const VerificationSuccess = () => {
       </Button>
     </div>
   );
-};
+}

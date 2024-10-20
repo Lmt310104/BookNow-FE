@@ -1,62 +1,68 @@
-import Axios, { InternalAxiosRequestConfig } from "axios";
-import { useToast } from "@/hooks/use-toast";
+import Axios, {
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 
-function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+// Request interceptor to attach JSON headers and token
+function authRequestInterceptor(
+  config: InternalAxiosRequestConfig
+): InternalAxiosRequestConfig {
   if (config.headers) {
     config.headers.Accept = "application/json";
+    const token = localStorage.getItem("token"); // Retrieve token from storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Attach token
+    }
   }
-  config.withCredentials = true;
+  config.withCredentials = true; // Include credentials with requests
   return config;
 }
 
+// Create an Axios instance
 export const api = Axios.create({
   baseURL: "http://localhost:8080/api/v1",
 });
 
+// Attach request interceptor
 api.interceptors.request.use(authRequestInterceptor);
-api.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    const { toast } = useToast();
-    const statusCode = error.response?.status;
-    const message = error.response?.data?.message || error.message;
-    switch (statusCode) {
-      case 401: {
-        const searchParams = new URLSearchParams(window.location.search);
-        const redirectTo =
-          searchParams.get("redirectTo") || window.location.pathname;
-        window.location.href = `/auth/sign-in?redirectTo=${encodeURIComponent(redirectTo)}`;
-        break;
-      }
-      case 403:
-        toast({
-          title: "Không có quyền truy cập",
-          description: "'Bạn không có quyền truy cập vào tài nguyên này",
-        });
-        break;
-      case 404:
-        toast({
-          title: "Không tìm thấy trang",
-          description: "Trang bạn đang tìm kiếm không tồn tại",
-        });
-        break;
-      case 500:
-        toast({
-          title: "Lỗi máy chủ",
-          description: "Đã xảy ra lỗi khi xử lý yêu cầu của bạn",
-        });
-        break;
-      default:
-        toast({
-          title: "Lỗi",
-          description: message,
-        });
-    }
-    // Ghi log lỗi (có thể sử dụng một service ghi log)
-    console.error("API Error:", error);
 
+// Response interceptor to handle responses and errors
+api.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    if (error.response) {
+      const { data, status } = error.response;
+      switch (status) {
+        case 400:
+          console.error("Bad Request:", data);
+          break;
+
+        case 401: {
+          // const searchParams = new URLSearchParams(window.location.search);
+          // const redirectTo =
+          //   searchParams.get("redirectTo") || window.location.pathname;
+          // window.location.href = `/auth/sign-in?redirectTo=${encodeURIComponent(
+          //   redirectTo
+          // )}`;
+          console.error("Unauthorized access");
+          break;
+        }
+
+        case 404:
+          console.error("Resource not found: /not-found");
+          break;
+
+        case 500:
+          console.error("Server error: /server-error");
+          break;
+
+        default:
+          console.error("An unknown error occurred:", data);
+      }
+    } else {
+      console.error("Network or CORS issue:", error.message);
+    }
     return Promise.reject(error);
-  },
+  }
 );

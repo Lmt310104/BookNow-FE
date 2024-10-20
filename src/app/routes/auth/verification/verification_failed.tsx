@@ -1,4 +1,4 @@
-export const VerificationFailed = () => {
+export default function VerificationFailed() {
   return (
     <div className="flex flex-col h-[100vh] items-center justify-center gap-10">
       <h1 className="text-2xl font-bold text-red-800">Verification Failed</h1>
@@ -8,4 +8,4 @@ export const VerificationFailed = () => {
       </div>
     </div>
   );
-};
+}

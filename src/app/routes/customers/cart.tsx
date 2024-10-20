@@ -1,3 +1,3 @@
-export const CartRoute = () => {
+export default function CartRoute() {
   return <div>CartRoute</div>;
-};
+}
