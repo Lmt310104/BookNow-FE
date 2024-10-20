@@ -9,17 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Search } from "lucide-react";
-
-import image from "@/assets/placeholder.svg";
-
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
-import { ProductTableHeader } from "@/features/product/components/product-table-header";
-import { ProductTableRow } from "@/features/product/components/product-table-row";
+import { ProductTableHeader } from "@/components/product/product-table-header";
+import { ProductTableRow } from "@/components/product/product-table-row";
 
-export const ProductRoute = () => {
-  console.log(image);
-
+export default function ProductRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -72,4 +67,4 @@ export const ProductRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

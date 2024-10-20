@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export const AccountPassword = () => {
+export default function AccountPassword () {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">

@@ -1,28 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSignUpByEmail } from "@/features/auth/apis/sign-up";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import authService from "@/services/auth.service";
 
-export const SignUpRoute = () => {
-  const [userInfo, setUserInfo] = useState({
+export default function SignUpRoute() {
+  const [input, setinput] = useState({
     email: "",
     password: "",
     fullName: "",
   });
-
   const navigate = useNavigate();
-  const signUpByEmailMutation = useSignUpByEmail({
-    mutationConfig: {
-      onSuccess: () => {
-        navigate("/auth/sign-in");
-      },
-    },
-  });
 
   function handleChangeInput({ name, value }: { name: string; value: string }) {
-    setUserInfo((currentInfo) => {
+    setinput((currentInfo) => {
       const newInfo = {
         ...currentInfo,
         [name]: value,
@@ -31,10 +23,15 @@ export const SignUpRoute = () => {
     });
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signUpByEmailMutation.mutate(userInfo);
-  }
+    try {
+      await authService.signUpByEmail(input);
+      navigate("/auth/sign-in");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="w-full grid grid-cols-2 h-screen">
@@ -50,7 +47,7 @@ export const SignUpRoute = () => {
                 id="name"
                 type="text"
                 required
-                value={userInfo.fullName}
+                value={input.fullName}
                 onChange={(e) =>
                   handleChangeInput({ name: "fullName", value: e.target.value })
                 }
@@ -61,9 +58,9 @@ export const SignUpRoute = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                  placeholder="email@example.com"
                 required
-                value={userInfo.email}
+                value={input.email}
                 onChange={(e) =>
                   handleChangeInput({ name: "email", value: e.target.value })
                 }
@@ -75,7 +72,7 @@ export const SignUpRoute = () => {
                 id="password"
                 type="password"
                 required
-                value={userInfo.password}
+                value={input.password}
                 onChange={(e) =>
                   handleChangeInput({ name: "password", value: e.target.value })
                 }
@@ -101,4 +98,4 @@ export const SignUpRoute = () => {
       <div className="bg-black"></div>
     </div>
   );
-};
+}

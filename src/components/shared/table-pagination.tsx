@@ -7,32 +7,42 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Meta } from "@/types/api";
 
-export const TablePagination = () => {
+export const TablePagination: React.FC<{ data: Meta }> = ({ data }) => {
+  const { hasNextPage, hasPreviousPage, page, itemCount, take } = data;
+
+  const totalPages = Math.ceil(itemCount / take);
+
   return (
     <div className="ml-auto">
       <Pagination>
         <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
+          {hasPreviousPage && (
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+          )}
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href="#" isActive={index + 1 === page}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {totalPages > 3 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
+          {hasNextPage && (
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          )}
         </PaginationContent>
       </Pagination>
     </div>

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "react-router-dom";
 import { routes } from "@/config";
 
-export const AccountInfo = () => {
+export default function AccountInfo() {
   const location = useLocation();
   const { pathname } = location;
   return (
@@ -100,4 +100,4 @@ export const AccountInfo = () => {
       </CardContent>
     </Card>
   );
-};
+}

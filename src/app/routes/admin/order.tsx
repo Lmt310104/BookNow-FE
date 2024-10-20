@@ -6,11 +6,11 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
-import { OrderTableHeader } from "@/features/order/components/order-table-header";
-import { OrderTableRow } from "@/features/order/components/order-table-row";
+import { OrderTableHeader } from "@/components/order/order-table-header";
+import { OrderTableRow } from "@/components/order/order-table-row";
 import { TablePagination } from "@/components/shared/table-pagination";
 
-export const OrderRoute = () => {
+export default function OrderRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -58,4 +58,4 @@ export const OrderRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

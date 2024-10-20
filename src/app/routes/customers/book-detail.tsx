@@ -30,13 +30,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import EmblaCarousel from "@/components/shared/embla-carousel";
 import { CounterInput } from "@/components/shared/counter-input";
-import { ProductVariation } from "@/features/product/components/product-variation";
+import { ProductVariation } from "@/components/product/product-variation";
 
 const OPTIONS: EmblaOptionsType = {};
 const SLIDE_COUNT = 10;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
-export const BookDetailRoute = () => {
+export default function BookDetailRoute() {
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
 
   return (
@@ -79,8 +79,8 @@ export const BookDetailRoute = () => {
                   onChange={setSelectedSize}
                   className="grid grid-cols-5 gap-4"
                 >
-                  {product.sizes.map((size) => (
-                    <ProductVariation size={size} />
+                  {product.sizes.map((size, index) => (
+                    <ProductVariation key={index} size={size} />
                   ))}
                 </RadioGroup>
               </fieldset>
@@ -94,8 +94,8 @@ export const BookDetailRoute = () => {
                   onChange={setSelectedSize}
                   className="grid grid-cols-5 gap-4"
                 >
-                  {product.sizes.map((size) => (
-                    <ProductVariation size={size} />
+                  {product.sizes.map((size, index) => (
+                    <ProductVariation size={size} key={index} />
                   ))}
                 </RadioGroup>
               </fieldset>
@@ -155,4 +155,4 @@ export const BookDetailRoute = () => {
       </Card>
     </ProductLayout>
   );
-};
+}

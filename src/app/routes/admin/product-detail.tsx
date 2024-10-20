@@ -1,10 +1,10 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { Button } from "@/components/ui/button";
-import { ProductInfoSection } from "@/features/product/components/product-info-section";
-import { ProductSaleSection } from "@/features/product/components/product-sale-section";
+import { ProductInfoSection } from "@/components/product/product-info-section";
+import { ProductSaleSection } from "@/components/product/product-sale-section";
 
-export const ProductDetailRoute = () => {
+export default function ProductDetailRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -32,4 +32,4 @@ export const ProductDetailRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

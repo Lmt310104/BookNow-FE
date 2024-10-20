@@ -1,7 +1,7 @@
 import CustomerLayout from "@/components/layouts/customer-layout";
-import { AccountInfo } from "@/components/shared/account-info";
+import AccountInfo from "@/components/shared/account-info";
 
-export const AccountProfileRoute = () => {
+export default function AccountProfileRoute() {
   return (
     <CustomerLayout>
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6 bg-[#f9f9f9] overflow-y-auto">
@@ -10,4 +10,4 @@ export const AccountProfileRoute = () => {
       </main>
     </CustomerLayout>
   );
-};
+}

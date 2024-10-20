@@ -1,245 +1,157 @@
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  // LoaderFunctionArgs,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useMemo } from "react";
-
 import { routes } from "@/config";
+import CustomerRoute from "./routes/admin/customer";
+import NotFoundRoute from "./routes/not-found";
+import ReviewRoute from "./routes/admin/review";
+import ProductDetailRoute from "./routes/admin/product-detail";
+import AdminPasswordRoute from "./routes/admin/account-password";
+import ProductRoute from "./routes/admin/product";
+import OrderRoute from "./routes/admin/order";
+import IncomeReportRoute from "./routes/admin/income-report";
+import DashboardRoute from "./routes/admin/dashboard";
+import BookReportRoute from "./routes/admin/book-report";
+import AddProductRoute from "./routes/admin/add-product";
+import AdminProfileRoute from "./routes/admin/account-profile";
+import PurchaseRoute from "./routes/customers/purchase";
+import OrderDetailRoute from "./routes/customers/order-detail";
+import CheckOutRoute from "./routes/customers/checkout";
+import AccountPasswordRoute from "./routes/customers/account-password";
+import CartRoute from "./routes/customers/cart";
+import BookDetailRoute from "./routes/customers/book-detail";
+import AccountProfileRoute from "./routes/customers/account-profile";
+import AccountAddressRoute from "./routes/customers/account-address";
+import HomeRoute from "./routes/customers/home";
+import VerificationFailed from "./routes/auth/verification/verification_failed";
+import VerificationSuccess from "./routes/auth/verification/verification_success";
+import VerificationRoute from "./routes/auth/verification/verification";
+import ResetPasswordRoute from "./routes/auth/reset-password";
+import ForgotPasswordRoute from "./routes/auth/forgot-password";
+import SignUpRoute from "./routes/auth/sign-up";
+import SignInRoute from "./routes/auth/sign-in";
+import CategoryRoute from "./routes/admin/category";
 
-export const createAppRouter = () =>
+const createAppRouter = () =>
   createBrowserRouter([
     {
       path: routes.AUTH.SIGN_IN,
-      lazy: async () => {
-        const { SignInRoute } = await import("./routes/auth/sign-in");
-        return { Component: SignInRoute };
-      },
+      element: <SignInRoute />,
     },
     {
       path: routes.AUTH.SIGN_UP,
-      lazy: async () => {
-        const { SignUpRoute } = await import("./routes/auth/sign-up");
-        return { Component: SignUpRoute };
-      },
+      element: <SignUpRoute />,
     },
     {
       path: routes.AUTH.FORGOT_PASSWORD,
-      lazy: async () => {
-        const { ForgotPasswordRoute } = await import(
-          "./routes/auth/forgot-password"
-        );
-        return { Component: ForgotPasswordRoute };
-      },
+      element: <ForgotPasswordRoute />,
     },
     {
       path: routes.AUTH.RESET_PASSWORD,
-      lazy: async () => {
-        const { ResetPasswordRoute } = await import(
-          "./routes/auth/reset-password"
-        );
-        return { Component: ResetPasswordRoute };
-      },
+      element: <ResetPasswordRoute />,
     },
     {
       path: routes.AUTH.VERIFICATION,
-      lazy: async () => {
-        const { VerificationRoute } = await import(
-          "./routes/auth/verification/verification"
-        );
-        return { Component: VerificationRoute };
-      },
+      element: <VerificationRoute />,
     },
     {
       path: routes.AUTH.VERIFICATION_SUCCESS,
-      lazy: async () => {
-        const { VerificationSuccess } = await import(
-          "./routes/auth/verification/verification_success"
-        );
-        return { Component: VerificationSuccess };
-      },
+      element: <VerificationSuccess />,
     },
     {
       path: routes.AUTH.VERIFICATION_FAILED,
-      lazy: async () => {
-        const { VerificationFailed } = await import(
-          "./routes/auth/verification/verification_failed"
-        );
-        return { Component: VerificationFailed };
-      },
+      element: <VerificationFailed />,
     },
     {
       path: routes.CUSTOMER.HOME,
-      lazy: async () => {
-        const { LandingRoute } = await import("./routes/landing");
-        return { Component: LandingRoute };
-      },
+      element: <HomeRoute />,
     },
     {
       path: routes.CUSTOMER.ACCOUNT_ADDRESS,
-      lazy: async () => {
-        const { AccountAddressRoute } = await import(
-          "./routes/customers/account-address"
-        );
-        return { Component: AccountAddressRoute };
-      },
+      element: <AccountAddressRoute />,
     },
     {
       path: routes.CUSTOMER.ACCOUNT_PROFILE,
-      lazy: async () => {
-        const { AccountProfileRoute } = await import(
-          "./routes/customers/account-profile"
-        );
-        return { Component: AccountProfileRoute };
-      },
+      element: <AccountProfileRoute />,
     },
     {
       path: routes.CUSTOMER.BOOK_DETAIL,
-      lazy: async () => {
-        const { BookDetailRoute } = await import(
-          "./routes/customers/book-detail"
-        );
-        return { Component: BookDetailRoute };
-      },
+      element: <BookDetailRoute />,
     },
     {
       path: routes.CUSTOMER.CART,
-      lazy: async () => {
-        const { CartRoute } = await import("./routes/customers/cart");
-        return { Component: CartRoute };
-      },
+      element: <CartRoute />,
     },
     {
       path: routes.CUSTOMER.CHANGE_PASSWORD,
-      lazy: async () => {
-        const { AccountPasswordRoute } = await import(
-          "./routes/customers/account-password"
-        );
-        return { Component: AccountPasswordRoute };
-      },
+      element: <AccountPasswordRoute />,
     },
     {
       path: routes.CUSTOMER.CHECKOUT,
-      lazy: async () => {
-        const { CheckOutRoute } = await import("./routes/customers/checkout");
-        return { Component: CheckOutRoute };
-      },
+      element: <CheckOutRoute />,
     },
     {
       path: routes.CUSTOMER.ORDER_DETAIL,
-      lazy: async () => {
-        const { OrderDetailRoute } = await import(
-          "./routes/customers/order-detail"
-        );
-        return { Component: OrderDetailRoute };
-      },
+      element: <OrderDetailRoute />,
     },
     {
       path: routes.CUSTOMER.PURCHASE,
-      lazy: async () => {
-        const { PurchaseRoute } = await import("./routes/customers/purchase");
-        return { Component: PurchaseRoute };
-      },
+      element: <PurchaseRoute />,
     },
     {
       path: routes.ADMIN.ACCOUNT_PROFILE,
-      lazy: async () => {
-        const { AdminProfileRoute } = await import(
-          "./routes/admin/account-profile"
-        );
-        return { Component: AdminProfileRoute };
-      },
+      element: <AdminProfileRoute />,
     },
     {
       path: routes.ADMIN.ADD_PRODUCT,
-      lazy: async () => {
-        const { AddProductRoute } = await import("./routes/admin/add-product");
-        return { Component: AddProductRoute };
-      },
+      element: <AddProductRoute />,
     },
     {
       path: routes.ADMIN.BOOK_REPORT,
-      lazy: async () => {
-        const { BookReportRoute } = await import("./routes/admin/book-report");
-        return { Component: BookReportRoute };
-      },
+      element: <BookReportRoute />,
     },
     {
       path: routes.ADMIN.DASHBOAD,
-      lazy: async () => {
-        const { DashboardRoute } = await import("./routes/admin/dashboard");
-        return { Component: DashboardRoute };
-      },
+      element: <DashboardRoute />,
     },
     {
       path: routes.ADMIN.INCOME_REPORT,
-      lazy: async () => {
-        const { IncomeReportRoute } = await import(
-          "./routes/admin/income-report"
-        );
-        return { Component: IncomeReportRoute };
-      },
+      element: <IncomeReportRoute />,
     },
     {
       path: routes.ADMIN.ORDER,
-      lazy: async () => {
-        const { OrderRoute } = await import("./routes/admin/order");
-        return { Component: OrderRoute };
-      },
+      element: <OrderRoute />,
     },
     {
       path: routes.ADMIN.PRODUCT,
-      lazy: async () => {
-        const { ProductRoute } = await import("./routes/admin/product");
-        return { Component: ProductRoute };
-      },
+      element: <ProductRoute />,
+    },
+    {
+      path: routes.ADMIN.CATEGORY,
+      element: <CategoryRoute />,
     },
     {
       path: routes.ADMIN.CHANGE_PASSWORD,
-      lazy: async () => {
-        const { AdminPasswordRoute } = await import(
-          "./routes/admin/account-password"
-        );
-        return { Component: AdminPasswordRoute };
-      },
+      element: <AdminPasswordRoute />,
     },
     {
       path: routes.ADMIN.PRODUCT_DETAIL,
-      lazy: async () => {
-        const { ProductDetailRoute } = await import(
-          "./routes/admin/product-detail"
-        );
-        return { Component: ProductDetailRoute };
-      },
+      element: <ProductDetailRoute />,
     },
     {
       path: routes.ADMIN.REVIEW,
-      lazy: async () => {
-        const { ReviewRoute } = await import("./routes/admin/review");
-        return { Component: ReviewRoute };
-      },
+      element: <ReviewRoute />,
     },
     {
       path: routes.ADMIN.CUSTOMER,
-      lazy: async () => {
-        const { CustomerRoute } = await import("./routes/admin/customer");
-        return { Component: CustomerRoute };
-      },
+      element: <CustomerRoute />,
     },
     {
       path: "*",
-      lazy: async () => {
-        const { NotFoundRoute } = await import("./routes/not-found");
-        return { Component: NotFoundRoute };
-      },
+      element: <NotFoundRoute />,
     },
   ]);
 
-export const AppRouter = () => {
-  const queryClient = useQueryClient();
-
-  const router = useMemo(() => createAppRouter(), [queryClient]);
-
+export default function AppRouter() {
+  const router = useMemo(() => createAppRouter(), []);
   return <RouterProvider router={router} />;
-};
+}

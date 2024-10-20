@@ -1,12 +1,8 @@
-import React from "react";
-
-type PropType = {
+export default function Thumb(props: {
   selected: boolean;
   index: number;
   onClick: () => void;
-};
-
-export const Thumb: React.FC<PropType> = (props) => {
+}) {
   const { selected, index, onClick } = props;
 
   return (
@@ -20,4 +16,4 @@ export const Thumb: React.FC<PropType> = (props) => {
       </button>
     </div>
   );
-};
+}

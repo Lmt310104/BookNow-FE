@@ -1,7 +1,7 @@
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
-import { AccountInfo } from "@/components/shared/account-info";
+import AccountInfo from "@/components/shared/account-info";
 
-export const AdminProfileRoute = () => {
+export default function AdminProfileRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -10,4 +10,4 @@ export const AdminProfileRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

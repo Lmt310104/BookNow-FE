@@ -1,39 +1,59 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSignInWithEmail } from "@/features/auth/apis/sign-in";
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import authService from "@/services/auth.service";
+import { jwtDecode } from "jwt-decode";
+import { JWTDecode } from "@/context/auth";
+import { UserRole } from "@/common/enums";
+import useAuth from "@/hooks/useAuth";
 
-export function SignInRoute() {
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    password: "",
-  });
+export default function SignInRoute() {
+  const [input, setinput] = useState({ email: "", password: "" });
+  const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
 
-  const signInWithEmailMutation = useSignInWithEmail({
-    mutationConfig: {
-      onSuccess: () => {
-        navigate("/");
-      },
-    },
-  });
-
-  function handleChangeInput({ name, value }: { name: string; value: string }) {
-    setUserInfo((currentInfo) => {
+  const handleChangeInput = ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string;
+  }) => {
+    setinput((currentInfo) => {
       const newInfo = {
         ...currentInfo,
         [name]: value,
       };
       return newInfo;
     });
-  }
+  };
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signInWithEmailMutation.mutate(userInfo);
-  }
+    try {
+      const response = await authService.signInWithEmail(input);
+      if (response.data) {
+        const accessToken: string = response.data.access_token;
+        setinput({ email: "", password: "" });
+        localStorage.setItem("token", accessToken);
+        const { id, role }: JWTDecode = jwtDecode(accessToken);
+        setAuth({
+          userId: id,
+          role,
+        });
+        if (role === UserRole.ADMIN) {
+          navigate("/dashboad");
+        } else if (role === UserRole.CUSTOMER) {
+          navigate("/");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="w-full grid grid-cols-2 h-screen">
       <div className="bg-black"></div>
@@ -48,9 +68,10 @@ export function SignInRoute() {
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="email@example.com"
                 required
-                value={userInfo.email}
+                value={input.email}
                 onChange={(e) =>
                   handleChangeInput({ name: "email", value: e.target.value })
                 }
@@ -61,8 +82,9 @@ export function SignInRoute() {
               <Input
                 id="password"
                 type="password"
+                name="password"
                 required
-                value={userInfo.password}
+                value={input.password}
                 onChange={(e) =>
                   handleChangeInput({ name: "password", value: e.target.value })
                 }
@@ -75,7 +97,7 @@ export function SignInRoute() {
               Quen mat khau?
             </a>
             <Button className="w-full" type="submit">
-              <Link to="/dashboad">Dang Nhap</Link>
+              Dang Nhap
             </Button>
             <Button variant="outline" className="w-full">
               Dang Nhap voi Google

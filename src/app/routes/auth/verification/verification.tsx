@@ -1,25 +1,23 @@
 import { Button } from "@/components/ui/button";
-import useVerificationEmail from "@/features/auth/apis/verification";
+import authService from "@/services/auth.service";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
-export const VerificationRoute = () => {
+
+export default function VerificationRoute() {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const token = params.get("token");
-  const verificationEmail = useVerificationEmail({
-    mutationConfig: {
-      onSuccess: () => {
-        navigate("/verification/success");
-      },
-      onError: () => {
-        navigate("/verification/failed");
-      },
-    },
-  });
-  const handleClickVerify = () => {
+
+  const handleClickVerify = async () => {
     if (token) {
-      verificationEmail.mutate({ token });
+      try {
+        await authService.verificationEmail({ token });
+        navigate("/verification/success");
+      } catch (err) {
+        console.log(err);
+        navigate("/verification/failed");
+      }
     } else {
       console.error("Token is null");
     }
@@ -39,4 +37,4 @@ export const VerificationRoute = () => {
       </div>
     </div>
   );
-};
+}

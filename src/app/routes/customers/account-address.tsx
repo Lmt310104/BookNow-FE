@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import CustomerLayout from "@/components/layouts/customer-layout";
-import { CustomerAddress } from "@/features/customer/components/customer-address";
+import { CustomerAddress } from "@/components/customer/customer-address";
 
-export const AccountAddressRoute = () => {
+export default function AccountAddressRoute() {
   return (
     <CustomerLayout>
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6 bg-[#f9f9f9] overflow-y-auto">
@@ -27,4 +27,4 @@ export const AccountAddressRoute = () => {
       </main>
     </CustomerLayout>
   );
-};
+}

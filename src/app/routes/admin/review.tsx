@@ -22,10 +22,10 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@radix-ui/react-label";
 import { TablePagination } from "@/components/shared/table-pagination";
-import { ReviewTableHeader } from "@/features/review/components/review-table-header";
-import { ReviewTableBody } from "@/features/review/components/review-table-body";
+import { ReviewTableHeader } from "@/components/review/review-table-header";
+import { ReviewTableBody } from "@/components/review/review-table-body";
 
-export const ReviewRoute = () => {
+export default function ReviewRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -97,4 +97,4 @@ export const ReviewRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}

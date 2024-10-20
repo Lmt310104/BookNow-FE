@@ -1,7 +1,7 @@
 import CustomerLayout from "@/components/layouts/customer-layout";
-import { AccountPassword } from "@/components/shared/account-password";
+import AccountPassword from "@/components/shared/account-password";
 
-export const AccountPasswordRoute = () => {
+export default function AccountPasswordRoute() {
   return (
     <CustomerLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -11,4 +11,4 @@ export const AccountPasswordRoute = () => {
       </main>
     </CustomerLayout>
   );
-};
+}

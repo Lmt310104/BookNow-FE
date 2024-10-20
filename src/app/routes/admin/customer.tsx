@@ -6,10 +6,10 @@ import { Search } from "lucide-react";
 
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
-import { CustomerTableHeader } from "@/features/customer/components/customer-table-header";
-import { CustomerTableRow } from "@/features/customer/components/customer-table-row";
+import { CustomerTableHeader } from "@/components/customer/customer-table-header";
+import { CustomerTableRow } from "@/components/customer/customer-table-row";
 
-export const CustomerRoute = () => {
+export default function CustomerRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -46,4 +46,4 @@ export const CustomerRoute = () => {
       </main>
     </DashBoardLayout>
   );
-};
+}
