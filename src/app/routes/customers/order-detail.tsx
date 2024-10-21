@@ -1,3 +1,3 @@
-export const OrderDetailRoute = () => {
+export default function OrderDetailRoute() {
   return <div>OrderDetailRoute</div>;
-};
+}

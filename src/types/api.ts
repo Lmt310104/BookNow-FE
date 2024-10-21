@@ -1,18 +1,8 @@
 export type Meta = {
   page: number;
-  total: number;
-  totalPages: number;
+  take: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 };
-export type AuthResponse = {
-  access_token: string;
-  user_id: string;
-};
-export type Entity<T> = {
-  [K in keyof T]: T[K];
-};
-export type User = Entity<{
-  id: string;
-  email?: string;
-  phone?: string;
-  role: string;
-}>;

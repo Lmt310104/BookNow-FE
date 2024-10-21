@@ -1,15 +1,6 @@
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { CircleUser, Search, ShoppingCart } from "lucide-react";
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
-import { Link } from "react-router-dom";
-import { routes } from "@/config";
+import {  Search, ShoppingCart } from "lucide-react";
+import UserDropDownMenu from "../shared/user-drop-down-menu";
 
 export default function ProductLayout({
   children,
@@ -38,33 +29,7 @@ export default function ProductLayout({
             <ShoppingCart className="h-7 w-7 text-white" />
           </div>
           <div className="w-11">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="rounded-full"
-                >
-                  <CircleUser className="h-7 w-7" />
-                  <span className="sr-only">Toggle user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to={routes.CUSTOMER.ACCOUNT_PROFILE}>
-                    Tai khoan cua toi
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to={routes.CUSTOMER.PURCHASE}>Don mua</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  {" "}
-                  <Link to={routes.AUTH.SIGN_IN}>Dang xuat</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserDropDownMenu />
           </div>
         </div>
       </div>

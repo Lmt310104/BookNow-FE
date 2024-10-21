@@ -1,3 +1,3 @@
-export const IncomeReportRoute = () => {
+export default function IncomeReportRoute() {
   return <div>IncomeReportRoute</div>;
-};
+}
