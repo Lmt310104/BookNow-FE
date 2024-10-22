@@ -13,8 +13,32 @@ import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ProductTableHeader } from "@/components/product/product-table-header";
 import { ProductTableRow } from "@/components/product/product-table-row";
+import { useState, useEffect } from "react";
+import { Meta } from "@/types/api";
+import bookService from "@/services/book.service";
 
 export default function ProductRoute() {
+  const [books, setBooks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [meta, setMeta] = useState<Meta | null>(null);
+  async function getAllBooks() {
+    try {
+      const response = await bookService.fetchAllBooks();
+      if (response) {
+        setBooks(response.data.data);
+        setMeta(response.data.meta);
+        console.log(response.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    const fetchData = async () => {
+      await getAllBooks();
+    };
+    fetchData();
+  }, [])
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
