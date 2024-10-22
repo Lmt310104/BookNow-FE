@@ -9,9 +9,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import image from "@/assets/placeholder.svg";
+import React from "react";
+import { BookData } from "@/types/book";
+import { Link } from "react-router-dom";
 
-export const ProductTableRow = () => {
+export const ProductTableRow : React.FC<{data: BookData}> = ({data}) => {
   return (
     <TableRow>
       <TableCell>
@@ -22,17 +24,17 @@ export const ProductTableRow = () => {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={image}
+          src={data.image_url[0]}
           width="64"
         />
-        Laser Lemonade Machine
+        {data.title}
       </TableCell>
-      <TableCell>Khac</TableCell>{" "}
+      <TableCell>{data.Category?.name}</TableCell>{" "}
       <TableCell>
-        <Badge variant="outline">Draft</Badge>
+        <Badge variant="outline">{data.status}</Badge>
       </TableCell>
-      <TableCell>$499.99</TableCell>
-      <TableCell className="hidden md:table-cell">25</TableCell>
+      <TableCell>{data.price} VND</TableCell>
+      <TableCell className="hidden md:table-cell">{data.stock_quantity}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -42,7 +44,11 @@ export const ProductTableRow = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Chinh sua</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={`${data.id}`}>
+                Chinh 
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>An</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

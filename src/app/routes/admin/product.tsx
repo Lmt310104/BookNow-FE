@@ -16,18 +16,20 @@ import { ProductTableRow } from "@/components/product/product-table-row";
 import { useState, useEffect } from "react";
 import { Meta } from "@/types/api";
 import bookService from "@/services/book.service";
+import { BookData } from "@/types/book";
 
 export default function ProductRoute() {
-  const [books, setBooks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [meta, setMeta] = useState<Meta | null>(null);
+  const [books, setBooks] = useState<BookData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [meta, setMeta] = useState<Meta>();
+  
   async function getAllBooks() {
     try {
       const response = await bookService.fetchAllBooks();
       if (response) {
         setBooks(response.data.data);
+        setIsLoading(false);
         setMeta(response.data.meta);
-        console.log(response.data.data);
       }
     } catch (err) {
       console.log(err);
@@ -40,6 +42,9 @@ export default function ProductRoute() {
     fetchData();
   }, [])
   return (
+    <>
+    {isLoading && <div>Is loading</div>}
+    {!isLoading && 
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <div className="flex">
@@ -77,18 +82,21 @@ export default function ProductRoute() {
             <Table>
               <ProductTableHeader />
               <TableBody>
-                <ProductTableRow />
-                <ProductTableRow />
-                <ProductTableRow />
-                <ProductTableRow />
+                {
+                  books.map((book) => (
+                    <ProductTableRow key={book.id} data={book} />
+                  ))
+                }
               </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="bg-muted/50">
-            <TablePagination />
+            <TablePagination data={meta} />
           </CardFooter>
         </Card>
       </main>
     </DashBoardLayout>
+    }
+    </>
   );
 }

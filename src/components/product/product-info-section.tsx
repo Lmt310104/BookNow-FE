@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import image from "@/assets/placeholder.svg";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -15,8 +14,10 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
+import { BookData } from "@/types/book";
 
-export const ProductInfoSection = () => {
+export const ProductInfoSection : React.FC<{data: BookData}>= ({data}) => {
+  console.log(data);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -25,47 +26,24 @@ export const ProductInfoSection = () => {
       <CardContent className="flex flex-col gap-6">
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Ten san pham</Label>
-          <Input id="name" type="name" placeholder="Ten san pham" required />
+          <Input id="name" type="name" placeholder="Ten san pham" required value={data.title}/>
         </div>
         <div className="grid grid-cols-[120px_1fr_1fr] gap-4">
           <Label className="text-right">Hinh anh san pham</Label>
           <div className="grid grid-cols-4 gap-4">
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-
+            {
+              data.image_url.map((image) => {
+                return(
+                  <img
+                    alt="Product image"
+                    className="aspect-square rounded-md object-cover"
+                    height="70"
+                    src={image}
+                    width="70"
+                  />
+                )
+              })
+            }
             <button className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed">
               <Upload className="h-4 w-4 text-muted-foreground" />
               <span className="sr-only">Upload</span>
@@ -78,7 +56,7 @@ export const ProductInfoSection = () => {
             alt="Product image"
             className="aspect-square rounded-md object-cover"
             height="70"
-            src={image}
+            src={data.image_url[0]}
             width="70"
           />
         </div>
@@ -87,7 +65,7 @@ export const ProductInfoSection = () => {
           <Dialog>
             <DialogTrigger asChild>
               <button className="inline-flex items-center  whitespace-nowrap rounded-md text-sm  transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                Danh muc
+                {data.Category?.name}
               </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
