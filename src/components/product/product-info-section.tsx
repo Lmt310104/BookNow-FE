@@ -3,33 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import image from "@/assets/placeholder.svg";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { BookDetail } from "@/types/book";
 
-export const ProductInfoSection = () => {
-  const [detailData, setDetailData] = useState<BookDetail>({
-    title: "",
-    author: "",
-    categoryId: "",
-    entryPrice: 0,
-    price: 0,
-    stockQuantity: 0,
-    description: "",
-    image: null,
-    preview: "",
-  });
+export const ProductInfoSection = ({
+  onChange,
+  detailData,
+}: {
+  onChange: Dispatch<SetStateAction<BookDetail>>;
+  detailData: BookDetail;
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleUploadFile = () => {
@@ -39,7 +25,7 @@ export const ProductInfoSection = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setDetailData((prevDetailData) => {
+      onChange((prevDetailData) => {
         return {
           ...prevDetailData,
           image: file,
@@ -56,7 +42,7 @@ export const ProductInfoSection = () => {
     name: string;
     value: string;
   }) => {
-    setDetailData((prevDetailData) => {
+    onChange((prevDetailData) => {
       return {
         ...prevDetailData,
         [name]: value,
@@ -113,7 +99,17 @@ export const ProductInfoSection = () => {
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Danh muc</Label>
-          <Dialog>
+          <Input
+            id="categoryId"
+            name="categoryId"
+            placeholder="categoryId"
+            required
+            value={detailData.categoryId}
+            onChange={(e) =>
+              handleChangeInput({ name: "categoryId", value: e.target.value })
+            }
+          />
+          {/* <Dialog>
             <DialogTrigger asChild>
               <button className="inline-flex items-center  whitespace-nowrap rounded-md text-sm  transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
                 Danh muc
@@ -128,7 +124,7 @@ export const ProductInfoSection = () => {
                 <Button type="submit">Xac nhan</Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Mo ta san pham</Label>

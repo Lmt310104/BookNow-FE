@@ -6,7 +6,7 @@ import Axios, {
 
 // Request interceptor to attach JSON headers and token
 function authRequestInterceptor(
-  config: InternalAxiosRequestConfig
+  config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig {
   if (config.headers) {
     config.headers.Accept = "application/json";
@@ -14,7 +14,11 @@ function authRequestInterceptor(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Attach token
     }
+    if (config.data instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
   }
+
   config.withCredentials = true; // Include credentials with requests
   return config;
 }
@@ -32,36 +36,25 @@ api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     if (error.response) {
-      const { data, status } = error.response;
+      const { status } = error.response;
       switch (status) {
         case 400:
           console.error("Bad Request:", error.response);
           break;
-
-        case 401: {
-          // const searchParams = new URLSearchParams(window.location.search);
-          // const redirectTo =
-          //   searchParams.get("redirectTo") || window.location.pathname;
-          // window.location.href = `/auth/sign-in?redirectTo=${encodeURIComponent(
-          //   redirectTo
-          // )}`;
+        case 401:
           console.error("Unauthorized access", error.response);
           break;
-        }
-
         case 404:
           console.error("Resource not found: /not-found", error.response);
           break;
-
         case 500:
           console.error("Server error: /server-error", error.response);
           break;
-
         default:
           console.error("An unknown error occurred:", error.response);
       }
     } else {
-      console.error("Network or CORS issue:", error.response);
+      console.error("Network or CORS issue:", error.message);
     }
     return Promise.reject(error);
   }

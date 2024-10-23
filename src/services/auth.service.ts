@@ -14,6 +14,14 @@ class AuthService {
   async logOut() {
     return api.delete("/auth/sign-out");
   }
+
+  async forgotPassword(email: string) {
+    return api.post("/auth/forgot-password", { email: email });
+  }
+
+  async resetPassword(){
+    
+  }
 }
 
 export default new AuthService();
