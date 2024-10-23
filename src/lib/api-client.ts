@@ -35,7 +35,7 @@ api.interceptors.response.use(
       const { data, status } = error.response;
       switch (status) {
         case 400:
-          console.error("Bad Request:", data);
+          console.error("Bad Request:", error.response);
           break;
 
         case 401: {
@@ -45,23 +45,23 @@ api.interceptors.response.use(
           // window.location.href = `/auth/sign-in?redirectTo=${encodeURIComponent(
           //   redirectTo
           // )}`;
-          console.error("Unauthorized access");
+          console.error("Unauthorized access", error.response);
           break;
         }
 
         case 404:
-          console.error("Resource not found: /not-found");
+          console.error("Resource not found: /not-found", error.response);
           break;
 
         case 500:
-          console.error("Server error: /server-error");
+          console.error("Server error: /server-error", error.response);
           break;
 
         default:
-          console.error("An unknown error occurred:", data);
+          console.error("An unknown error occurred:", error.response);
       }
     } else {
-      console.error("Network or CORS issue:", error.message);
+      console.error("Network or CORS issue:", error.response);
     }
     return Promise.reject(error);
   }

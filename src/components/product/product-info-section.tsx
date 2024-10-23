@@ -15,8 +15,55 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Upload } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { BookDetail } from "@/types/book";
 
 export const ProductInfoSection = () => {
+  const [detailData, setDetailData] = useState<BookDetail>({
+    title: "",
+    author: "",
+    categoryId: "",
+    entryPrice: 0,
+    price: 0,
+    stockQuantity: 0,
+    description: "",
+    image: null,
+    preview: "",
+  });
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleUploadFile = () => {
+    inputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setDetailData((prevDetailData) => {
+        return {
+          ...prevDetailData,
+          image: file,
+          preview: URL.createObjectURL(file),
+        };
+      });
+    }
+  };
+
+  const handleChangeInput = ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string;
+  }) => {
+    setDetailData((prevDetailData) => {
+      return {
+        ...prevDetailData,
+        [name]: value,
+      };
+    });
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -25,62 +72,44 @@ export const ProductInfoSection = () => {
       <CardContent className="flex flex-col gap-6">
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Ten san pham</Label>
-          <Input id="name" type="name" placeholder="Ten san pham" required />
+          <Input
+            id="title"
+            name="title"
+            placeholder="Ten san pham"
+            required
+            value={detailData.title}
+            onChange={(e) =>
+              handleChangeInput({ name: "title", value: e.target.value })
+            }
+          />
         </div>
         <div className="grid grid-cols-[120px_1fr_1fr] gap-4">
           <Label className="text-right">Hinh anh san pham</Label>
           <div className="grid grid-cols-4 gap-4">
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-            <img
-              alt="Product image"
-              className="aspect-square rounded-md object-cover"
-              height="70"
-              src={image}
-              width="70"
-            />
-
-            <button className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed">
-              <Upload className="h-4 w-4 text-muted-foreground" />
-              <span className="sr-only">Upload</span>
-            </button>
+            {detailData.preview ? (
+              <img
+                alt="Product image"
+                className="aspect-square rounded-md object-cover"
+                height="70"
+                src={detailData.preview}
+                width="70"
+              />
+            ) : (
+              <button
+                className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
+                onClick={handleUploadFile}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={inputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                <Upload className="h-4 w-4 text-muted-foreground" />
+              </button>
+            )}
           </div>
-        </div>
-        <div className="grid grid-cols-[120px_2fr] gap-4">
-          <Label className="text-right">Anh bia</Label>
-          <img
-            alt="Product image"
-            className="aspect-square rounded-md object-cover"
-            height="70"
-            src={image}
-            width="70"
-          />
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Danh muc</Label>
@@ -94,28 +123,7 @@ export const ProductInfoSection = () => {
               <DialogHeader>
                 <DialogTitle>Chinh sua danh muc</DialogTitle>
               </DialogHeader>
-              {/* <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value="Pedro Duarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="username" className="text-right">
-                      Username
-                    </Label>
-                    <Input
-                      id="username"
-                      value="@peduarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                </div> */}
+
               <DialogFooter>
                 <Button type="submit">Xac nhan</Button>
               </DialogFooter>
@@ -124,7 +132,66 @@ export const ProductInfoSection = () => {
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Mo ta san pham</Label>
-          <Textarea placeholder="Mo ta san pham" required rows={4} />
+          <Textarea
+            placeholder="Mo ta san pham"
+            required
+            name="description"
+            rows={4}
+            value={detailData.description}
+            onChange={(e) =>
+              handleChangeInput({ name: "description", value: e.target.value })
+            }
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-[120px_1fr]  gap-4">
+            <Label className="text-right">Gia dau vao</Label>
+            <Input
+              id="entryPrice"
+              name="entryPrice"
+              type="number"
+              min={0}
+              required
+              defaultValue={0}
+              value={detailData.entryPrice}
+              onChange={(e) =>
+                handleChangeInput({ name: "entryPrice", value: e.target.value })
+              }
+            />
+          </div>
+          <div className="grid grid-cols-[120px_1fr]  gap-4">
+            <Label className="text-right">Gia ban</Label>
+            <Input
+              id="price"
+              name="price"
+              type="number"
+              defaultValue={0}
+              min={0}
+              required
+              value={detailData.price}
+              onChange={(e) =>
+                handleChangeInput({ name: "price", value: e.target.value })
+              }
+            />
+          </div>
+          <div className="grid grid-cols-[120px_1fr]  gap-4">
+            <Label className="text-right">Ton kho</Label>
+            <Input
+              id="stockQuantity"
+              name="stockQuantity"
+              type="number"
+              min={0}
+              defaultValue={0}
+              required
+              value={detailData.stockQuantity}
+              onChange={(e) =>
+                handleChangeInput({
+                  name: "stockQuantity",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

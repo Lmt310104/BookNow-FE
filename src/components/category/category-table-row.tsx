@@ -1,18 +1,46 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Category } from "@/types/category";
-import { CategoryState } from "@/common/enums/category-state";
+import categoryService from "@/services/category.service";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CategoryState } from "@/common/enums";
+import { useState } from "react";
 
-export const CategoryTableRow: React.FC<{ data: Category }> = ({ data }) => {
+interface CategoryTableRowProps {
+  data: Category;
+  onUpdate: (id: string) => void;
+  onRefetch: () => Promise<void>;
+}
+
+export const CategoryTableRow: React.FC<CategoryTableRowProps> = ({
+  data,
+  onUpdate,
+  onRefetch,
+}) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const handleHide = async () => {
+    try {
+      await categoryService.disableCategoryById(data.id);
+      await onRefetch();
+      setIsOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleShow = async () => {
+    try {
+      await categoryService.enableCategoryById(data.id);
+      await onRefetch();
+      setIsOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -26,22 +54,39 @@ export const CategoryTableRow: React.FC<{ data: Category }> = ({ data }) => {
         </Badge>
       </TableCell>
       <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <Button size="icon" variant="ghost">
               <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Chinh sua</DropdownMenuItem>
+          </PopoverTrigger>
+          <PopoverContent className="w-max p-1">
+            <div
+              className="py-2 px-3 w-full hover:bg-[#F4F4F5]"
+              onClick={() => {
+                onUpdate(data.id);
+                setIsOpen(false);
+              }}
+            >
+              Chinh sua
+            </div>
             {data.is_disable ? (
-              <DropdownMenuItem>Hien thi</DropdownMenuItem>
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleShow}
+              >
+                Hien thi
+              </div>
             ) : (
-              <DropdownMenuItem>An</DropdownMenuItem>
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleHide}
+              >
+                An
+              </div>
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </PopoverContent>
+        </Popover>
       </TableCell>
     </TableRow>
   );

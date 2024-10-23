@@ -8,8 +8,37 @@ import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { CustomerTableHeader } from "@/components/customer/customer-table-header";
 import { CustomerTableRow } from "@/components/customer/customer-table-row";
+import { useEffect, useState } from "react";
+import { Customer } from "@/types/customer";
+import customerService from "@/services/customer.service";
+import { Meta } from "@/types/api";
 
 export default function CustomerRoute() {
+  const [customers, setCustomers] = useState<Array<Customer>>([]);
+  const [meta, setMeta] = useState<Meta>({
+    page: 1,
+    take: 10,
+    itemCount: 0,
+    pageCount: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+
+  const fetchAllCustomer = async () => {
+    try {
+      const response = await customerService.getAllCusomter();
+      setMeta(response.data.meta);
+      setCustomers(response.data.data);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCustomer();
+  }, []);
+
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -33,14 +62,14 @@ export default function CustomerRoute() {
             <Table>
               <CustomerTableHeader />
               <TableBody>
-                <CustomerTableRow />
-                <CustomerTableRow />
-                <CustomerTableRow />
+                {customers.map((item, index) => {
+                  return <CustomerTableRow key={index} data={item} onRefetch={fetchAllCustomer}/>;
+                })}
               </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="bg-muted/50">
-            <TablePagination />
+            <TablePagination data={meta}/>
           </CardFooter>
         </Card>
       </main>

@@ -13,14 +13,16 @@ import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ProductTableHeader } from "@/components/product/product-table-header";
 import { ProductTableRow } from "@/components/product/product-table-row";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductRoute() {
+  const navigate = useNavigate();
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <div className="flex">
           <h1 className="text-lg font-semibold">San Pham</h1>
-          <Button className="gap-1 ml-auto">
+          <Button className="gap-1 ml-auto" onClick={()=> navigate('/portal/book/new')}>
             <PlusCircle className="h-3.5 w-3.5" />
             <span>Them san pham moi</span>
           </Button>

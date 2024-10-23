@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/pagination";
 import { Meta } from "@/types/api";
 
-export const TablePagination: React.FC<{ data: Meta }> = ({ data }) => {
+export const TablePagination: React.FC<{ data?: Meta | null }> = ({ data }) => {
+  if(!data){
+    return;
+  }
+
   const { hasNextPage, hasPreviousPage, page, itemCount, take } = data;
 
   const totalPages = Math.ceil(itemCount / take);
@@ -20,12 +24,12 @@ export const TablePagination: React.FC<{ data: Meta }> = ({ data }) => {
         <PaginationContent>
           {hasPreviousPage && (
             <PaginationItem>
-              <PaginationPrevious href="#" />
+              <PaginationPrevious/>
             </PaginationItem>
           )}
           {Array.from({ length: totalPages }, (_, index) => (
             <PaginationItem key={index}>
-              <PaginationLink href="#" isActive={index + 1 === page}>
+              <PaginationLink isActive={index + 1 === page}>
                 {index + 1}
               </PaginationLink>
             </PaginationItem>
@@ -40,7 +44,7 @@ export const TablePagination: React.FC<{ data: Meta }> = ({ data }) => {
           </PaginationItem>
           {hasNextPage && (
             <PaginationItem>
-              <PaginationNext href="#" />
+              <PaginationNext/>
             </PaginationItem>
           )}
         </PaginationContent>

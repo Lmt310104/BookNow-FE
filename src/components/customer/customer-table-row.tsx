@@ -1,35 +1,72 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { Customer } from "@/types/customer";
+import { AccountState } from "@/common/enums/customer";
+import { Badge } from "../ui/badge";
+import { Gender } from "@/common/enums";
+import { dateToVNString } from "@/utils/format";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import customerService from "@/services/customer.service";
+import { useState } from "react";
 
-export const CustomerTableRow = () => {
+export const CustomerTableRow = ({ data, onRefetch }: { data: Customer, onRefetch: ()=> Promise<void>  }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const handleActive = async () => {
+    try {
+      await customerService.enableCustomerById(data.id);
+      await onRefetch();
+      setIsOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleDisable = async () => {
+    try {
+      await customerService.disablecustomerById(data.id);
+      await onRefetch();
+      setIsOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <TableRow>
-      <TableCell>2252</TableCell>
-      <TableCell>Le Minh Toan</TableCell>
-      <TableCell>31/01/2004</TableCell>
-      <TableCell>Nam</TableCell>
-      <TableCell>1234567890</TableCell>
-      <TableCell>lmtoan311@gmail.com</TableCell>
+      <TableCell>{data.full_name}</TableCell>
+      <TableCell>{dateToVNString(new Date(data.birthday))}</TableCell>
+      <TableCell>{data.gender === Gender.MALE ? "Nam" : "Nu"}</TableCell>
+      <TableCell>{data.phone}</TableCell>
+      <TableCell>{data.email}</TableCell>
+      <TableCell className="w-40">
+        <Badge variant="secondary">
+          {data.is_disable ? AccountState.DISABLE : AccountState.ACTIVE}
+        </Badge>
+      </TableCell>
       <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <Button size="icon" variant="ghost">
               <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Chinh sua</DropdownMenuItem>
-            <DropdownMenuItem>An</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </PopoverTrigger>
+          <PopoverContent className="w-max p-1">
+            {data.is_disable ? (
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleActive}
+              >
+                Kich hoat
+              </div>
+            ) : (
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleDisable}
+              >
+                Vo hieu hoa
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
       </TableCell>
     </TableRow>
   );

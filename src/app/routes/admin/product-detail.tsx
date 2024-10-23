@@ -8,13 +8,11 @@ export default function ProductDetailRoute() {
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
-        <Tabs defaultValue="all">
+        <Tabs defaultValue="detail">
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger value="active">Thong tin chi tiet</TabsTrigger>
-              <TabsTrigger value="archived" className="hidden sm:flex">
-                Thong tin ban hang
-              </TabsTrigger>
+              <TabsTrigger value="detail">Thong tin chi tiet</TabsTrigger>
+              <TabsTrigger value="sale">Thong tin ban hang</TabsTrigger>
             </TabsList>
           </div>
         </Tabs>

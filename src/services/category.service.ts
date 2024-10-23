@@ -1,4 +1,5 @@
 import { api } from "@/lib/api-client";
+import { Page } from "@/types/api";
 import { ResCreateCategory, ResDisableCategoryById, ResEnableCategoryById, ResFetchAllCategories } from "@/types/category";
 
 class CategryService {
@@ -14,11 +15,11 @@ class CategryService {
     return api.post(`/categories/${id}/disable`);
   }
 
-  async getAllCategories(): Promise<ResFetchAllCategories> {
-    return api.get("/categories/get-all");
+  async getAllCategories({page, take}: Page): Promise<ResFetchAllCategories> {
+    return api.get(`/categories/get-all?page=${page}&take=${take}`);
   }
-  async upDateCategory() {
-    return api.post("/categories/update");
+  async upDateCategory(id: string) {
+    return api.post(`/categories/update/${id}`);
   }
 }
 
