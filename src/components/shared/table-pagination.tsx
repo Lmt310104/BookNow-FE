@@ -8,43 +8,73 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Meta } from "@/types/api";
+import { Dispatch, SetStateAction } from "react";
 
-export const TablePagination: React.FC<{ data?: Meta | null }> = ({ data }) => {
-  if(!data){
+export const TablePagination: React.FC<{
+  data?: Meta | null;
+  onChange: Dispatch<SetStateAction<Meta>>;
+}> = ({ data, onChange }) => {
+  if (!data) {
     return;
   }
 
-  const { hasNextPage, hasPreviousPage, page, itemCount, take } = data;
+  const { hasNextPage, hasPreviousPage, page, pageCount } = data;
 
-  const totalPages = Math.ceil(itemCount / take);
+  const handleSelect = (number: number) => {
+    if (number === page) {
+      return;
+    }
+
+    onChange((prevMeta) => {
+      return {
+        ...prevMeta,
+        page: number,
+      };
+    });
+  };
+
+  const handleSelectPrev = () => {
+    onChange((prevMeta) => {
+      return {
+        ...prevMeta,
+        page: page - 1,
+      };
+    });
+  };
+
+  const handleSelectNext = () => {
+    onChange((prevMeta) => {
+      return {
+        ...prevMeta,
+        page: page + 1,
+      };
+    });
+  };
 
   return (
     <div className="ml-auto">
       <Pagination>
         <PaginationContent>
           {hasPreviousPage && (
-            <PaginationItem>
-              <PaginationPrevious/>
+            <PaginationItem onClick={handleSelectPrev}>
+              <PaginationPrevious />
             </PaginationItem>
           )}
-          {Array.from({ length: totalPages }, (_, index) => (
-            <PaginationItem key={index}>
+          {Array.from({ length: pageCount }, (_, index) => (
+            <PaginationItem key={index} onClick={() => handleSelect(index + 1)}>
               <PaginationLink isActive={index + 1 === page}>
                 {index + 1}
               </PaginationLink>
             </PaginationItem>
           ))}
-          {totalPages > 3 && (
+          {pageCount > 3 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
           )}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
           {hasNextPage && (
-            <PaginationItem>
-              <PaginationNext/>
+            <PaginationItem onClick={handleSelectNext}>
+              <PaginationNext />
             </PaginationItem>
           )}
         </PaginationContent>

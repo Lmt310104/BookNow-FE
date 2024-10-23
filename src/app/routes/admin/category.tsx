@@ -49,7 +49,7 @@ export default function CategoryRoute() {
 
   useEffect(() => {
     getAllCategories();
-  },[]);
+  },[meta.page]);
 
   const handleAddNew = () => {
     dialogRef.current?.onOpen();
@@ -61,7 +61,7 @@ export default function CategoryRoute() {
 
   return (
     <DashBoardLayout>
-      <CategoryDialog ref={dialogRef} />
+      <CategoryDialog ref={dialogRef}  onRefetch={getAllCategories}/>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <div className="flex">
           <h1 className="text-lg font-semibold">Danh Muc</h1>
@@ -110,7 +110,7 @@ export default function CategoryRoute() {
             </Table>
           </CardContent>
           <CardFooter className="bg-muted/50">
-            <TablePagination data={meta} />
+            <TablePagination data={meta} onChange={setMeta} />
           </CardFooter>
         </Card>
       </main>
