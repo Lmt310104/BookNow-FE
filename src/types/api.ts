@@ -11,7 +11,7 @@ export type Meta = Page & {
 };
 
 export type Respone = {
-  statusCode?:number;
+  status?:number;
   message?: string;
   data: unknown
 }

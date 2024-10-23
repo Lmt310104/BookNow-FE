@@ -25,3 +25,7 @@ export interface ResEnableCustomer extends Respone {
 export interface ResDisableCustomer extends Respone {
   data: Customer
 }
+
+export interface ResGetAccountById extends Respone {
+  
+}

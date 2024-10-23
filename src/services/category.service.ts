@@ -21,6 +21,10 @@ class CategryService {
   async upDateCategory(id: string) {
     return api.post(`/categories/update/${id}`);
   }
+
+  async getCategoryById(id: string) {
+    return api.get(`/categories/${id}`);
+  }
 }
 
 export default new CategryService();

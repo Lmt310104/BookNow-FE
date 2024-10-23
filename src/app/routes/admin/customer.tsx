@@ -26,7 +26,10 @@ export default function CustomerRoute() {
 
   const fetchAllCustomer = async () => {
     try {
-      const response = await customerService.getAllCusomter();
+      const response = await customerService.getAllCusomter({
+        page: meta.page,
+        take: meta.take,
+      });
       setMeta(response.data.meta);
       setCustomers(response.data.data);
       console.log(response);
@@ -37,7 +40,7 @@ export default function CustomerRoute() {
 
   useEffect(() => {
     fetchAllCustomer();
-  }, []);
+  }, [meta.page]);
 
   return (
     <DashBoardLayout>
@@ -63,13 +66,19 @@ export default function CustomerRoute() {
               <CustomerTableHeader />
               <TableBody>
                 {customers.map((item, index) => {
-                  return <CustomerTableRow key={index} data={item} onRefetch={fetchAllCustomer}/>;
+                  return (
+                    <CustomerTableRow
+                      key={index}
+                      data={item}
+                      onRefetch={fetchAllCustomer}
+                    />
+                  );
                 })}
               </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="bg-muted/50">
-            <TablePagination data={meta}/>
+            <TablePagination data={meta} onChange={setMeta} />
           </CardFooter>
         </Card>
       </main>

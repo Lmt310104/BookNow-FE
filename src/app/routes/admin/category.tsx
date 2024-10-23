@@ -55,8 +55,8 @@ export default function CategoryRoute() {
     dialogRef.current?.onOpen();
   };
 
-  const handleUpdate = (id: string) => {
-    dialogRef.current?.onOpen(id);
+  const handleUpdate = async (id: string) => {
+    await dialogRef.current?.onOpen(id);
   };
 
   return (

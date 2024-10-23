@@ -18,7 +18,7 @@ import { Input } from "../ui/input";
 import { Category } from "@/types/category";
 
 export interface CategoryDialogRef {
-  onOpen: (id?: string) => void;
+  onOpen: (id?: string) => Promise<void>;
   onClose: () => void;
 }
 
@@ -30,15 +30,26 @@ const CategoryDialog = forwardRef<CategoryDialogRef, CategoryDialogProps>(
   function CategoryDialog({ onRefetch }, ref) {
     const [input, setInput] = useState<string>("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [category, setCategory] = useState<Category | null>(null);
+    const [category, setCategory] = useState<Category>({
+      id: "",
+      name: "",
+      is_disable: false,
+    });
 
     useImperativeHandle(ref, () => {
       return {
-        onOpen(id?: string) {
+        async onOpen(id?: string) {
           if (id) {
-            console.log("categoryId", id);
+            try {
+              // const response = await categoryService.getCategoryById(id);
+              // console.log("response", response);
+              // setIsOpen(true);
+            } catch (err) {
+              console.log(err);
+            }
+          } else {
+            setIsOpen(true);
           }
-          setIsOpen(true);
         },
         onClose() {
           setIsOpen(false);
@@ -68,7 +79,7 @@ const CategoryDialog = forwardRef<CategoryDialogRef, CategoryDialogProps>(
         <DialogContent className="max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {category ? "Chinh sua danh muc" : "Them danh muc moi"}
+              {category.id ? "Chinh sua danh muc" : "Them danh muc moi"}
             </DialogTitle>
           </DialogHeader>
           <form className="space-y-6" onSubmit={handleSubmit}>
@@ -79,6 +90,7 @@ const CategoryDialog = forwardRef<CategoryDialogRef, CategoryDialogProps>(
                 placeholder="Ten danh muc"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                required
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
