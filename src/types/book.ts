@@ -28,6 +28,8 @@ export interface ResBookDetail extends Book {
   stock_quantity: number;
   category_id: string;
   sold_quantity: number;
+  total_reviews: number;
+  avg_stars: number;
 }
 
 export interface ResGetAllBooks extends Response {

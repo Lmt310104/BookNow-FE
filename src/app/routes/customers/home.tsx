@@ -4,7 +4,6 @@ import bookService from "@/services/book.service";
 import { Meta } from "@/types/api";
 import { ResBookDetail } from "@/types/book";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function HomeRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
@@ -16,7 +15,6 @@ export default function HomeRoute() {
     hasPreviousPage: false,
     hasNextPage: false,
   });
-  const navigate = useNavigate();
   const getAllBooks = async () => {
     try {
       const response = await bookService.getAllBooks({
