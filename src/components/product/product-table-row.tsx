@@ -1,21 +1,16 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Checkbox } from "@headlessui/react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import image from "@/assets/placeholder.svg";
-import { ResGetBook } from "@/types/book";
-import React from "react";
+import { ResBookDetail } from "@/types/book";
+import React, { useState } from "react";
 import { BOOK_STATUS } from "@/common/constants";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useNavigate } from "react-router-dom";
 
 interface ProductTableRowProps {
-  data: ResGetBook;
+  data: ResBookDetail;
   onRefetch: () => Promise<void>;
 }
 
@@ -23,7 +18,12 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
   data,
   onRefetch,
 }) => {
-  console.log(data);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleUpdate = () => {
+    navigate(`/portal/book/${data.id}`);
+  };
   return (
     <TableRow>
       {/* <TableCell>
@@ -42,7 +42,7 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
           <div>{`Id: ${data.id}`}</div>
         </div>
       </TableCell>
-      <TableCell>{data.Category.name}</TableCell>
+      <TableCell>{data.Category?.name}</TableCell>
       <TableCell>
         <Badge variant="outline">{BOOK_STATUS[data.status]}</Badge>
       </TableCell>
@@ -50,18 +50,37 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
       <TableCell>{data.price}</TableCell>
       <TableCell>{data.stock_quantity}</TableCell>
       <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <Button size="icon" variant="ghost">
               <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Chinh sua</DropdownMenuItem>
-            <DropdownMenuItem>An</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </PopoverTrigger>
+          <PopoverContent className="w-max p-1">
+            <div
+              className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+              onClick={handleUpdate}
+            >
+              Chinh sua
+            </div>
+            {/* {data.is_disable ? (
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleActive}
+              >
+                Hien thi
+              </div>
+            ) : (
+              <div
+                className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
+                onClick={handleDisable}
+              >
+                An
+              </div>
+            )} */}
+          </PopoverContent>
+        </Popover>
+        '
       </TableCell>
     </TableRow>
   );

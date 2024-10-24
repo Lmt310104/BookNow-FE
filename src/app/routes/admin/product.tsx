@@ -17,10 +17,10 @@ import { useNavigate } from "react-router-dom";
 import bookService from "@/services/book.service";
 import { useEffect, useState } from "react";
 import { Meta } from "@/types/api";
-import {  ResGetBook } from "@/types/book";
+import {  ResBookDetail } from "@/types/book";
 
 export default function ProductRoute() {
-  const [books, setBooks] = useState<ResGetBook[]>([]);
+  const [books, setBooks] = useState<ResBookDetail[]>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
     take: 10,

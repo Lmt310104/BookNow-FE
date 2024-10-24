@@ -71,30 +71,30 @@ export const ProductInfoSection = ({
         </div>
         <div className="grid grid-cols-[120px_1fr_1fr] gap-4">
           <Label className="text-right">Hinh anh san pham</Label>
-          <div className="grid grid-cols-4 gap-4">
-            {detailData.preview ? (
-              <img
-                alt="Product image"
-                className="aspect-square rounded-md object-cover"
-                height="70"
-                src={detailData.preview}
-                width="70"
-              />
-            ) : (
-              <button
-                className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
-                onClick={handleUploadFile}
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={inputRef}
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
+          <div className="flex flex-row gap-4">
+            {detailData.preview && (
+              <div className="rounded-md h-[70px] w-[70px] overflow-hidden">
+                <img
+                  alt="Product image"
+             className="object-cover h-full w-full"
+                  src={detailData.preview}
                 />
-                <Upload className="h-4 w-4 text-muted-foreground" />
-              </button>
+              </div>
             )}
+            <button
+              className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
+              onClick={handleUploadFile}
+              type="button"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                ref={inputRef}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              <Upload className="h-4 w-4 text-muted-foreground" />
+            </button>
           </div>
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
