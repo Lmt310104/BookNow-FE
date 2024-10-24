@@ -10,7 +10,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import customerService from "@/services/customer.service";
 import { useState } from "react";
 
-export const CustomerTableRow = ({ data, onRefetch }: { data: Customer, onRefetch: ()=> Promise<void>  }) => {
+interface CustomerTableRowProps {
+  data: Customer;
+  onRefetch: () => Promise<void>;
+}
+
+export const CustomerTableRow: React.FC<CustomerTableRowProps> = ({
+  data,
+  onRefetch,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const handleActive = async () => {
     try {

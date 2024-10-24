@@ -10,29 +10,45 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import image from "@/assets/placeholder.svg";
+import { ResGetBook } from "@/types/book";
+import React from "react";
+import { BOOK_STATUS } from "@/common/constants";
 
-export const ProductTableRow = () => {
+interface ProductTableRowProps {
+  data: ResGetBook;
+  onRefetch: () => Promise<void>;
+}
+
+export const ProductTableRow: React.FC<ProductTableRowProps> = ({
+  data,
+  onRefetch,
+}) => {
+  console.log(data);
   return (
     <TableRow>
-      <TableCell>
+      {/* <TableCell>
         <Checkbox />
-      </TableCell>
-      <TableCell className="font-medium flex flex-row gap-4 items-center">
+      </TableCell> */}
+      <TableCell className="flex flex-row gap-4">
         <img
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={image}
+          src={(data.image_url.length > 0 && data.image_url[0]) || image}
           width="64"
         />
-        Laser Lemonade Machine
+        <div className="w-full flex flex-col justify-center">
+          <div className="font-medium">{data.title}</div>
+          <div>{`Id: ${data.id}`}</div>
+        </div>
       </TableCell>
-      <TableCell>Khac</TableCell>{" "}
+      <TableCell>{data.Category.name}</TableCell>
       <TableCell>
-        <Badge variant="outline">Draft</Badge>
+        <Badge variant="outline">{BOOK_STATUS[data.status]}</Badge>
       </TableCell>
-      <TableCell>$499.99</TableCell>
-      <TableCell className="hidden md:table-cell">25</TableCell>
+      <TableCell>{data.entry_price}</TableCell>
+      <TableCell>{data.price}</TableCell>
+      <TableCell>{data.stock_quantity}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

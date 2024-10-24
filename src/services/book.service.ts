@@ -1,9 +1,9 @@
 import { api } from "@/lib/api-client";
-import { BookDetail } from "@/types/book";
+import { Page } from "@/types/api";
+import { BookDetail, ResGetAllBooks } from "@/types/book";
 
 class BookService {
   async createBook(data: BookDetail) {
-    console.log(data)
     const formData = new FormData();
     formData.append("description", data.description);
     formData.append("categoryId", data.categoryId);
@@ -16,6 +16,10 @@ class BookService {
       formData.append("image", data.image);
     }
     return api.post("/books/create", formData);
+  }
+
+  async getAllBooks({page, take} : Page): Promise<ResGetAllBooks> {
+    return api.get(`/books/get-all?page=${page}&take=${take}`);
   }
 }
 
