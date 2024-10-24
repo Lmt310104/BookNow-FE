@@ -1,24 +1,32 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-export const CounterInput = ({ max }: { max: number }) => {
-  const [value, setValue] = useState<number>(1);
+interface CounterInputProps {
+  max: number;
+  value: number;
+  onChange: Dispatch<SetStateAction<number>>;
+}
 
+export const CounterInput: React.FC<CounterInputProps> = ({
+  max,
+  value,
+  onChange,
+}) => {
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eValue = Number(e.target.value);
     if (!isNaN(eValue)) {
-      setValue(eValue);
+      onChange(eValue);
     }
   };
 
   const handleIncrease = () => {
     if (value < max) {
-      setValue(value + 1);
+      onChange(value + 1);
     }
   };
 
   const handleDerease = () => {
     if (value > 0) {
-      setValue(value - 1);
+      onChange(value - 1);
     }
   };
   return (

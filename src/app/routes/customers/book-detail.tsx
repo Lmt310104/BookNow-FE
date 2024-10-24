@@ -35,6 +35,7 @@ import { ProductVariation } from "@/components/product/product-variation";
 import { useParams } from "react-router-dom";
 import bookService from "@/services/book.service";
 import { BookDetail, ResBookDetail } from "@/types/book";
+import cartService from "@/services/cart.service";
 
 const OPTIONS: EmblaOptionsType = {};
 // const SLIDE_COUNT = 10;
@@ -44,6 +45,7 @@ export default function BookDetailRoute() {
   // const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
   const param = useParams();
   const [detailData, setDetailData] = useState<ResBookDetail | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
 
   const getBookDetail = async (id: string) => {
     try {
@@ -60,7 +62,24 @@ export default function BookDetailRoute() {
       getBookDetail(param.bookId);
     }
   }, [param]);
-  console.log(detailData);
+
+  const handleAddToCart = async () => {
+    if (
+      detailData?.id &&
+      quantity <= detailData.stock_quantity &&
+      quantity > 0
+    ) {
+      try {
+        const response = await cartService.addToCart({
+          bookId: detailData.id,
+          quantity: quantity,
+        });
+        console.log(response)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   return (
     detailData && (
@@ -103,7 +122,7 @@ export default function BookDetailRoute() {
             </div>
             <p className="text-xl text-gray-900">{`${detailData.price} d`}</p>
             <section aria-labelledby="options-heading">
-              <form className="space-y-6">
+              <div className="space-y-6">
                 {/* <fieldset
                 aria-label="Choose a size"
                 className="grid grid-cols-[100px_1fr]"
@@ -139,10 +158,14 @@ export default function BookDetailRoute() {
                   className="grid grid-cols-[100px_1fr]"
                 >
                   <div className="text-gray-900">So luong</div>
-                  <CounterInput max={detailData.stock_quantity} />
+                  <CounterInput
+                    max={detailData.stock_quantity}
+                    value={quantity}
+                    onChange={setQuantity}
+                  />
                 </fieldset>
-                <Button>Them vao gio hang</Button>
-              </form>
+                <Button onClick={handleAddToCart} type="button">Them vao gio hang</Button>
+              </div>
             </section>
           </div>
         </Card>
