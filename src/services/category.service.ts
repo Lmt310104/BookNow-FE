@@ -23,7 +23,7 @@ class CategryService {
   }
 
   async getCategoryById(id: string) {
-    return api.get(`/categories/${id}`);
+    return api.get(`/categories/get-one/${id}`);
   }
 }
 

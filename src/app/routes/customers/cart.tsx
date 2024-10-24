@@ -2,16 +2,44 @@ import { CartTableHeader } from "@/components/cart/cart-table-header";
 import { CartTableRow } from "@/components/cart/cart-table-row";
 import ProductLayout from "@/components/layouts/product-layout";
 import { Table, TableBody } from "@/components/ui/table";
+import cartService from "@/services/cart.service";
+import { Meta } from "@/types/api";
+import { ResCartItem } from "@/types/cart";
+import { useEffect, useState } from "react";
 
 export default function CartRoute() {
+  const [cart, setCart] = useState<Array<ResCartItem>>([]);
+  const [meta, setMeta] = useState<Meta>({
+    page: 1,
+    take: 20,
+    itemCount: 0,
+    pageCount: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+  const getCart = async () => {
+    try {
+      const response = await cartService.getCart();
+      setCart(response.data.data);
+      setMeta(response.data.meta);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+  }, [meta.page]);
+
   return (
     <ProductLayout>
-      <div className="w-full h-[500px] border border-red-500">
+      <div className="w-full ">
         <Table>
           <CartTableHeader />
           <TableBody>
-            <CartTableRow /> <CartTableRow /> <CartTableRow /> <CartTableRow />
-            <CartTableRow />
+            {cart.map((item, index) => {
+              return <CartTableRow key={index} data={item} />;
+            })}
           </TableBody>
         </Table>
       </div>

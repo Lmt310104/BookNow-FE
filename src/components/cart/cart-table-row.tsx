@@ -6,8 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CategoryState } from "@/common/enums";
 import image from "@/assets/placeholder.svg";
+import { ResCartItem } from "@/types/cart";
 
-export const CartTableRow = () => {
+interface CartTableRowProps {
+  data: ResCartItem;
+  onRefetch?: () => Promise<void>;
+}
+
+export const CartTableRow: React.FC<CartTableRowProps> = ({
+  data,
+  onRefetch,
+}) => {
   return (
     <TableRow>
       <TableCell>
@@ -18,36 +27,18 @@ export const CartTableRow = () => {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          //   src={(data.image_url.length > 0 && data.image_url[0]) || image}
-          src={image}
+          src={data.book.image_url.length > 0 ? data.book.image_url[0] : image}
           width="64"
         />
         <div className="w-full flex flex-col justify-center">
-          <div className="font-medium">{"data.title"}</div>
+          <div className="font-medium">{data.book.title}</div>
         </div>
       </TableCell>
-      <TableCell>{"data.name"}</TableCell>
+      <TableCell>{data.book.price}</TableCell>
+      <TableCell>{data.quantity}</TableCell>
+      <TableCell>{data.quantity * data.book.price}</TableCell>
       <TableCell>
-        <Badge variant="secondary">{CategoryState.ACTIVE}</Badge>
-      </TableCell>
-      <TableCell>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-max p-1">
-            <div className="py-2 px-3 w-full hover:bg-[#F4F4F5]">Chinh sua</div>
-            {true ? (
-              <div className="py-2 px-3  w-full hover:bg-[#F4F4F5]">
-                Hien thi
-              </div>
-            ) : (
-              <div className="py-2 px-3  w-full hover:bg-[#F4F4F5]">An</div>
-            )}
-          </PopoverContent>
-        </Popover>
+        <Button variant="outline">Xoa</Button>
       </TableCell>
     </TableRow>
   );
