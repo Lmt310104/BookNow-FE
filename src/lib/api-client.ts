@@ -1,24 +1,13 @@
+import authService from "@/services/auth.service";
 import Axios, {
   AxiosError,
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from "axios";
 
-const getAccessToken = () => localStorage.getItem("token");
-const setAccessToken = (token: string) => localStorage.setItem("token", token);
-
-const refreshAccessToken = async (): Promise<string> => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No refresh token available");
-
-  const response = await Axios.post(
-    "http://localhost:8080/api/v1/auth/refresh-token",
-  );
-
-  const newAccessToken = response.data.access_token;
-  setAccessToken(newAccessToken);
-  return newAccessToken;
-};
+export const getAccessToken = () => localStorage.getItem("token");
+export const setAccessToken = (token: string) =>
+  localStorage.setItem("token", token);
 
 function authRequestInterceptor(
   config: InternalAxiosRequestConfig,
@@ -57,12 +46,15 @@ api.interceptors.response.use(
       originalRequest._retry = true; // Prevent infinite retry loops
 
       try {
-        const newToken = await refreshAccessToken();
+        const newToken = await authService.refreshAccessToken();
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         console.error("Get new token success");
         return api(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh token expired or invalid. Logging out");
+        console.error(
+          "Refresh token expired or invalid. Logging out",
+          refreshError,
+        );
         localStorage.removeItem("token");
         window.location.href = "/auth/sign-in";
       }

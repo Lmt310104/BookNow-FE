@@ -38,7 +38,9 @@ export default function CartRoute() {
           <CartTableHeader />
           <TableBody>
             {cart.map((item, index) => {
-              return <CartTableRow key={index} data={item} />;
+              return (
+                <CartTableRow key={index} data={item} onRefetch={getCart} />
+              );
             })}
           </TableBody>
         </Table>

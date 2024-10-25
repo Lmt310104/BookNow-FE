@@ -13,7 +13,7 @@ export default function ProductLayout({
   return (
     <div className="h-screen w-full overflow-y-auto">
       <div className="px-40 h-24 w-full flex flex-row items-center bg-black gap-16">
-        <a href="#" className="text-white text-nowrap  text-2xl font-bold">
+        <a href="/" className="text-white text-nowrap  text-2xl font-bold">
           Book Now
         </a>
 

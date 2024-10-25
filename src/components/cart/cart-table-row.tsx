@@ -7,16 +7,25 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CategoryState } from "@/common/enums";
 import image from "@/assets/placeholder.svg";
 import { ResCartItem } from "@/types/cart";
+import cartService from "@/services/cart.service";
 
 interface CartTableRowProps {
   data: ResCartItem;
-  onRefetch?: () => Promise<void>;
+  onRefetch: () => Promise<void>;
 }
 
 export const CartTableRow: React.FC<CartTableRowProps> = ({
   data,
   onRefetch,
 }) => {
+  const handleRemove = async () => {
+    try {
+      await cartService.removeFromCart(data.book_id);
+      await onRefetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <TableRow>
       <TableCell>
@@ -38,7 +47,7 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
       <TableCell>{data.quantity}</TableCell>
       <TableCell>{data.quantity * data.book.price}</TableCell>
       <TableCell>
-        <Button variant="outline">Xoa</Button>
+        <Button variant="outline" onClick={handleRemove}>Xoa</Button>
       </TableCell>
     </TableRow>
   );

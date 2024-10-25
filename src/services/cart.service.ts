@@ -9,6 +9,11 @@ class CartService {
   async getCart(): Promise<ResGetCart> {
     return api.get("/carts/get-all");
   }
+
+  async removeFromCart(bookId: string) {
+    return api.delete(`/carts/remove-from-cart/${bookId}`);
+  }
+
 }
 
 export default new CartService();
