@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { EmblaOptionsType } from "embla-carousel";
+import image from "@/assets/placeholder.svg";
 
 const product = {
   name: "Cho Tôi Xin Một Vé Đi Tuổi Thơ (Bìa Mềm) (Tái Bản)",
@@ -31,45 +32,98 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import EmblaCarousel from "@/components/shared/embla-carousel";
 import { CounterInput } from "@/components/shared/counter-input";
 import { ProductVariation } from "@/components/product/product-variation";
+import { useParams } from "react-router-dom";
+import bookService from "@/services/book.service";
+import { BookDetail, ResBookDetail } from "@/types/book";
+import cartService from "@/services/cart.service";
 
 const OPTIONS: EmblaOptionsType = {};
-const SLIDE_COUNT = 10;
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+// const SLIDE_COUNT = 10;
+// const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function BookDetailRoute() {
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  // const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  const param = useParams();
+  const [detailData, setDetailData] = useState<ResBookDetail | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const getBookDetail = async (id: string) => {
+    try {
+      const response = await bookService.getBookById(id);
+      setDetailData(response.data.data);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (param?.bookId) {
+      getBookDetail(param.bookId);
+    }
+  }, [param]);
+
+  const handleAddToCart = async () => {
+    if (
+      detailData?.id &&
+      quantity <= detailData.stock_quantity &&
+      quantity > 0
+    ) {
+      try {
+        const response = await cartService.addToCart({
+          bookId: detailData.id,
+          quantity: quantity,
+        });
+        console.log(response)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   return (
-    <ProductLayout>
-      <Card className="mt-6 grid grid-cols-5 gap-12 p-6">
-        <div className="w-full col-span-2">
-          <EmblaCarousel slides={SLIDES} options={OPTIONS} />
-        </div>
-        <div className="space-y-6  col-span-3">
-          <h2 className="text-xl font-medium text-gray-900 ">{product.name}</h2>
-
-          <div>
-            <div className="flex items-center ">
-              <p className=" text-sm">{product.rating}</p>
-              <div className="flex items-center">
-                {[0, 1, 2, 3, 4].map((rating) => (
-                  <StarIcon
-                    key={rating}
-                    aria-hidden="true"
-                    className={(product.rating > rating
-                      ? "text-gray-900"
-                      : "text-gray-200"
-                    ).concat(" h-4 w-4 flex-shrink-0")}
-                  />
-                ))}
-              </div>
-              <p className="ml-3 text-sm">{product.reviewCount} danh gia</p>
-            </div>
+    detailData && (
+      <ProductLayout>
+        <Card className="mt-6 grid grid-cols-5 gap-12 p-6">
+          <div className="w-full col-span-2">
+            <EmblaCarousel
+              slides={
+                detailData?.image_url && detailData?.image_url.length > 0
+                  ? detailData?.image_url
+                  : [image]
+              }
+              options={OPTIONS}
+            />
           </div>
-          <p className="text-xl text-gray-900">{product.price}</p>
-          <section aria-labelledby="options-heading">
-            <form className="space-y-6">
-              <fieldset
+          <div className="space-y-6  col-span-3">
+            <h2 className="text-xl font-medium text-gray-900 ">
+              {detailData.title}
+            </h2>
+
+            <div>
+              <div className="flex items-center ">
+                <p className=" text-sm">{detailData.avg_stars}</p>
+                <div className="flex items-center">
+                  {[0, 1, 2, 3, 4].map((rating) => (
+                    <StarIcon
+                      key={rating}
+                      aria-hidden="true"
+                      className={(detailData.avg_stars > rating
+                        ? "text-gray-900"
+                        : "text-gray-200"
+                      ).concat(" h-4 w-4 flex-shrink-0")}
+                    />
+                  ))}
+                </div>
+                <p className="ml-3 text-sm">
+                  {detailData.total_reviews} danh gia
+                </p>
+              </div>
+            </div>
+            <p className="text-xl text-gray-900">{`${detailData.price} d`}</p>
+            <section aria-labelledby="options-heading">
+              <div className="space-y-6">
+                {/* <fieldset
                 aria-label="Choose a size"
                 className="grid grid-cols-[100px_1fr]"
               >
@@ -98,61 +152,37 @@ export default function BookDetailRoute() {
                     <ProductVariation size={size} key={index} />
                   ))}
                 </RadioGroup>
-              </fieldset>
-              <fieldset
-                aria-label="Choose a size"
-                className="grid grid-cols-[100px_1fr]"
-              >
-                <div className="text-gray-900">So luong</div>
-                <CounterInput />
-              </fieldset>
-              <Button>Them vao gio hang</Button>
-            </form>
-          </section>
-        </div>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Mo Ta San Pham</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>{" "}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>{" "}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>{" "}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>{" "}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>{" "}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec
-            ultricies nunc nisl nec nunc.
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Danh Gia San Pham</CardTitle>
-        </CardHeader>
-      </Card>
-    </ProductLayout>
+              </fieldset> */}
+                <fieldset
+                  aria-label="Choose a size"
+                  className="grid grid-cols-[100px_1fr]"
+                >
+                  <div className="text-gray-900">So luong</div>
+                  <CounterInput
+                    max={detailData.stock_quantity}
+                    value={quantity}
+                    onChange={setQuantity}
+                  />
+                </fieldset>
+                <Button onClick={handleAddToCart} type="button">Them vao gio hang</Button>
+              </div>
+            </section>
+          </div>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Mo Ta San Pham</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-justify indent-4">{detailData.description}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Danh Gia San Pham</CardTitle>
+          </CardHeader>
+        </Card>
+      </ProductLayout>
+    )
   );
 }

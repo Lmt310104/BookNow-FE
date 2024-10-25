@@ -1,23 +1,100 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { LockKeyhole, Mail, Pencil, Phone } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import image from "@/assets/placeholder.svg";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
-import { Link, useLocation } from "react-router-dom";
+
+import { FormEvent, useEffect, useState } from "react";
+import { User } from "@/types/user";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Gender, UserRole } from "@/common/enums";
+import useAuth from "@/hooks/useAuth";
+import customerService from "@/services/customer.service";
+import { dateToString, stringToDate } from "@/utils/format";
+import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 
 export default function AccountInfo() {
-  const location = useLocation();
-  const { pathname } = location;
+  const [accountData, setAccountData] = useState<User>({
+    email: "",
+    gender: Gender.MALE,
+    birthday: new Date(),
+    full_name: "",
+    phone: undefined,
+  });
+  const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
+  const getAccountData = async (id: string) => {
+    try {
+      const response = await customerService.getAccountById(id);
+      console.log(response);
+      setAccountData(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (auth?.userId) {
+      getAccountData(auth.userId);
+    }
+  }, [auth]);
+
+  const handleChangePass = () => {
+    if (auth) {
+      if (auth.role === UserRole.ADMIN) {
+        navigate(routes.ADMIN.CHANGE_PASSWORD);
+      } else if (auth.role === UserRole.CUSTOMER) {
+        navigate(routes.CUSTOMER.CHANGE_PASSWORD);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+  };
+
+  function handleChangeInput({ name, value }: { name: string; value: string }) {
+    if (name === "birthday") {
+      setAccountData((currentInfo) => {
+        const newInfo = {
+          ...currentInfo,
+          [name]: stringToDate(value),
+        };
+        return newInfo;
+      });
+    } else {
+      setAccountData((currentInfo) => {
+        const newInfo = {
+          ...currentInfo,
+          [name]: value,
+        };
+        return newInfo;
+      });
+    }
+  }
+
+  const handleCancel = ()=>{
+    if (auth?.userId) {
+      getAccountData(auth.userId);
+    }
+  }
+
   return (
     <Card className="w-full">
-      <CardContent className="flex flex-row mt-6">
-        <div className="border-r border-gray-300 h-100 basis-1/2 flex flex-col gap-6 pr-8">
-          <label>Thong tin ca nhan</label>
+      <CardContent>
+        <form className="flex flex-col gap-6 mt-6" onSubmit={handleSubmit}>
           <div className="relative mx-auto">
             <img
               className="w-28 h-28 rounded-full border-4 border-[#C2E1FF]"
@@ -28,75 +105,113 @@ export default function AccountInfo() {
               <Pencil className="w-3 h-3 text-white absolute" />
             </div>
           </div>
-          <div className="grid grid-cols-[1fr_1fr]">
-            <label>Ho va ten</label>
-            <Input id="name" type="name" required />
-          </div>
-          <div className="grid grid-cols-[1fr_1fr]">
-            <label>Ngay sinh</label>
-            <Input id="birthday" type="date" required />
-          </div>
-          <div className="grid grid-cols-[1fr_1fr]">
-            <label>Gioi tinh</label>
-            <RadioGroup
-              defaultValue="male"
-              className="flex-1 flex flex-row justify-between"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="male" id="r1" />
-                <Label htmlFor="r1">Nam</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="female" id="r2" />
-                <Label htmlFor="r2">Nu</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="other" id="r3" />
-                <Label htmlFor="r3">Khac</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <Button className="mx-auto">Luu thay doi</Button>
-        </div>
-        <div className=" basis-1/2 flex flex-col  gap-8 pl-8">
-          <p>So dien thoai va Email</p>
-          <div className="flex flex-row w-full gap-2 items-center">
-            <Phone className="w-5 h-5" />
-            <div className="flex flex-col gap-1">
-              <p>So dien thoai</p>
-              <p>0343800708</p>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Ho va ten</Label>
+              <Input
+                id="fullName"
+                type="fullName"
+                required
+                value={accountData?.full_name}
+                onChange={(e) =>
+                  handleChangeInput({
+                    name: "full_name",
+                    value: e.target.value,
+                  })
+                }
+              />
             </div>
-            <Button variant="outline" className="border border-black ml-auto">
-              Cap Nhat
-            </Button>
-          </div>
-          <div className="flex flex-row w-full gap-2 items-center">
-            <Mail className="w-5 h-5" />
-            <div className="flex flex-col gap-1">
-              <p>Dia chi mail</p>
-              <p>email@gmail.com</p>
+            <div className="space-y-2">
+              <Label>Ngay sinh</Label>
+              <Input
+                id="birthday"
+                type="date"
+                required
+                value={dateToString(
+                  (accountData?.birthday && new Date(accountData?.birthday)) ||
+                    new Date(),
+                )}
+                onChange={(e) =>
+                  handleChangeInput({
+                    name: "birthday",
+                    value: e.target.value,
+                  })
+                }
+              />
             </div>
-            <Button variant="outline" className="border border-black ml-auto">
-              Cap Nhat
-            </Button>
           </div>
-          <p>Bao mat</p>
-          <div className="flex flex-row w-full gap-2 items-center">
-            <LockKeyhole className="w-5 h-5" />
-            <p>Doi mat khau</p>
-            <Button variant="outline" className="border border-black ml-auto">
-              <Link
-                to={
-                  pathname === routes.ADMIN.ACCOUNT_PROFILE
-                    ? routes.ADMIN.CHANGE_PASSWORD
-                    : routes.CUSTOMER.CHANGE_PASSWORD
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Gioi tinh</Label>
+              <Select
+                defaultValue={Gender.MALE}
+                value={accountData?.gender}
+                onValueChange={(e) =>
+                  handleChangeInput({
+                    name: "gender",
+                    value: e,
+                  })
                 }
               >
-                Cap Nhat
-              </Link>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Gioi tinh" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value={Gender.MALE}>Nam</SelectItem>
+                    <SelectItem value={Gender.FEMALE}>Nu</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>So dien thoai</Label>
+              <Input
+                id="phone"
+                type="number"
+                value={accountData.phone}
+                disabled
+                onChange={(e) =>
+                  handleChangeInput({
+                    name: "phone",
+                    value: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={accountData?.email}
+                onChange={(e) =>
+                  handleChangeInput({
+                    name: "email",
+                    value: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label>Password</Label>
+              <Button variant="secondary" onClick={handleChangePass}>
+                Doi mat khau
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-row gap-6 mx-auto">
+            <Button className="w-40" variant="outline" onClick={handleCancel}>
+              Huy
+            </Button>
+            <Button className="w-40" type="submit">
+              Xac nhan
             </Button>
           </div>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

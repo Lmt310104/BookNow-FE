@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import Thumb from "./carousel-thumbnail";
 
 type PropType = {
-  slides: number[];
+  slides: string[];
   options?: EmblaOptionsType;
 };
 
@@ -42,25 +41,28 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     <div className="w-full">
       <div className="overflow-hidden" ref={emblaMainRef}>
         <div className="w-full flex touch-pan-y touch-pinch-zoom">
-          {slides.map((index) => (
+          {slides.map((imageUrl, index) => (
             <div
-              className="w-full aspect-square flex-none pl-4 border border-gray-300  overflow-hidden bg-gray-100"
+              className="w-full aspect-square flex-none border border-gray-300  overflow-hidden bg-gray-100"
               key={index}
             >
-              {index + 1}
+              <img className="w-full h-full object-cover" src={imageUrl} />
             </div>
           ))}
         </div>
       </div>
       <div className="overflow-hidden mt-3 w-full" ref={emblaThumbsRef}>
         <div className="flex flex-row gap-3 w-full">
-          {slides.map((index) => (
-            <Thumb
+          {slides.map((imageUrl, index) => (
+            <div
+              className={"flex-shrink-0 flex-grow-0 border border-#3b74a6-500 aspect-square w-[25%]".concat(
+                index === selectedIndex ? " border border-black" : "",
+              )}
               key={index}
               onClick={() => onThumbClick(index)}
-              selected={index === selectedIndex}
-              index={index}
-            />
+            >
+              <img className="w-full h-full object-cover" src={imageUrl} />
+            </div>
           ))}
         </div>
       </div>

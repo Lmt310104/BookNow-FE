@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { JWTDecode } from "@/context/auth";
 import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
+import { setAccessToken } from "@/lib/api-client";
 
 export default function SignInRoute() {
   const [input, setinput] = useState({ email: "", password: "" });
@@ -37,7 +38,7 @@ export default function SignInRoute() {
       if (response.data) {
         const accessToken: string = response.data.access_token;
         setinput({ email: "", password: "" });
-        localStorage.setItem("token", accessToken);
+        setAccessToken(accessToken);
         const { id, role }: JWTDecode = jwtDecode(accessToken);
         setAuth({
           userId: id,

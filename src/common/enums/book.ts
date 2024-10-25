@@ -1,0 +1,6 @@
+export enum BookStatus {
+  INACTIVE = "INACTIVE",
+  INSTOCK = "INSTOCK",
+  OUTOFSTOCK = "OUTOFSTOCK",
+  LOWSTOCK = "LOWSTOCK",
+}

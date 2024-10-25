@@ -7,6 +7,7 @@ import {
   SetStateAction,
 } from "react";
 import { jwtDecode } from "jwt-decode";
+import { getAccessToken } from "@/lib/api-client";
 
 export interface AuthState {
   userId: string;
@@ -29,7 +30,7 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 
 const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [auth, setAuth] = useState<AuthState | null>(() => {
-    const token: string | null = localStorage.getItem("token");
+    const token: string | null = getAccessToken();
     if (token) {
       const { id, role }: JWTDecode = jwtDecode(token);
       console.log(id, role);

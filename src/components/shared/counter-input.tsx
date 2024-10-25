@@ -1,9 +1,40 @@
-export const CounterInput = () => {
+import { Dispatch, SetStateAction } from "react";
+
+interface CounterInputProps {
+  max: number;
+  value: number;
+  onChange: Dispatch<SetStateAction<number>>;
+}
+
+export const CounterInput: React.FC<CounterInputProps> = ({
+  max,
+  value,
+  onChange,
+}) => {
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const eValue = Number(e.target.value);
+    if (!isNaN(eValue)) {
+      onChange(eValue);
+    }
+  };
+
+  const handleIncrease = () => {
+    if (value < max) {
+      onChange(value + 1);
+    }
+  };
+
+  const handleDerease = () => {
+    if (value > 0) {
+      onChange(value - 1);
+    }
+  };
   return (
     <div className="max-w-xs flex flex-row items-center gap-4">
       <div className="relative flex items-center max-w-[8rem]">
         <button
           type="button"
+          onClick={handleDerease}
           id="decrement-button"
           data-input-counter-decrement="quantity-input"
           className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s p-3 h-8 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
@@ -25,19 +56,21 @@ export const CounterInput = () => {
           </svg>
         </button>
         <input
-          type="text"
+          type="number"
           id="quantity-input"
           data-input-counter
           aria-describedby="helper-text-explanation"
-          className="bg-gray-50 border-x-0 border-gray-300 h-8 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5"
-          value={1}
-          min={1}
-          max={100}
+          className="bg-gray-50 border-x-0 border-gray-300 h-8 text-center text-gray-900 text-sm"
+          value={value}
+          onChange={handleChangeInput}
+          min={0}
+          max={max}
           required
         />
         <button
           type="button"
           id="increment-button"
+          onClick={handleIncrease}
           data-input-counter-increment="quantity-input"
           className="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-e p-3 h-8 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
         >
@@ -58,7 +91,7 @@ export const CounterInput = () => {
           </svg>
         </button>
       </div>
-      <p>100 san pham co san</p>
+      <p>{`${max} san pham co san`}</p>
     </div>
   );
 };

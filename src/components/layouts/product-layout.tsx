@@ -1,16 +1,19 @@
 import { Button } from "@/components/ui/button";
 import {  Search, ShoppingCart } from "lucide-react";
 import UserDropDownMenu from "../shared/user-drop-down-menu";
+import { useNavigate } from "react-router-dom";
+import { routes } from "@/config";
 
 export default function ProductLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigation = useNavigate();
   return (
     <div className="h-screen w-full overflow-y-auto">
       <div className="px-40 h-24 w-full flex flex-row items-center bg-black gap-16">
-        <a href="#" className="text-white text-nowrap  text-2xl font-bold">
+        <a href="/" className="text-white text-nowrap  text-2xl font-bold">
           Book Now
         </a>
 
@@ -25,7 +28,7 @@ export default function ProductLayout({
           </Button>
         </div>
         <div className="flex flex-row gap-4 w-fit items-center">
-          <div className="w-11">
+          <div className="w-11" onClick={()=> navigation(routes.CUSTOMER.CART)}>
             <ShoppingCart className="h-7 w-7 text-white" />
           </div>
           <div className="w-11">

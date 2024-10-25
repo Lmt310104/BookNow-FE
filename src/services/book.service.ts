@@ -1,23 +1,45 @@
-// import { api } from "@/lib/api-client";
+import { api } from "@/lib/api-client";
+import { Page } from "@/types/api";
+import { BookDetail, ResGetAllBooks, ResGetBookById } from "@/types/book";
 
-// interface BookData {
-//   title: string;
-//   authorId: string;
-//   categoryId: string;
-//   entryPrice: number;
-//   price: number;
-//   stockQuantity: number;
-//   description: string;
-// }
+class BookService {
+  async createBook(data: BookDetail) {
+    const formData = new FormData();
+    formData.append("description", data.description);
+    formData.append("categoryId", data.categoryId);
+    formData.append("title", data.title);
+    formData.append("price", data.price.toString());
+    formData.append("stockQuantity", data.stockQuantity.toString());
+    formData.append("entryPrice", data?.entryPrice.toString());
+    formData.append("author", data?.author || "");
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+    return api.post("/books/create", formData);
+  }
 
-// class BookService {
-//   async addNewBook(data) {
-//     api.post(".book/create", data);
-//   }
-//   async fetchBookById() {}
-//   async fetchAllBooks() {}
-//   async updateBookById() {}
-//   async storeBook() {}
-// }
+  async getAllBooks({ page, take }: Page): Promise<ResGetAllBooks> {
+    return api.get(`/books/get-all?page=${page}&take=${take}`);
+  }
 
-// export default new BookService();
+  async getBookById(id: string): Promise<ResGetBookById> {
+    return api.get(`books/get-one/${id}`);
+  }
+
+  async updateBookById(data: BookDetail) {
+    const formData = new FormData();
+    formData.append("description", data.description);
+    formData.append("categoryId", data.categoryId);
+    formData.append("title", data.title);
+    formData.append("price", data.price.toString());
+    formData.append("stockQuantity", data.stockQuantity.toString());
+    formData.append("entryPrice", data?.entryPrice.toString());
+    formData.append("author", data?.author || "");
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+    return api.patch(`/books/update/${data.id}`, formData);
+  }
+}
+
+export default new BookService();

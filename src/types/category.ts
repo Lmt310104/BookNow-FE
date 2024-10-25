@@ -1,4 +1,4 @@
-import { Meta } from "./api";
+import { Meta, Respone } from "./api";
 
 export interface Category {
   id: string;
@@ -6,19 +6,19 @@ export interface Category {
   is_disable: boolean;
 }
 
-export interface ResFetchAllCategories {
+export interface ResFetchAllCategories extends Respone {
   data: {
     data: Array<Category>;
     meta: Meta;
   };
 }
 
-export interface ResEnableCategoryById {
+export interface ResEnableCategoryById extends Respone {
   data: Category;
 }
 
-export interface ResDisableCategoryById {
+export interface ResDisableCategoryById extends Respone {
   data: Category;
 }
 
-export interface ResCreateCategory {}
+export interface ResCreateCategory extends Respone {}
