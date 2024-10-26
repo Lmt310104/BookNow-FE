@@ -1,5 +1,6 @@
 import { api, setAccessToken } from "@/lib/api-client";
 import { User } from "@/types/user";
+import axios from "axios";
 
 class AuthService {
   async signInWithEmail(data: { email: string; password: string }) {
@@ -25,8 +26,14 @@ class AuthService {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No refresh token available");
 
-    const response = await api.get(
+    const response = await axios.get(
       "http://localhost:8080/api/v1/auth/refresh-token",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      },
     );
 
     const newAccessToken = response.data.access_token;
