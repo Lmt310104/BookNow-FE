@@ -56,7 +56,7 @@ export default function CustomerLayout({
             </nav>
           </div>
         </div>
-        <div className="flex flex-col h-screen">{children}</div>
+        <div className="flex flex-col">{children}</div>
       </div>
     </ProductLayout>
   );
