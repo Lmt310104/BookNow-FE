@@ -1,4 +1,5 @@
 import authService from "@/services/auth.service";
+import throttle from "lodash.throttle";
 import Axios, {
   AxiosError,
   InternalAxiosRequestConfig,
@@ -8,6 +9,27 @@ import Axios, {
 export const getAccessToken = () => localStorage.getItem("token");
 export const setAccessToken = (token: string) =>
   localStorage.setItem("token", token);
+const refreshAccessToken = throttle(
+  async (originalRequest) => {
+    try {
+      const newToken = await authService.refreshAccessToken();
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return api(originalRequest);
+    } catch (refreshError) {
+      console.error(
+        "Refresh token expired or invalid. Logging out",
+        refreshError,
+      );
+      localStorage.removeItem("token");
+      window.location.href = "/auth/sign-in";
+    }
+  },
+  1000,
+  {
+    leading: true,
+    trailing: true,
+  },
+);
 
 function authRequestInterceptor(
   config: InternalAxiosRequestConfig,
@@ -16,6 +38,7 @@ function authRequestInterceptor(
     config.headers.Accept = "application/json";
 
     const token = getAccessToken();
+    console.log("get access token twice", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -44,20 +67,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // Prevent infinite retry loops
-
-      try {
-        const newToken = await authService.refreshAccessToken();
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        console.error("Get new token success");
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.error(
-          "Refresh token expired or invalid. Logging out",
-          refreshError,
-        );
-        localStorage.removeItem("token");
-        window.location.href = "/auth/sign-in";
-      }
+      await refreshAccessToken(originalRequest);
     }
 
     if (error.response) {

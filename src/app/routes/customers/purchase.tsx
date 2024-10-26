@@ -39,7 +39,7 @@ export default function PurchaseRoute() {
 
   return (
     <CustomerLayout>
-      <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
+      <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
         <Tabs defaultValue="all" className="mx-auto">
           <TabsList>
             <TabsTrigger value="all">Tat ca</TabsTrigger>

@@ -4,20 +4,27 @@ import image from "@/assets/placeholder.svg";
 import React from "react";
 import { ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
+import { useNavigate } from "react-router-dom";
 
 interface OrderItemRowProps {
   data: Order;
 }
 
 export const OrderItemRow: React.FC<OrderItemRowProps> = ({ data }) => {
-  console.log(data);
+  const navigate = useNavigate();
+  const handleShowDetail = () => {
+    navigate(`/customer/purchase/${data.id}`);
+  };
   return (
     <div className="rounded-lg border border-dashed shadow-sm w-full bg-white gap-4">
       <div className="flex flex-row justify-between p-4">
         <span>{`Ma Don Hang: ${data.id}`}</span>
         <span>{ORDER_STATUS[data.status]}</span>
       </div>
-      <div className="flex flex-row p-4 border border-y-grey-100 gap-4">
+      <div
+        className="flex flex-row p-4 border-y border-grey-100 gap-4 hover:cursor-pointer hover:bg-gray-50"
+        onClick={handleShowDetail}
+      >
         <div className="overflow-hidden aspect-square rounded-md h-[64px]">
           <img
             alt="Product image"

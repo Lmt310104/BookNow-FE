@@ -1,4 +1,4 @@
-import { api, setAccessToken } from "@/lib/api-client";
+import { api, getAccessToken, setAccessToken } from "@/lib/api-client";
 import { User } from "@/types/user";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ class AuthService {
   async resetPassword() {}
 
   async refreshAccessToken(): Promise<string> {
-    const token = localStorage.getItem("token");
+    const token = getAccessToken();
     if (!token) throw new Error("No refresh token available");
 
     const response = await axios.get(
@@ -31,12 +31,14 @@ class AuthService {
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         withCredentials: true,
       },
     );
 
     const newAccessToken = response.data.access_token;
+    console.log("this is newAccessToken", newAccessToken);
     setAccessToken(newAccessToken);
     return newAccessToken;
   }

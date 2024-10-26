@@ -3,7 +3,7 @@ import ProductItemCard from "@/components/product/product-item-card";
 import bookService from "@/services/book.service";
 import { Meta } from "@/types/api";
 import { ResBookDetail } from "@/types/book";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 
 export default function HomeRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
