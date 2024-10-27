@@ -17,7 +17,8 @@ import { useNavigate } from "react-router-dom";
 import bookService from "@/services/book.service";
 import { useEffect, useState } from "react";
 import { Meta } from "@/types/api";
-import {  ResBookDetail } from "@/types/book";
+import { ResBookDetail } from "@/types/book";
+import { BookStatus } from "@/common/enums";
 
 export default function ProductRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
@@ -30,16 +31,18 @@ export default function ProductRoute() {
     hasNextPage: false,
   });
   const navigate = useNavigate();
+  const [tabState, setTabState] = useState<string>("all");
+
   const getAllBooks = async () => {
+  
     try {
       const response = await bookService.getAllBooks({
         page: meta.page,
         take: meta.take,
-      });
-      
+      }, tabState);
+
       setBooks(response.data.data);
       setMeta(response.data.meta);
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
@@ -47,7 +50,7 @@ export default function ProductRoute() {
 
   useEffect(() => {
     getAllBooks();
-  }, [meta.page]);
+  }, [meta.page, tabState]);
 
   return (
     <DashBoardLayout>
@@ -62,12 +65,21 @@ export default function ProductRoute() {
             <span>Them san pham moi</span>
           </Button>
         </div>
-        <Tabs defaultValue="all">
+        <Tabs value={tabState}>
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger value="all">Tat ca (0)</TabsTrigger>
-              <TabsTrigger value="active">Dang ban (0)</TabsTrigger>
-              <TabsTrigger value="archived">Da an (0)</TabsTrigger>
+              <TabsTrigger value="all" onClick={() => setTabState("all")}>
+                Tat ca
+              </TabsTrigger>
+              <TabsTrigger value={BookStatus.ACTIVE} onClick={() => setTabState(BookStatus.ACTIVE)}>
+                Dang ban
+              </TabsTrigger>
+              <TabsTrigger
+                value={BookStatus.INACTIVE}
+                onClick={() => setTabState(BookStatus.INACTIVE)}
+              >
+                Da an
+              </TabsTrigger>
             </TabsList>
           </div>
         </Tabs>
@@ -81,9 +93,6 @@ export default function ProductRoute() {
                 className="w-full rounded-lg bg-background pl-8"
               />
               <Button>Ap dung</Button>
-              <Button variant="outline" className="border border-black">
-                Nhap lai
-              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -92,7 +101,13 @@ export default function ProductRoute() {
               <TableBody>
                 {books &&
                   books.map((item, index) => {
-                    return <ProductTableRow key={index} data={item} onRefetch={getAllBooks}/>
+                    return (
+                      <ProductTableRow
+                        key={index}
+                        data={item}
+                        onRefetch={getAllBooks}
+                      />
+                    );
                   })}
               </TableBody>
             </Table>

@@ -20,7 +20,6 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  console.log(data)
 
   const handleUpdate = () => {
     navigate(`/portal/book/${data.id}`);

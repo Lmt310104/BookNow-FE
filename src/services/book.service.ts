@@ -1,3 +1,4 @@
+import { BookStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
 import { BookDetail, ResGetAllBooks, ResGetBookById } from "@/types/book";
@@ -18,9 +19,13 @@ class BookService {
     return api.post("/books/create", formData);
   }
 
-  async getAllBooks({ page, take }: Page): Promise<ResGetAllBooks> {
+  async getAllBooks({ page, take }: Page, status: string): Promise<ResGetAllBooks> {
+    if(status=== BookStatus.ACTIVE || status === BookStatus.INACTIVE){
+    return api.get(`/books/get-all?page=${page}&take=${take}&status=${status}`);
+  } else {
     return api.get(`/books/get-all?page=${page}&take=${take}`);
   }
+}
 
   async getBookById(id: string): Promise<ResGetBookById> {
     return api.get(`books/get-one/${id}`);

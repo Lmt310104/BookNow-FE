@@ -21,4 +21,3 @@ export interface ResDisableCategoryById extends Respone {
   data: Category;
 }
 
-export interface ResCreateCategory extends Respone {}
