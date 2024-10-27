@@ -30,7 +30,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
         })}
       </div>
       <div className="w-full  flex flex-col gap-4 p-4 items-end">
-        <div>{`Thanh tien: ${data.total_price}`}</div>
+        <div>{`Tong tien: ${data.total_price}`}</div>
         {data.status === OrderStatus.PENDING && (
           <Button variant="outline">Huy don hang</Button>
         )}

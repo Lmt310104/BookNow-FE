@@ -1,6 +1,6 @@
 export const OrderTableHeader = () => {
   return (
-    <div className="w-full h-10 items-center flex flex-row font-medium text-muted-foreground text-sm border-b border-gray-300">
+    <div className="w-full h-10 items-center flex flex-row font-medium text-muted-foreground text-sm border-b border-gray-300 hover:bg-muted/50">
       <div className="basis-[55%]  px-2 text-left">
         San pham
       </div>

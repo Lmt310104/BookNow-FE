@@ -19,7 +19,7 @@ export default function OrderDetailRoute() {
 
   const getOrderById = async (id: string) => {
     try {
-      const response = await orderService.getOrderById(id);
+      const response = await orderService.getOrderDetail(id);
       setOrderDetail(response.data.data);
       console.log(response);
     } catch (err) {
@@ -38,11 +38,14 @@ export default function OrderDetailRoute() {
   };
 
   return (
-    orderDetail && (
-      <CustomerLayout>
+    <CustomerLayout>
+      {orderDetail && (
         <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
           <SectionCard className="flex flex-row items-center p-4 gap-1">
-            <div onClick={handleBack} className="hover:cursor-pointer flex flexp-row gap-1 items-center">
+            <div
+              onClick={handleBack}
+              className="hover:cursor-pointer flex flexp-row gap-1 items-center"
+            >
               <ChevronLeft className="h-5 w-5" />
               <span>TRỞ LẠI</span>
             </div>
@@ -68,7 +71,13 @@ export default function OrderDetailRoute() {
             <div className="font-medium p-4">San Pham</div>
             <div>
               {orderDetail.OrderItems.map((item, index) => {
-                return <OrderItemRow key={index} data={item} onShowBookDetail={()=> navigate(`/book/${item.book_id}`)}/>;
+                return (
+                  <OrderItemRow
+                    key={index}
+                    data={item}
+                    onShowBookDetail={() => navigate(`/book/${item.book_id}`)}
+                  />
+                );
               })}
             </div>
             <div className="flex p-4">
@@ -76,7 +85,7 @@ export default function OrderDetailRoute() {
             </div>
           </SectionCard>
         </main>
-      </CustomerLayout>
-    )
+      )}
+    </CustomerLayout>
   );
 }

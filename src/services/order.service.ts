@@ -6,12 +6,16 @@ class OrderService {
     return api.get("orders/get-all");
   }
 
-  async getOrderById(id: string): Promise<ResGetOrderById> {
+  async getOrderDetail(id: string): Promise<ResGetOrderById> {
     return api.get(`orders/get-details/${id}`);
   }
 
   async getOrdersByAdmin(): Promise<ResGetOrdersByUser> {
     return api.get("orders/list");
+  }
+
+  async getOrderDetailByAdMin(id: string):Promise<ResGetOrderById> {
+    return api.get(`orders/get-details-by-admin/${id}`);
   }
 }
 

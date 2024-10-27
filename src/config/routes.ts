@@ -22,6 +22,7 @@ const routes = {
   ADMIN: {
     DASHBOAD: "/dashboad",
     ORDER: "/portal/order",
+    ORDER_DETAIL: "/portal/order/:orderId",
     PRODUCT: "/portal/book",
     ADD_PRODUCT: "/portal/book/new",
     PRODUCT_DETAIL: "/portal/book/:bookId",

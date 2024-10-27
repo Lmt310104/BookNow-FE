@@ -6,6 +6,7 @@ import ProductOrderTableRow from "./product-order-table-row";
 import { ORDER_STATUS } from "@/common/constants/order";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface OrderTableRowProps {
   data: Order;
@@ -13,11 +14,12 @@ interface OrderTableRowProps {
 
 export const OrderTableRow: React.FC<OrderTableRowProps> = ({ data }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col text-sm border border-gray-300 rounded-md">
       <div className="flex flex-row justify-between py-2 px-4 bg-muted">
-        <span>LMT</span>
+        <span>{data.user.full_name}</span>
         <span>{`Ma don hang: ${data.id}`}</span>
       </div>
       <div className="w-full flex flex-row items-center p-4">
@@ -38,8 +40,11 @@ export const OrderTableRow: React.FC<OrderTableRowProps> = ({ data }) => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-max p-1">
+              <div className="py-2 px-3 w-full hover:bg-[#F4F4F5]" onClick={()=> navigate(`/portal/order/${data.id}`)}>
+                Xem chi tiet
+              </div>
               <div className="py-2 px-3 w-full hover:bg-[#F4F4F5]">
-                Chinh sua
+                In phieu giao
               </div>
             </PopoverContent>
           </Popover>

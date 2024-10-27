@@ -28,7 +28,7 @@ export const OrderItemRow: React.FC<OrderItemRowProps> = ({
       <div className="flex flex-col gap-1">
         <div>{data.book.title}</div>
         <div className="text-sm">
-          <span className="text-[#787C80]">So luong:</span>
+          <span className="text-[#787C80]">So luong: </span>
           {data.quantity}
         </div>
       </div>
