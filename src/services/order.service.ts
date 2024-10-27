@@ -1,9 +1,17 @@
 import { api } from "@/lib/api-client";
-import { ResGetOrdersByUser } from "@/types/order";
+import { ResGetOrderById, ResGetOrdersByUser } from "@/types/order";
 
 class OrderService {
-  async getOrdersByUser():Promise<ResGetOrdersByUser> {
+  async getOrdersByUser(): Promise<ResGetOrdersByUser> {
     return api.get("orders/get-all");
+  }
+
+  async getOrderById(id: string): Promise<ResGetOrderById> {
+    return api.get(`orders/get-details/${id}`);
+  }
+
+  async getOrdersByAdmin(): Promise<ResGetOrdersByUser> {
+    return api.get("orders/list");
   }
 }
 

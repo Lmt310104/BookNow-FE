@@ -1,20 +1,18 @@
-import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
 export const OrderTableHeader = () => {
   return (
-    <TableHeader>
-      <TableRow>
-        <TableHead>Mã đơn hàng</TableHead>
-        <TableHead>Trạng thái</TableHead>
-
-        <TableHead>Han xac nhan</TableHead>
-        <TableHead>Đánh giá</TableHead>
-        <TableHead>Nội dung</TableHead>
-        <TableHead>Người đánh giá</TableHead>
-        <TableHead>
-          <span className="sr-only">Thao tac</span>
-        </TableHead>
-      </TableRow>
-    </TableHeader>
+    <div className="w-full h-10 items-center flex flex-row font-medium text-muted-foreground text-sm border-b border-gray-300">
+      <div className="basis-[55%]  px-2 text-left">
+        San pham
+      </div>
+      <div className="basis-1/5  px-2 text-left">
+        Tong don hang
+      </div>
+      <div className="basis-1/5 px-2 text-left">
+        Trang thai
+      </div>
+      <div className="basis-[5%] px-2 text-left ">
+        <span className="sr-only">Thao tac</span>
+      </div>
+    </div>
   );
 };

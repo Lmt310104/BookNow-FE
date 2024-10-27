@@ -27,7 +27,7 @@ const refreshAccessToken = throttle(
   1000,
   {
     leading: true,
-    trailing: true,
+    trailing: false,
   },
 );
 

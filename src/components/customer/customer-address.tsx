@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
+import SectionCard from "../shared/section-card";
 
 export const CustomerAddress = () => {
   return (
-    <div className="  flex flex-row justify-between rounded-lg border border-dashed shadow-sm w-full bg-white p-4">
+    <SectionCard className="flex flex-row justify-between  p-4">
       <div className="flex flex-col gap-1">
         <div>DAO DUY THONG</div>
         <div className="text-sm">
@@ -17,6 +18,6 @@ export const CustomerAddress = () => {
         <Button variant="secondary">Chinh sua</Button>
         <Button variant="outline">Xoa</Button>
       </div>
-    </div>
+    </SectionCard>
   );
 };

@@ -92,7 +92,7 @@ export default function ProductRoute() {
               <TableBody>
                 {books &&
                   books.map((item, index) => {
-                    return <ProductTableRow key={index} data={item} onRefetch={getAllBooks}/>;
+                    return <ProductTableRow key={index} data={item} onRefetch={getAllBooks}/>
                   })}
               </TableBody>
             </Table>

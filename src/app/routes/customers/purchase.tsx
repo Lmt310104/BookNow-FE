@@ -7,9 +7,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 
 import { TablePagination } from "@/components/shared/table-pagination";
-import { OrderItemRow } from "@/components/order/order-item-row";
 import { Meta } from "@/types/api";
 import { Order } from "@/types/order";
+import { OrderRow } from "@/components/order/order-row";
 
 export default function PurchaseRoute() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -25,9 +25,9 @@ export default function PurchaseRoute() {
   const getAllOrdersByUser = async () => {
     try {
       const response = await orderService.getOrdersByUser();
+      console.log(response)
       setOrders(response.data.data);
       setMeta(response.data.meta);
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
@@ -66,7 +66,7 @@ export default function PurchaseRoute() {
         </div>
         <div className="flex flex-col gap-3">
           {orders.map((item, index) => {
-            return <OrderItemRow key={index} data={item}/>;
+            return <OrderRow key={index} data={item}/>;
           })}
         </div>
         <TablePagination data={meta} onChange={setMeta} />
