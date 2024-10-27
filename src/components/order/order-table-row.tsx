@@ -18,7 +18,7 @@ export const OrderTableRow: React.FC<OrderTableRowProps> = ({ data }) => {
     <div className="flex flex-col text-sm border border-gray-300 rounded-md">
       <div className="flex flex-row justify-between py-2 px-4 bg-muted">
         <span>LMT</span>
-        <span>Ma don hang</span>
+        <span>{`Ma don hang: ${data.id}`}</span>
       </div>
       <div className="w-full flex flex-row items-center p-4">
         <div className="basis-[55%] space-y-4">
