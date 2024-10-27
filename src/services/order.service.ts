@@ -9,6 +9,10 @@ class OrderService {
   async getOrderById(id: string): Promise<ResGetOrderById> {
     return api.get(`orders/get-details/${id}`);
   }
+
+  async getOrdersByAdmin(): Promise<ResGetOrdersByUser> {
+    return api.get("orders/list");
+  }
 }
 
 export default new OrderService();

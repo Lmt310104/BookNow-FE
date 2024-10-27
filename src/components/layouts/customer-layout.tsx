@@ -36,7 +36,9 @@ export default function CustomerLayout({
               <a
                 href={routes.CUSTOMER.PURCHASE}
                 className={
-                  pathname === routes.CUSTOMER.PURCHASE ? active : inActive
+                  pathname.includes(routes.CUSTOMER.PURCHASE)
+                    ? active
+                    : inActive
                 }
               >
                 <ShoppingCart className="h-4 w-4" />
