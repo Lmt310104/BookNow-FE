@@ -25,7 +25,7 @@ class CustomerService {
     formData.append("email", data.email);
     formData.append("fullName", data.full_name);
     formData.append("gender", data.gender);
-    if (data.phone) formData.append("phone", data.phone?.toString());
+    formData.append("phone", data.phone?.toString()|| '');
     if (imageFile) {
       formData.append("avatar_url", imageFile);
     }

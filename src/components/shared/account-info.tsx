@@ -64,7 +64,8 @@ export default function AccountInfo() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       await customerService.updateAccount(accountData, imageFile);
     } catch (err) {
@@ -114,6 +115,12 @@ export default function AccountInfo() {
         };
       });
     }
+
+    return () => {
+      if (accountData.avatar_url) {
+        URL.revokeObjectURL(accountData.avatar_url);
+      }
+    };
   }, [imageFile]);
 
   const handleUploadFile = () => {
@@ -123,7 +130,7 @@ export default function AccountInfo() {
   return (
     <Card className="w-full">
       <CardContent>
-        <div className="flex flex-col gap-6 mt-6">
+        <form className="flex flex-col gap-6 mt-6">
           <div className="relative mx-auto">
             <img
               className="w-28 h-28 rounded-full border-4 border-[#C2E1FF]"
@@ -236,20 +243,20 @@ export default function AccountInfo() {
             </div>
             <div className="flex flex-col gap-2">
               <Label>Password</Label>
-              <Button variant="secondary" onClick={handleChangePass}>
+              <Button variant="secondary"  type="button" onClick={handleChangePass}>
                 Doi mat khau
               </Button>
             </div>
           </div>
           <div className="flex flex-row gap-6 mx-auto">
-            <Button className="w-40" variant="outline" onClick={handleCancel}>
+            <Button className="w-40" variant="outline" type="button" onClick={handleCancel}>
               Huy
             </Button>
             <Button className="w-40" type="submit" onClick={handleSubmit}>
               Xac nhan
             </Button>
           </div>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );
