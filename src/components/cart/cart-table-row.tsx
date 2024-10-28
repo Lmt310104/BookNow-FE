@@ -1,10 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CategoryState } from "@/common/enums";
 import image from "@/assets/placeholder.svg";
 import { ResCartItem } from "@/types/cart";
 import cartService from "@/services/cart.service";

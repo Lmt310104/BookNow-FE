@@ -1,4 +1,3 @@
-import { OrderStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
 import { ResGetOrderById, ResGetOrdersByUser } from "@/types/order";

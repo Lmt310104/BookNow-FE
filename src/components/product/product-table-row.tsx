@@ -8,6 +8,8 @@ import React, { useState } from "react";
 import { BOOK_STATUS } from "@/common/constants";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useNavigate } from "react-router-dom";
+import bookService from "@/services/book.service";
+import { BookStatus } from "@/common/enums";
 
 interface ProductTableRowProps {
   data: ResBookDetail;
@@ -24,6 +26,26 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
   const handleUpdate = () => {
     navigate(`/portal/book/${data.id}`);
   };
+
+
+  const handleActive = async ()=>{
+    try{
+      await bookService.activeBookById(data.id);
+      await onRefetch();
+    } catch(err){
+      console.log(err);
+    }
+  }
+
+
+  const handleHide = async ()=>{
+    try{
+      await bookService.inactiveBookById(data.id);
+      await onRefetch();
+    } catch(err){
+      console.log(err);
+    }
+  }
   return (
     <TableRow>
       {/* <TableCell>
@@ -63,7 +85,7 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
             >
               Chinh sua
             </div>
-            {/* {data.is_disable ? (
+            {data.status=== BookStatus.INACTIVE ? (
               <div
                 className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
                 onClick={handleActive}
@@ -73,11 +95,11 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
             ) : (
               <div
                 className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
-                onClick={handleDisable}
+                onClick={handleHide}
               >
                 An
               </div>
-            )} */}
+            )}
           </PopoverContent>
         </Popover>
       </TableCell>

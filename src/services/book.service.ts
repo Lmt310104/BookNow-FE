@@ -45,6 +45,14 @@ class BookService {
     }
     return api.patch(`/books/update/${data.id}`, formData);
   }
+
+  async activeBookById(id: string){
+    return api.post(`/books/active/${id}`);
+  }
+
+  async inactiveBookById(id: string){
+    return api.post(`/books/inactive/${id}`);
+  }
 }
 
 export default new BookService();

@@ -1,9 +1,9 @@
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import { ResCreateCategory, ResDisableCategoryById, ResEnableCategoryById, ResFetchAllCategories } from "@/types/category";
+import {  ResDisableCategoryById, ResEnableCategoryById, ResFetchAllCategories } from "@/types/category";
 
 class CategryService {
-  async createCategory(data: { name: string }):Promise<ResCreateCategory> {
+  async createCategory(data: { name: string }) {
     return api.post("/categories/create", data);
   }
 
