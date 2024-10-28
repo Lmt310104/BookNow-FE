@@ -5,9 +5,9 @@ export const CategoryTableHeader = () => {
   return (
     <TableHeader>
       <TableRow>
-        <TableHead className="w-[30px]">
+        {/* <TableHead className="w-[30px]">
           <Checkbox />
-        </TableHead>
+        </TableHead> */}
         <TableHead>Ma danh muc</TableHead>
         <TableHead>Ten danh muc</TableHead>
         <TableHead>Trang thai</TableHead>

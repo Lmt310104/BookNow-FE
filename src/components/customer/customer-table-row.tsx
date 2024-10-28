@@ -9,6 +9,7 @@ import { dateToVNString } from "@/utils/format";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import customerService from "@/services/customer.service";
 import { useState } from "react";
+import image from "@/assets/placeholder.svg";
 
 interface CustomerTableRowProps {
   data: Customer;
@@ -40,6 +41,12 @@ export const CustomerTableRow: React.FC<CustomerTableRowProps> = ({
   };
   return (
     <TableRow>
+      <TableCell className="flex flex-row gap-4 items-center">
+        <img
+          className="aspect-square rounded-full object-cover"
+          src={data.avatar_url || image}
+        />
+      </TableCell>
       <TableCell>{data.full_name}</TableCell>
       <TableCell>{dateToVNString(new Date(data.birthday))}</TableCell>
       <TableCell>{data.gender === Gender.MALE ? "Nam" : "Nu"}</TableCell>
@@ -70,7 +77,7 @@ export const CustomerTableRow: React.FC<CustomerTableRowProps> = ({
                 className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
                 onClick={handleDisable}
               >
-                Vo hieu hoa
+                Khoa
               </div>
             )}
           </PopoverContent>

@@ -9,6 +9,7 @@ export interface Customer {
   birthday: Date;
   gender: Gender;
   is_disable: boolean;
+  avatar_url?: string
 }
 
 export interface ResFetchAllCustomers extends Respone {
@@ -16,13 +17,5 @@ export interface ResFetchAllCustomers extends Respone {
     data: Array<Customer>;
     meta: Meta;
   };
-}
-
-export interface ResEnableCustomer extends Respone {
-  data: Customer
-}
-
-export interface ResDisableCustomer extends Respone {
-  data: Customer
 }
 

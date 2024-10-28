@@ -44,9 +44,9 @@ export const CategoryTableRow: React.FC<CategoryTableRowProps> = ({
 
   return (
     <TableRow>
-      <TableCell>
+      {/* <TableCell>
         <Checkbox />
-      </TableCell>
+      </TableCell> */}
       <TableCell>{data.id}</TableCell>
       <TableCell>{data.name}</TableCell>
       <TableCell>

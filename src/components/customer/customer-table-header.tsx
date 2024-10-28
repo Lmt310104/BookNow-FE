@@ -4,6 +4,7 @@ export const CustomerTableHeader = () => {
   return (
     <TableHeader>
       <TableRow>
+      <TableHead className="w-10">Avatar</TableHead>
         <TableHead>Ho va ten</TableHead>
         <TableHead>Ngay sinh</TableHead>
         <TableHead>Gioi tinh</TableHead>

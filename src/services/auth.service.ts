@@ -42,6 +42,10 @@ class AuthService {
     setAccessToken(newAccessToken);
     return newAccessToken;
   }
+
+  async signInWithGoogle() {
+    
+  }
 }
 
 export default new AuthService();

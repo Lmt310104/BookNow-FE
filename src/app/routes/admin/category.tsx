@@ -68,7 +68,6 @@ export default function CategoryRoute() {
 
   useEffect(() => {
     getAllCategories();
-    console.log("getAllCategories");
   }, [meta.page, tabState]);
 
   const handleAddNew = () => {
