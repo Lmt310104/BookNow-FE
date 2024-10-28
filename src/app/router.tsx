@@ -30,6 +30,7 @@ import ForgotPasswordRoute from "./routes/auth/forgot-password";
 import SignUpRoute from "./routes/auth/sign-up";
 import SignInRoute from "./routes/auth/sign-in";
 import CategoryRoute from "./routes/admin/category";
+import AdminOrderDetailRoute from "./routes/admin/order-detail";
 
 const createAppRouter = () =>
   createBrowserRouter([
@@ -120,6 +121,10 @@ const createAppRouter = () =>
     {
       path: routes.ADMIN.ORDER,
       element: <OrderRoute />,
+    },
+    {
+      path: routes.ADMIN.ORDER_DETAIL,
+      element: <AdminOrderDetailRoute />,
     },
     {
       path: routes.ADMIN.PRODUCT,

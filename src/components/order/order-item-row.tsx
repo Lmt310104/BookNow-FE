@@ -17,18 +17,24 @@ export const OrderItemRow: React.FC<OrderItemRowProps> = ({
       onClick={onShowBookDetail}
     >
       <div className="overflow-hidden aspect-square rounded-md h-[64px]">
-        <img
+        {/* <img
           alt="Product image"
           className="object-cover w-full h-full"
           src={
             (data.book.image_url.length > 0 && data.book.image_url[0]) || image
           }
+        /> */}
+        <img
+          alt="Product image"
+          className="object-cover w-full h-full"
+          src={image}
         />
       </div>
       <div className="flex flex-col gap-1">
-        <div>{data.book.title}</div>
+        {/* <div>{data.book.title}</div> */}
+        <div>{"data.book.title"}</div>
         <div className="text-sm">
-          <span className="text-[#787C80]">So luong:</span>
+          <span className="text-[#787C80]">So luong: </span>
           {data.quantity}
         </div>
       </div>

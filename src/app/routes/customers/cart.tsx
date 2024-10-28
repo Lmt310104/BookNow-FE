@@ -33,7 +33,7 @@ export default function CartRoute() {
 
   return (
     <ProductLayout>
-      <div className="w-full ">
+      <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
         <Table>
           <CartTableHeader />
           <TableBody>
@@ -44,7 +44,7 @@ export default function CartRoute() {
             })}
           </TableBody>
         </Table>
-      </div>
+      </main>
     </ProductLayout>
   );
 }

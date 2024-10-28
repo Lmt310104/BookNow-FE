@@ -1,25 +1,25 @@
-import CustomerLayout from "@/components/layouts/customer-layout";
-import orderService from "@/services/order.service";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
-import { OrderItemRow } from "@/components/order/order-item-row";
+import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { Order } from "@/types/order";
-import { useNavigate, useParams } from "react-router-dom";
+import orderService from "@/services/order.service";
+import { useEffect, useState } from "react";
 import SectionCard from "@/components/shared/section-card";
 import { ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
+import { OrderItemRow } from "@/components/order/order-item-row";
+import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "@/config";
 
-export default function OrderDetailRoute() {
+export default function AdminOrderDetailRoute() {
   const param = useParams();
   const navigate = useNavigate();
   const [orderDetail, setOrderDetail] = useState<Order | null>(null);
 
   const getOrderById = async (id: string) => {
     try {
-      const response = await orderService.getOrderDetail(id);
+      const response = await orderService.getOrderDetailByAdMin(id);
       setOrderDetail(response.data.data);
       console.log(response);
     } catch (err) {
@@ -34,13 +34,23 @@ export default function OrderDetailRoute() {
   }, [param]);
 
   const handleBack = () => {
-    navigate(routes.CUSTOMER.PURCHASE);
+    navigate(routes.ADMIN.ORDER);
+  };
+
+  const handleCancelOrder = async () => {
+    if (orderDetail?.id) {
+      try {
+        await orderService.cancelOrder(orderDetail.id);
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (
-    <CustomerLayout>
+    <DashBoardLayout>
       {orderDetail && (
-        <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
+        <main className="flex flex-1 flex-col gap-6 p-6 bg-muted/40 overflow-y-auto">
           <SectionCard className="flex flex-row items-center p-4 gap-1">
             <div
               onClick={handleBack}
@@ -52,11 +62,14 @@ export default function OrderDetailRoute() {
             <span className="ml-auto">{`MÃ ĐƠN HÀNG: ${orderDetail.id}`}</span>|
             <span>{ORDER_STATUS[orderDetail.status]}</span>
           </SectionCard>
-          <SectionCard className="p-4 flex flex-row">
+          <SectionCard className="p-4 flex flex-row gap-4">
             {orderDetail.status === OrderStatus.PENDING && (
-              <Button variant="outline" className="ml-auto">
-                Huy don hang
-              </Button>
+              <>
+                <Button variant="outline" className="ml-auto" onClick={handleCancelOrder}>
+                  Huy don hang
+                </Button>
+                <Button>Chuan bi hang</Button>
+              </>
             )}
           </SectionCard>
           <SectionCard className="p-4 space-y-4">
@@ -86,6 +99,6 @@ export default function OrderDetailRoute() {
           </SectionCard>
         </main>
       )}
-    </CustomerLayout>
+    </DashBoardLayout>
   );
 }

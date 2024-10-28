@@ -14,11 +14,19 @@ export interface ResFetchAllCategories extends Respone {
 }
 
 export interface ResEnableCategoryById extends Respone {
-  data: Category;
+  data: {
+    data: Category;
+  };
 }
 
 export interface ResDisableCategoryById extends Respone {
-  data: Category;
+  data: {
+    data: Category;
+  };
 }
 
-export interface ResCreateCategory extends Respone {}
+export interface ResGetCategoryById extends Respone {
+  data: {
+    data: Category;
+  };
+}

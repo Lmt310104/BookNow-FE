@@ -58,9 +58,6 @@ export default function CustomerRoute() {
                 />
               </div>
               <Button>Ap dung</Button>
-              <Button variant="outline" className="border border-black">
-                Nhap lai
-              </Button>
             </div>
             <Table>
               <CustomerTableHeader />

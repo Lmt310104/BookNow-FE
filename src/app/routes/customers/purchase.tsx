@@ -10,6 +10,7 @@ import { TablePagination } from "@/components/shared/table-pagination";
 import { Meta } from "@/types/api";
 import { Order } from "@/types/order";
 import { OrderRow } from "@/components/order/order-row";
+import { OrderStatus } from "@/common/enums";
 
 export default function PurchaseRoute() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -21,11 +22,15 @@ export default function PurchaseRoute() {
     hasPreviousPage: false,
     hasNextPage: false,
   });
+  const [tabState, setTabState] = useState<string>("all");
 
   const getAllOrdersByUser = async () => {
     try {
-      const response = await orderService.getOrdersByUser();
-      console.log(response)
+      const response = await orderService.getOrdersByUser({
+        page: meta.page,
+        take: meta.take,
+      },tabState );
+      console.log(response);
       setOrders(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {
@@ -35,19 +40,19 @@ export default function PurchaseRoute() {
 
   useEffect(() => {
     getAllOrdersByUser();
-  }, [meta.page]);
+  }, [meta.page, tabState]);
 
   return (
     <CustomerLayout>
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
-        <Tabs defaultValue="all" className="mx-auto">
+        <Tabs value={tabState} className="mx-auto">
           <TabsList>
-            <TabsTrigger value="all">Tat ca</TabsTrigger>
-            <TabsTrigger value="awaiting">Cho xac nhan</TabsTrigger>
-            <TabsTrigger value="processing">Dang xu ly</TabsTrigger>
-            <TabsTrigger value="shipping">Dang van chuyen</TabsTrigger>
-            <TabsTrigger value="delivered">Da giao hang</TabsTrigger>
-            <TabsTrigger value="canceled">Da huy</TabsTrigger>
+            <TabsTrigger value="all" onClick={()=> setTabState("all")}>Tat ca</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PENDING} onClick={()=> setTabState(OrderStatus.PENDING)}>Cho xac nhan</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PROCESSING} onClick={()=> setTabState(OrderStatus.PROCESSING)}>Dang xu ly</TabsTrigger>
+            <TabsTrigger value={OrderStatus.DELIVERED} onClick={()=> setTabState(OrderStatus.DELIVERED)}>Dang van chuyen</TabsTrigger>
+            <TabsTrigger value={OrderStatus.SUCCESS} onClick={()=> setTabState(OrderStatus.SUCCESS)}>Da giao hang</TabsTrigger>
+            <TabsTrigger value={OrderStatus.CANCELLED} onClick={()=> setTabState(OrderStatus.CANCELLED)}>Da huy</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex flex-row gap-4">
@@ -60,13 +65,10 @@ export default function PurchaseRoute() {
             />
           </div>
           <Button>Ap dung</Button>
-          <Button variant="outline" className="border border-black">
-            Nhap lai
-          </Button>
         </div>
         <div className="flex flex-col gap-3">
           {orders.map((item, index) => {
-            return <OrderRow key={index} data={item}/>;
+            return <OrderRow key={index} data={item} />;
           })}
         </div>
         <TablePagination data={meta} onChange={setMeta} />

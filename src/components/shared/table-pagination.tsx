@@ -67,11 +67,11 @@ export const TablePagination: React.FC<{
               </PaginationLink>
             </PaginationItem>
           ))}
-          {pageCount > 3 && (
+          {/* {pageCount > 3 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
-          )}
+          )} */}
           {hasNextPage && (
             <PaginationItem onClick={handleSelectNext}>
               <PaginationNext />

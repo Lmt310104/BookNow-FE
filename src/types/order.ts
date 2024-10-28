@@ -21,6 +21,11 @@ export interface Order {
   phone_number: string;
   user_id: string;
   OrderItems: Array<OrderItem>;
+  user: {
+    email: string;
+    full_name: string;
+    id: string;
+  };
 }
 
 export interface ResGetOrdersByUser {

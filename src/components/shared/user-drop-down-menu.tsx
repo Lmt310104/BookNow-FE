@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import { UserRole } from "@/common/enums";
@@ -31,7 +31,7 @@ export default function UserDropDownMenu() {
       console.log(err);
     }
   };
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,19 +43,23 @@ export default function UserDropDownMenu() {
 
       <DropdownMenuContent align="end">
         {auth && auth.role === UserRole.ADMIN && (
-          <DropdownMenuItem>
-            <Link to={routes.ADMIN.ACCOUNT_PROFILE}>Tai khoan cua toi</Link>
+          <DropdownMenuItem
+            onClick={() => navigate(routes.ADMIN.ACCOUNT_PROFILE)}
+          >
+            Tai khoan cua toi
           </DropdownMenuItem>
         )}
         {auth && auth.role === UserRole.CUSTOMER && (
           <>
-            <DropdownMenuItem>
-              <Link to={routes.CUSTOMER.ACCOUNT_PROFILE}>
-                Tai khoan cua toi
-              </Link>
+            <DropdownMenuItem
+              onClick={() => navigate(routes.CUSTOMER.ACCOUNT_PROFILE)}
+            >
+              Tai khoan cua toi
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to={routes.CUSTOMER.PURCHASE}>Don mua</Link>
+            <DropdownMenuItem
+              onClick={() => navigate(routes.CUSTOMER.PURCHASE)}
+            >
+              Don mua
             </DropdownMenuItem>
           </>
         )}

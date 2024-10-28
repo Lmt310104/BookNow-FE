@@ -74,7 +74,7 @@ export default function BookDetailRoute() {
           bookId: detailData.id,
           quantity: quantity,
         });
-        console.log(response)
+        console.log(response);
       } catch (err) {
         console.log(err);
       }
@@ -164,7 +164,9 @@ export default function BookDetailRoute() {
                     onChange={setQuantity}
                   />
                 </fieldset>
-                <Button onClick={handleAddToCart} type="button">Them vao gio hang</Button>
+                <Button onClick={handleAddToCart} type="button">
+                  Them vao gio hang
+                </Button>
               </div>
             </section>
           </div>

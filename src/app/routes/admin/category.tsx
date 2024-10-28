@@ -20,6 +20,7 @@ import { Category } from "@/types/category";
 import CategoryDialog, {
   CategoryDialogRef,
 } from "@/components/category/category-dialog";
+import { KeyboardEvent } from "react";
 
 export default function CategoryRoute() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -31,15 +32,33 @@ export default function CategoryRoute() {
     hasPreviousPage: false,
     hasNextPage: false,
   });
+  const [tabState, setTabState] = useState<string>("all");
   const dialogRef = useRef<CategoryDialogRef>(null);
+  const [textSearch, setTextSearch] = useState<string>("");
 
   const getAllCategories = async () => {
+    let isDisable;
+    if (tabState === "inactive") {
+      isDisable = true;
+    } else if (tabState === "active") {
+      isDisable = false;
+    } else {
+      isDisable = null;
+    }
+
     try {
-      const response = await categoryService.getAllCategories({
-        page: meta.page,
-        take: meta.take,
-      });
-      console.log(response.data.meta);
+      let response;
+      if (textSearch) {
+        response = await categoryService.searchCategory(isDisable, textSearch);
+      } else {
+        response = await categoryService.getAllCategories(
+          {
+            page: meta.page,
+            take: meta.take,
+          },
+          isDisable,
+        );
+      }
       setCategories(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {
@@ -49,7 +68,8 @@ export default function CategoryRoute() {
 
   useEffect(() => {
     getAllCategories();
-  },[meta.page]);
+    console.log("getAllCategories");
+  }, [meta.page, tabState]);
 
   const handleAddNew = () => {
     dialogRef.current?.onOpen();
@@ -59,9 +79,15 @@ export default function CategoryRoute() {
     await dialogRef.current?.onOpen(id);
   };
 
+  const handleEnterPress = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      await getAllCategories();
+    }
+  };
+
   return (
     <DashBoardLayout>
-      <CategoryDialog ref={dialogRef}  onRefetch={getAllCategories}/>
+      <CategoryDialog ref={dialogRef} onRefetch={getAllCategories} />
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <div className="flex">
           <h1 className="text-lg font-semibold">Danh Muc</h1>
@@ -70,12 +96,21 @@ export default function CategoryRoute() {
             <span>Them danh muc moi</span>
           </Button>
         </div>
-        <Tabs defaultValue="all">
+        <Tabs value={tabState}>
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger value="all">Tat ca</TabsTrigger>
-              <TabsTrigger value="active">Dang hoat dong</TabsTrigger>
-              <TabsTrigger value="archived">Da an</TabsTrigger>
+              <TabsTrigger value="all" onClick={() => setTabState("all")}>
+                Tat ca
+              </TabsTrigger>
+              <TabsTrigger value="active" onClick={() => setTabState("active")}>
+                Dang hoat dong
+              </TabsTrigger>
+              <TabsTrigger
+                value="inactive"
+                onClick={() => setTabState("inactive")}
+              >
+                Da an
+              </TabsTrigger>
             </TabsList>
           </div>
         </Tabs>
@@ -86,12 +121,12 @@ export default function CategoryRoute() {
               <Input
                 type="search"
                 placeholder="Nhap ten danh muc"
+                value={textSearch}
                 className="w-full rounded-lg bg-background pl-8"
+                onChange={(e) => setTextSearch(e.target.value)}
+                onKeyDown={handleEnterPress}
               />
-              <Button>Ap dung</Button>
-              <Button variant="outline" className="border border-black">
-                Nhap lai
-              </Button>
+              <Button onClick={async () => getAllCategories()}>Ap dung</Button>
             </div>
           </CardHeader>
           <CardContent>

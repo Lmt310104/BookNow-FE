@@ -4,4 +4,5 @@ export enum OrderStatus {
   DELIVERED = "DELIVERED",
   CANCELLED = "CANCELLED",
   SUCCESS = "SUCCESS",
+  REJECT = "REJECT",
 }

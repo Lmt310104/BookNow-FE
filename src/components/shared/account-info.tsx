@@ -6,8 +6,8 @@ import image from "@/assets/placeholder.svg";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-import { FormEvent, useEffect, useState } from "react";
-import { User } from "@/types/user";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { ResUser, User } from "@/types/user";
 import {
   Select,
   SelectContent,
@@ -25,16 +25,19 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 
 export default function AccountInfo() {
-  const [accountData, setAccountData] = useState<User>({
+  const [accountData, setAccountData] = useState<ResUser>({
     email: "",
     gender: Gender.MALE,
     birthday: new Date(),
     full_name: "",
     phone: undefined,
+    avatar_url: undefined,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const getAccountData = async (id: string) => {
+    setImageFile(null);
     try {
       const response = await customerService.getAccountById(id);
       console.log(response);
@@ -43,6 +46,7 @@ export default function AccountInfo() {
       console.log(err);
     }
   };
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (auth?.userId) {
@@ -62,7 +66,11 @@ export default function AccountInfo() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    try {
+      await customerService.updateAccount(accountData, imageFile);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   function handleChangeInput({ name, value }: { name: string; value: string }) {
@@ -85,26 +93,64 @@ export default function AccountInfo() {
     }
   }
 
-  const handleCancel = ()=>{
+  const handleCancel = () => {
     if (auth?.userId) {
       getAccountData(auth.userId);
     }
-  }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
+  useEffect(() => {
+    if (imageFile != null) {
+      setAccountData((prevData) => {
+        return {
+          ...prevData,
+          avatar_url: URL.createObjectURL(imageFile),
+        };
+      });
+    }
+
+    return () => {
+      if (accountData.avatar_url) {
+        URL.revokeObjectURL(accountData.avatar_url);
+      }
+    };
+  }, [imageFile]);
+
+  const handleUploadFile = () => {
+    inputRef.current?.click();
+  };
 
   return (
     <Card className="w-full">
       <CardContent>
-        <form className="flex flex-col gap-6 mt-6" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-6 mt-6">
           <div className="relative mx-auto">
             <img
               className="w-28 h-28 rounded-full border-4 border-[#C2E1FF]"
-              src={image}
+              src={accountData.avatar_url || image}
               alt="Rounded avatar"
             />
-            <div className="absolute bottom-[10px] left-[90px] w-4 h-4 bg-[#64646D] rounded-full flex justify-center items-center">
+            <div
+              className="absolute bottom-[10px] left-[90px] w-4 h-4 bg-[#64646D] rounded-full flex justify-center items-center hover:cursor-pointer"
+              onClick={handleUploadFile}
+            >
               <Pencil className="w-3 h-3 text-white absolute" />
             </div>
           </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={inputRef}
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label>Ho va ten</Label>
@@ -170,7 +216,6 @@ export default function AccountInfo() {
                 id="phone"
                 type="number"
                 value={accountData.phone}
-                disabled
                 onChange={(e) =>
                   handleChangeInput({
                     name: "phone",
@@ -198,16 +243,16 @@ export default function AccountInfo() {
             </div>
             <div className="flex flex-col gap-2">
               <Label>Password</Label>
-              <Button variant="secondary" onClick={handleChangePass}>
+              <Button variant="secondary"  type="button" onClick={handleChangePass}>
                 Doi mat khau
               </Button>
             </div>
           </div>
           <div className="flex flex-row gap-6 mx-auto">
-            <Button className="w-40" variant="outline" onClick={handleCancel}>
+            <Button className="w-40" variant="outline" type="button" onClick={handleCancel}>
               Huy
             </Button>
-            <Button className="w-40" type="submit">
+            <Button className="w-40" type="submit" onClick={handleSubmit}>
               Xac nhan
             </Button>
           </div>

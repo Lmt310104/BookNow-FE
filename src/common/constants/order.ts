@@ -4,4 +4,5 @@ export const ORDER_STATUS = {
   DELIVERED: "Dang van chuyen",
   CANCELLED: "Da huy",
   SUCCESS: "Dao giao",
+  REJECT: "Da huy",
 };

@@ -41,9 +41,10 @@ const CategoryDialog = forwardRef<CategoryDialogRef, CategoryDialogProps>(
         async onOpen(id?: string) {
           if (id) {
             try {
-              // const response = await categoryService.getCategoryById(id);
-              // console.log("response", response);
-              // setIsOpen(true);
+              const response = await categoryService.getCategoryById(id);
+              setCategory(response.data.data);
+              setInput(response.data.data.name);
+              setIsOpen(true);
             } catch (err) {
               console.log(err);
             }
@@ -65,13 +66,30 @@ const CategoryDialog = forwardRef<CategoryDialogRef, CategoryDialogProps>(
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      try {
-        await categoryService.createCategory({ name: input });
-        await onRefetch();
-        setIsOpen(false);
-      } catch (err) {
-        console.log(err);
+      if (category.id) {
+        try {
+          await categoryService.upDateCategory({
+            id: category.id,
+            name: input,
+          });
+          await onRefetch();
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        try {
+          await categoryService.createCategory({ name: input });
+          await onRefetch();
+        } catch (err) {
+          console.log(err);
+        }
       }
+      setIsOpen(false);
+      setCategory({
+        id: "",
+        name: "",
+        is_disable: false,
+      });
     };
 
     return (
