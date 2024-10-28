@@ -35,6 +35,7 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
     } catch(err){
       console.log(err);
     }
+    setIsOpen(false);
   }
 
 
@@ -44,6 +45,7 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
       await onRefetch();
     } catch(err){
       console.log(err);
+      setIsOpen(false);
     }
   }
   return (

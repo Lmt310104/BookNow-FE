@@ -1,6 +1,6 @@
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import {  ResDisableCategoryById, ResEnableCategoryById, ResFetchAllCategories } from "@/types/category";
+import {  ResDisableCategoryById, ResEnableCategoryById, ResFetchAllCategories, ResGetCategoryById } from "@/types/category";
 
 class CategryService {
   async createCategory(data: { name: string }) {
@@ -22,11 +22,11 @@ class CategryService {
       return api.get(`/categories/get-all?page=${page}&take=${take}`);
     }
   }
-  async upDateCategory(id: string) {
-    return api.post(`/categories/update/${id}`);
+  async upDateCategory({id, name}:{id: string, name: string}) {
+    return api.post(`/categories/update/${id}`,{name});
   }
 
-  async getCategoryById(id: string) {
+  async getCategoryById(id: string): Promise<ResGetCategoryById> {
     return api.get(`/categories/get-one/${id}`);
   }
 

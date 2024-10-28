@@ -59,11 +59,8 @@ export default function CategoryRoute() {
           isDisable,
         );
       }
-
-      console.log(response.data.meta);
       setCategories(response.data.data);
       setMeta(response.data.meta);
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
