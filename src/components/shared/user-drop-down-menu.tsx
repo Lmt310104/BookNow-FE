@@ -24,8 +24,8 @@ export default function UserDropDownMenu() {
     try {
       const response = await authService.logOut();
       if (response) {
-        removeAccessToken();
         setAuth(null);
+        removeAccessToken();
         navigate(routes.AUTH.SIGN_IN);
       }
     } catch (err) {

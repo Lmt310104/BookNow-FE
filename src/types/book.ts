@@ -13,10 +13,18 @@ export interface BookDetail extends Book {
   entryPrice: number;
   description: string;
   stockQuantity: number;
-  image?: File | null;
+  images: Array<File>;
   preview?: string;
   categoryId: string;
   id?: string;
+}
+
+export interface CreateBookDetail extends Book {
+  entryPrice: number;
+  description: string;
+  stockQuantity: number;
+  images: Array<File>;
+  categoryId: string;
 }
 
 export interface ResBookDetail extends Book {

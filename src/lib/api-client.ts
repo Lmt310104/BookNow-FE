@@ -6,14 +6,20 @@ import Axios, {
   AxiosResponse,
 } from "axios";
 import Cookies from "universal-cookie";
+import { routes } from "@/config";
+const cookies = new Cookies();
+
 
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
-const cookies = new Cookies();
-export const getAccessToken = () => cookies.get("access_token");
-export const setAccessToken = (token: string) => cookies.set("access_token", token, { path: "/" });
+export const getAccessToken = () => {
+  return cookies.get("access_token");
+};
+export const setAccessToken = (token: string) => {
+  cookies.set("access_token", token, { path: "/" });
+};
 export const removeAccessToken = () => {
-  cookies.remove("access_token");
-}
+  cookies.remove("access_token", { path: '/' });
+};
 const refreshAccessToken = throttle(
   async (originalRequest) => {
     try {
@@ -26,7 +32,7 @@ const refreshAccessToken = throttle(
         refreshError,
       );
       removeAccessToken();
-      window.location.href = "/auth/sign-in";
+      window.location.href = routes.AUTH.SIGN_IN;
     }
   },
   1000,

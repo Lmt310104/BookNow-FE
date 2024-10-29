@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export default function VerificationSuccess() {
+
   return (
     <div className="h-[100vh] flex flex-col items-center justify-center gap-10">
       <span className="font-bold text-2xl">Verification Success</span>
@@ -12,7 +13,7 @@ export default function VerificationSuccess() {
         <span className="text-center">You can now login to your account.</span>
       </div>
       <Button>
-        <Link to="/">Go to the home page</Link>
+        <Link to="/auth/sign-in">Go to the log in page</Link>
       </Button>
     </div>
   );

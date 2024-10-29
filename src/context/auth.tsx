@@ -32,12 +32,16 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [auth, setAuth] = useState<AuthState | null>(() => {
     const token: string | null = getAccessToken();
     if (token) {
-      const { id, role }: JWTDecode = jwtDecode(token);
-      console.log(id, role);
-      return {
-        userId: id,
-        role: role,
-      };
+      try {
+        const { id, role }: JWTDecode = jwtDecode(token);
+        console.log(id, role);
+        return {
+          userId: id,
+          role: role,
+        };
+      } catch(err){
+        console.log(err);
+      }
     }
     return null;
   });

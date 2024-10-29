@@ -1,10 +1,10 @@
 import { BookStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import { BookDetail, ResGetAllBooks, ResGetBookById } from "@/types/book";
+import { BookDetail, CreateBookDetail, ResGetAllBooks, ResGetBookById } from "@/types/book";
 
 class BookService {
-  async createBook(data: BookDetail) {
+  async createBook(data: CreateBookDetail) {
     const formData = new FormData();
     formData.append("description", data.description);
     formData.append("categoryId", data.categoryId);
@@ -12,9 +12,11 @@ class BookService {
     formData.append("price", data.price.toString());
     formData.append("stockQuantity", data.stockQuantity.toString());
     formData.append("entryPrice", data?.entryPrice.toString());
-    formData.append("author", data?.author || "");
-    if (data.image) {
-      formData.append("image", data.image);
+    formData.append("author", "John");
+    if (data.images && data.images.length > 0) {
+      data.images.forEach((image) => {
+        formData.append("images", image);
+      });
     }
     return api.post("/books/create", formData);
   }
@@ -40,9 +42,9 @@ class BookService {
     formData.append("stockQuantity", data.stockQuantity.toString());
     formData.append("entryPrice", data?.entryPrice.toString());
     formData.append("author", data?.author || "");
-    if (data.image) {
-      formData.append("image", data.image);
-    }
+    // if (data.image) {
+    //   formData.append("image", data.image);
+    // }
     return api.patch(`/books/update/${data.id}`, formData);
   }
 

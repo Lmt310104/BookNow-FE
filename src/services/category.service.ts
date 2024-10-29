@@ -23,7 +23,7 @@ class CategryService {
     }
   }
   async upDateCategory({id, name}:{id: string, name: string}) {
-    return api.post(`/categories/update/${id}`,{name});
+    return api.put(`/categories/update/${id}`,{name: name});
   }
 
   async getCategoryById(id: string): Promise<ResGetCategoryById> {

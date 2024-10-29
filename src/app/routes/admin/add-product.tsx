@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { ProductInfoSection } from "@/components/product/product-info-section";
 import { ProductSaleSection } from "@/components/product/product-sale-section";
 import { FormEvent, useState } from "react";
-import { BookDetail } from "@/types/book";
+import { CreateBookDetail } from "@/types/book";
 import bookService from "@/services/book.service";
+import { useNavigate } from "react-router-dom";
+import { routes } from "@/config";
 
 export default function AddProductRoute() {
-  const [detailData, setDetailData] = useState<BookDetail>({
+  const [detailData, setDetailData] = useState<CreateBookDetail>({
     title: "",
     author: "NXBVN",
     categoryId: "",
@@ -15,14 +17,15 @@ export default function AddProductRoute() {
     price: 0,
     stockQuantity: 0,
     description: "",
-    image: null,
-    preview: "",
+    images: [],
   });
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await bookService.createBook(detailData);
+      navigate(routes.ADMIN.PRODUCT);
     } catch (err) {
       console.log(err);
     }
