@@ -8,15 +8,18 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { routes } from "@/config";
 import authService from "@/services/auth.service";
 import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPasswordRoute() {
   const [input, setInput] = useState("");
+  const navigate = useNavigate();
   const forgotPassword = async (email: string) => {
     try {
-      const response = await authService.forgotPassword(email);
-      console.log(response);
+      await authService.forgotPassword(email);
+      navigate(`${routes.AUTH.RESET_PASSWORD}?email=${input}`);
     } catch (err) {
       console.log(err);
     }
@@ -29,6 +32,10 @@ export default function ForgotPasswordRoute() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await forgotPassword(input);
+  };
+
+  const handleCancel = () => {
+    navigate(routes.AUTH.SIGN_IN);
   };
 
   return (
@@ -54,8 +61,8 @@ export default function ForgotPasswordRoute() {
           </div>
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
-          <Button variant="outline" type="button">
-            Tiep Tuc
+          <Button variant="outline" type="button" onClick={handleCancel}>
+            Huy
           </Button>
           <Button type="submit">Tiep Tuc</Button>
         </CardFooter>
