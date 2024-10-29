@@ -1,3 +1,4 @@
+import { BookStatus } from "@/common/enums";
 import ProductLayout from "@/components/layouts/product-layout";
 import ProductItemCard from "@/components/product/product-item-card";
 import bookService from "@/services/book.service";
@@ -20,7 +21,7 @@ export default function HomeRoute() {
       const response = await bookService.getAllBooks({
         page: meta.page,
         take: meta.take,
-      });
+      }, BookStatus.ACTIVE);
 
       setBooks(response.data.data);
       setMeta(response.data.meta);

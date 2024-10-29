@@ -24,7 +24,7 @@ export default function ProductRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
-    take: 10,
+    take: 20,
     itemCount: 0,
     pageCount: 0,
     hasPreviousPage: false,

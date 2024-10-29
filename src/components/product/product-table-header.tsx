@@ -8,7 +8,7 @@ export const ProductTableHeader = () => {
         {/* <TableHead className="w-[30px]">
           <Checkbox />
         </TableHead> */}
-        <TableHead>Ten san pham</TableHead>
+        <TableHead className="w-1/2">Ten san pham</TableHead>
         <TableHead>Danh muc</TableHead>
         <TableHead>Trang thai</TableHead>
         <TableHead>Gia nhap kho</TableHead>

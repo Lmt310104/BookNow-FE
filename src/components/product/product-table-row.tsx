@@ -27,40 +27,38 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
     navigate(`/portal/book/${data.id}`);
   };
 
-
-  const handleActive = async ()=>{
-    try{
+  const handleActive = async () => {
+    try {
       await bookService.activeBookById(data.id);
       await onRefetch();
-    } catch(err){
+    } catch (err) {
       console.log(err);
     }
     setIsOpen(false);
-  }
+  };
 
-
-  const handleHide = async ()=>{
-    try{
+  const handleHide = async () => {
+    try {
       await bookService.inactiveBookById(data.id);
       await onRefetch();
-    } catch(err){
+    } catch (err) {
       console.log(err);
       setIsOpen(false);
     }
-  }
+  };
   return (
     <TableRow>
       {/* <TableCell>
         <Checkbox />
       </TableCell> */}
       <TableCell className="flex flex-row gap-4">
-        <img
-          alt="Product image"
-          className="aspect-square rounded-md object-cover"
-          height="64"
-          src={(data.image_url.length > 0 && data.image_url[0]) || image}
-          width="64"
-        />
+        <div className="overflow-hidden rounded-md w-[64px] aspect-square">
+          <img
+            alt="Product image"
+            className="object-cover w-full h-full"
+            src={(data.image_url.length > 0 && data.image_url[0]) || image}
+          />
+        </div>
         <div className="w-full flex flex-col justify-center">
           <div className="font-medium">{data.title}</div>
           <div>{`Id: ${data.id}`}</div>
@@ -87,7 +85,7 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
             >
               Chinh sua
             </div>
-            {data.status=== BookStatus.INACTIVE ? (
+            {data.status === BookStatus.INACTIVE ? (
               <div
                 className="py-2 px-3  w-full hover:bg-[#F4F4F5]"
                 onClick={handleActive}

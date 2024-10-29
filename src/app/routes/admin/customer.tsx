@@ -19,7 +19,7 @@ export default function CustomerRoute() {
   const [customers, setCustomers] = useState<Array<Customer>>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
-    take: 10,
+    take: 20,
     itemCount: 0,
     pageCount: 0,
     hasPreviousPage: false,

@@ -13,7 +13,7 @@ import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { CategoryTableRow } from "@/components/category/category-table-row";
 import { CategoryTableHeader } from "@/components/category/category-table-header";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import categoryService from "@/services/category.service";
 import { Meta } from "@/types/api";
 import { Category } from "@/types/category";
@@ -26,7 +26,7 @@ export default function CategoryRoute() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
-    take: 10,
+    take: 20,
     itemCount: 0,
     pageCount: 0,
     hasPreviousPage: false,

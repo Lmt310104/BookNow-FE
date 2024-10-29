@@ -1,7 +1,7 @@
 import { api, getAccessToken, setAccessToken } from "@/lib/api-client";
 import { User } from "@/types/user";
 import axios from "axios";
-const URL_SERVER = import.meta.env.URL_SERVER;
+const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 class AuthService {
   async signInWithEmail(data: { email_phone: string; password: string }) {

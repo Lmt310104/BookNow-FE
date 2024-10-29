@@ -18,7 +18,7 @@ export default function ProductDetailRoute() {
     price: 0,
     stockQuantity: 0,
     description: "",
-    image: null,
+    images: [],
     preview: "",
   });
 
@@ -36,7 +36,7 @@ export default function ProductDetailRoute() {
         price: responseData.price,
         stockQuantity: responseData.stock_quantity,
         description: responseData.description,
-        image: null,
+        images: [],
         preview: imagePreview || "",
         id: responseData.id
       });

@@ -1,36 +1,40 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import image from "@/assets/placeholder.svg";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Label } from "@/components/ui/label";
-import { Upload } from "lucide-react";
-import { Dispatch, SetStateAction, useRef } from "react";
-import { BookDetail } from "@/types/book";
+import { Trash2, Upload } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { CreateBookDetail } from "@/types/book";
+import { Combobox } from "./combo-box";
 
 export const ProductInfoSection = ({
   onChange,
   detailData,
 }: {
-  onChange: Dispatch<SetStateAction<BookDetail>>;
-  detailData: BookDetail;
+  onChange: Dispatch<SetStateAction<CreateBookDetail>>;
+  detailData: CreateBookDetail;
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
   const handleUploadFile = () => {
     inputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onChange((prevDetailData) => {
-        return {
-          ...prevDetailData,
-          image: file,
-          preview: URL.createObjectURL(file),
-        };
+  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+
+      onChange((prevData) => {
+        const newImages = prevData.images.concat(fileArray);
+        if (newImages.length > 5) {
+          console.log("You can only upload a maximum of 5 files.");
+          return { ...prevData, images: newImages.slice(0, 5) };
+        }
+
+        return { ...prevData, images: newImages };
       });
     }
   };
@@ -47,6 +51,24 @@ export const ProductInfoSection = ({
         ...prevDetailData,
         [name]: value,
       };
+    });
+  };
+
+  useEffect(() => {
+    const imageUrls = detailData.images.map((file) =>
+      URL.createObjectURL(file),
+    );
+    setSelectedImages(imageUrls);
+    return () => {
+      selectedImages.map((item) => URL.revokeObjectURL(item));
+    };
+  }, [detailData.images]);
+
+  const handleDeleteImage = (index: number) => {
+    console.log(index);
+    onChange((prevData) => {
+      const newImages = prevData.images.filter((_, i) => i !== index);
+      return { ...prevData, images: newImages };
     });
   };
 
@@ -72,34 +94,48 @@ export const ProductInfoSection = ({
         <div className="grid grid-cols-[120px_1fr_1fr] gap-4">
           <Label className="text-right">Hinh anh san pham</Label>
           <div className="flex flex-row gap-4">
-            {detailData.preview && (
-              <div className="rounded-md h-[70px] w-[70px] overflow-hidden">
-                <img
-                  alt="Product image"
-             className="object-cover h-full w-full"
-                  src={detailData.preview}
+            {selectedImages.map((item, index) => {
+              return (
+                <div
+                  className="rounded-md h-[70px] w-[70px] overflow-hidden relative"
+                  key={index}
+                >
+                  <img
+                    alt="Product image"
+                    className="object-cover h-full w-full absolute"
+                    src={item || image}
+                  />
+                  <div className="bg-black w-full h-full flex items-center justify-center bg-opacity-40 z-10 absolute opacity-0 hover:opacity-100 transition-all duration-300">
+                    <Trash2
+                      className="w-5 h-5 text-white"
+                      onClick={() => handleDeleteImage(index)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            {selectedImages.length < 5 && (
+              <button
+                className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
+                onClick={handleUploadFile}
+                type="button"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={inputRef}
+                  onChange={handleFilesChange}
+                  style={{ display: "none" }}
+                  multiple
                 />
-              </div>
+                <Upload className="h-4 w-4 text-muted-foreground" />
+              </button>
             )}
-            <button
-              className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
-              onClick={handleUploadFile}
-              type="button"
-            >
-              <input
-                type="file"
-                accept="image/*"
-                ref={inputRef}
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-              />
-              <Upload className="h-4 w-4 text-muted-foreground" />
-            </button>
           </div>
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Danh muc</Label>
-          <Input
+          {/* <Input
             id="categoryId"
             name="categoryId"
             placeholder="categoryId"
@@ -108,23 +144,8 @@ export const ProductInfoSection = ({
             onChange={(e) =>
               handleChangeInput({ name: "categoryId", value: e.target.value })
             }
-          />
-          {/* <Dialog>
-            <DialogTrigger asChild>
-              <button className="inline-flex items-center  whitespace-nowrap rounded-md text-sm  transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                Danh muc
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Chinh sua danh muc</DialogTitle>
-              </DialogHeader>
-
-              <DialogFooter>
-                <Button type="submit">Xac nhan</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog> */}
+          /> */}
+          <Combobox onChange={(value)=> handleChangeInput({ name: "categoryId", value: value })}/>
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Mo ta san pham</Label>
@@ -148,7 +169,6 @@ export const ProductInfoSection = ({
               type="number"
               min={0}
               required
-              defaultValue={0}
               value={detailData.entryPrice}
               onChange={(e) =>
                 handleChangeInput({ name: "entryPrice", value: e.target.value })
@@ -161,7 +181,6 @@ export const ProductInfoSection = ({
               id="price"
               name="price"
               type="number"
-              defaultValue={0}
               min={0}
               required
               value={detailData.price}
@@ -177,7 +196,6 @@ export const ProductInfoSection = ({
               name="stockQuantity"
               type="number"
               min={0}
-              defaultValue={0}
               required
               value={detailData.stockQuantity}
               onChange={(e) =>
