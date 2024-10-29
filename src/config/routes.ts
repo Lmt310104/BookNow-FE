@@ -7,6 +7,7 @@ const routes = {
     VERIFICATION: "/verification",
     VERIFICATION_SUCCESS: "/verification/success",
     VERIFICATION_FAILED: "/verification/failed",
+    SIGN_IN_SUCCESS: "/auth/success",
   },
   CUSTOMER: {
     HOME: "/",

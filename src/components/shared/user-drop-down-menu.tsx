@@ -14,6 +14,7 @@ import { routes } from "@/config";
 import useAuth from "@/hooks/useAuth";
 import { UserRole } from "@/common/enums";
 import authService from "@/services/auth.service";
+import { removeAccessToken } from "@/lib/api-client";
 
 export default function UserDropDownMenu() {
   const [auth, setAuth] = useAuth();
@@ -23,7 +24,7 @@ export default function UserDropDownMenu() {
     try {
       const response = await authService.logOut();
       if (response) {
-        localStorage.removeItem("token");
+        removeAccessToken();
         setAuth(null);
         navigate(routes.AUTH.SIGN_IN);
       }

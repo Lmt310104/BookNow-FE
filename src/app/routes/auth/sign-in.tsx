@@ -8,7 +8,8 @@ import { jwtDecode } from "jwt-decode";
 import { JWTDecode } from "@/context/auth";
 import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
-import { setAccessToken } from "@/lib/api-client";
+import { api, setAccessToken } from "@/lib/api-client";
+const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 export default function SignInRoute() {
   const [input, setinput] = useState({ email: "", password: "" });
@@ -37,8 +38,8 @@ export default function SignInRoute() {
       const response = await authService.signInWithEmail(input);
       if (response.data) {
         const accessToken: string = response.data.access_token;
-        setinput({ email: "", password: "" });
         setAccessToken(accessToken);
+        setinput({ email: "", password: "" });
         const { id, role }: JWTDecode = jwtDecode(accessToken);
         setAuth({
           userId: id,
@@ -54,6 +55,15 @@ export default function SignInRoute() {
       console.log(err);
     }
   };
+
+  const handleSignInWithGoogle = async ()=>{
+    try{
+      const googleAuthUrl = `${URL_SERVER}/auth/google`
+      window.location.href = googleAuthUrl;
+    } catch(err){
+      console.log(err);
+    }
+  }
 
   return (
     <div className="w-full grid grid-cols-2 h-screen">
@@ -100,7 +110,7 @@ export default function SignInRoute() {
             <Button className="w-full" type="submit">
               Dang Nhap
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" type='button' className="w-full" onClick={handleSignInWithGoogle}>
               Dang Nhap voi Google
             </Button>
           </form>
