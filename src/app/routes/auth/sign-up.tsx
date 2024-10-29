@@ -158,9 +158,9 @@ export default function SignUpRoute() {
             <Button className="w-full" type="submit">
               Tiep tuc
             </Button>
-            <Button variant="outline" className="w-full">
+            {/* <Button variant="outline" className="w-full">
               Dang Ky voi Google
-            </Button>
+            </Button> */}
           </form>
 
           <div className="mt-4 text-center text-sm">

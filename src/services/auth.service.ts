@@ -1,4 +1,5 @@
 import { api, getAccessToken, setAccessToken } from "@/lib/api-client";
+import { ResetPassword } from "@/types/auth";
 import { User } from "@/types/user";
 import axios from "axios";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
@@ -7,17 +8,17 @@ class AuthService {
   async signInWithEmail(data: { email_phone: string; password: string }) {
     return api.post("/auth/sign-in/email", {
       email: data.email_phone,
-      password: data.password
+      password: data.password,
     });
   }
   async signUpByEmail(data: User) {
     return api.post("/auth/sign-up/email", data);
   }
 
-  async singInWithPhone(data: {email_phone: string, password: string}){
+  async singInWithPhone(data: { email_phone: string; password: string }) {
     return api.post("/auth/sign-in/phone", {
       phone: data.email_phone,
-      password: data.password
+      password: data.password,
     });
   }
   async verificationEmail(data: { token: string }) {
@@ -31,7 +32,13 @@ class AuthService {
     return api.post("/auth/forgot-password", { email: email });
   }
 
-  async resetPassword() {}
+  async resetPassword({ email, newPassword, code }: ResetPassword) {
+    return api.post("auth/reset-password", {
+      email,
+      newPassword,
+      code,
+    });
+  }
 
   async refreshAccessToken(): Promise<string> {
     const token = getAccessToken();
