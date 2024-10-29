@@ -30,9 +30,9 @@ class CategryService {
     return api.get(`/categories/get-one/${id}`);
   }
 
-  async searchCategory(state:boolean| null, query: string){
-    if(state===true || state===false){
-      return api.get(`/categories/search?query=${query}&state=${state}`);
+  async searchCategory(disable:boolean| null, query: string){
+    if(disable===true || disable===false){
+      return api.get(`/categories/search?query=${query}&disable=${disable}`);
     } else {
       return api.get(`/categories/search?query=${query}`);
     }

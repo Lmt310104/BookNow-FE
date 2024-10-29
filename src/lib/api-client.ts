@@ -5,10 +5,15 @@ import Axios, {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from "axios";
+import Cookies from "universal-cookie";
 
-export const getAccessToken = () => localStorage.getItem("token");
-export const setAccessToken = (token: string) =>
-  localStorage.setItem("token", token);
+const URL_SERVER = import.meta.env.VITE_URL_SERVER;
+const cookies = new Cookies();
+export const getAccessToken = () => cookies.get("access_token");
+export const setAccessToken = (token: string) => cookies.set("access_token", token, { path: "/" });
+export const removeAccessToken = () => {
+  cookies.remove("access_token");
+}
 const refreshAccessToken = throttle(
   async (originalRequest) => {
     try {
@@ -20,7 +25,7 @@ const refreshAccessToken = throttle(
         "Refresh token expired or invalid. Logging out",
         refreshError,
       );
-      localStorage.removeItem("token");
+      removeAccessToken();
       window.location.href = "/auth/sign-in";
     }
   },
@@ -53,7 +58,7 @@ function authRequestInterceptor(
 }
 
 export const api = Axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: URL_SERVER,
 });
 
 api.interceptors.request.use(authRequestInterceptor);

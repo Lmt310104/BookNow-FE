@@ -31,6 +31,7 @@ import SignUpRoute from "./routes/auth/sign-up";
 import SignInRoute from "./routes/auth/sign-in";
 import CategoryRoute from "./routes/admin/category";
 import AdminOrderDetailRoute from "./routes/admin/order-detail";
+import SignInSuccess from "./routes/auth/sign-in-success";
 
 const createAppRouter = () =>
   createBrowserRouter([
@@ -61,6 +62,10 @@ const createAppRouter = () =>
     {
       path: routes.AUTH.VERIFICATION_FAILED,
       element: <VerificationFailed />,
+    },
+    {
+      path: routes.AUTH.SIGN_IN_SUCCESS,
+      element: <SignInSuccess />,
     },
     {
       path: routes.CUSTOMER.HOME,
