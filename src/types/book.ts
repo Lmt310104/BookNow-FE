@@ -13,22 +13,20 @@ export interface BookDetail extends Book {
   entryPrice: number;
   description: string;
   stockQuantity: number;
-  images: Array<File>;
-  preview?: string;
   categoryId: string;
-  id?: string;
 }
 
-export interface CreateBookDetail extends Book {
-  entryPrice: number;
-  description: string;
-  stockQuantity: number;
+export interface CreateBookDetail extends BookDetail {
   images: Array<File>;
-  categoryId: string;
+}
+
+export interface UpdateBookDetail extends CreateBookDetail {
+  id: string;
+  image_url: string[];
+  initCategory: Category | null
 }
 
 export interface ResBookDetail extends Book {
-  Category?: Category;
   status: BookStatus;
   image_url: string[];
   id: string;

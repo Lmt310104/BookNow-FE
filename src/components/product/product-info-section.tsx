@@ -5,18 +5,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Trash2, Upload } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { CreateBookDetail } from "@/types/book";
+import { CreateBookDetail, UpdateBookDetail } from "@/types/book";
 import { Combobox } from "./combo-box";
 
 export const ProductInfoSection = ({
   onChange,
   detailData,
 }: {
-  onChange: Dispatch<SetStateAction<CreateBookDetail>>;
-  detailData: CreateBookDetail;
+  onChange:
+    | Dispatch<SetStateAction<CreateBookDetail>>
+    | Dispatch<SetStateAction<UpdateBookDetail>>;
+  detailData: CreateBookDetail | UpdateBookDetail;
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const isUpdate = "id" in detailData;
 
   const handleUploadFile = () => {
     inputRef.current?.click();
@@ -26,8 +29,7 @@ export const ProductInfoSection = ({
     const files = event.target.files;
     if (files) {
       const fileArray = Array.from(files);
-
-      onChange((prevData) => {
+      (onChange as Dispatch<SetStateAction<CreateBookDetail | UpdateBookDetail>>)((prevData) => {
         const newImages = prevData.images.concat(fileArray);
         if (newImages.length > 5) {
           console.log("You can only upload a maximum of 5 files.");
@@ -46,16 +48,18 @@ export const ProductInfoSection = ({
     name: string;
     value: string;
   }) => {
-    onChange((prevDetailData) => {
-      return {
-        ...prevDetailData,
-        [name]: value,
-      };
-    });
+    (onChange as Dispatch<SetStateAction<CreateBookDetail | UpdateBookDetail>>)(
+      (prevDetailData) => {
+        return {
+          ...prevDetailData,
+          [name]: value,
+        };
+      },
+    );
   };
 
   useEffect(() => {
-    const imageUrls = detailData.images.map((file) =>
+    const imageUrls = detailData.images.map((file: File) =>
       URL.createObjectURL(file),
     );
     setSelectedImages(imageUrls);
@@ -64,12 +68,27 @@ export const ProductInfoSection = ({
     };
   }, [detailData.images]);
 
-  const handleDeleteImage = (index: number) => {
+  const handleDeleteImageFile = (index: number) => {
     console.log(index);
-    onChange((prevData) => {
-      const newImages = prevData.images.filter((_, i) => i !== index);
-      return { ...prevData, images: newImages };
-    });
+    (onChange as Dispatch<SetStateAction<CreateBookDetail | UpdateBookDetail>>)(
+      (prevData) => {
+        const newImages = prevData.images.filter(
+          (_: File, i: number) => i !== index,
+        );
+        return { ...prevData, images: newImages };
+      },
+    );
+  };
+
+  const handleDeleteInitImage = (index: number) => {
+    (onChange as Dispatch<SetStateAction<UpdateBookDetail>>)(
+      (prevData) => {
+        const newImages = prevData.image_url.filter(
+          (_: string, i: number) => i !== index,
+        );
+        return { ...prevData, image_url: newImages };
+      },
+    );
   };
 
   return (
@@ -94,6 +113,27 @@ export const ProductInfoSection = ({
         <div className="grid grid-cols-[120px_1fr_1fr] gap-4">
           <Label className="text-right">Hinh anh san pham</Label>
           <div className="flex flex-row gap-4">
+            
+          {isUpdate && (detailData as UpdateBookDetail).image_url.map((item, index) => {
+              return (
+                <div
+                  className="rounded-md h-[70px] w-[70px] overflow-hidden relative"
+                  key={index}
+                >
+                  <img
+                    alt="Product image"
+                    className="object-cover h-full w-full absolute"
+                    src={item || image}
+                  />
+                  <div className="bg-black w-full h-full flex items-center justify-center bg-opacity-40 z-10 absolute opacity-0 hover:opacity-100 transition-all duration-300">
+                    <Trash2
+                      className="w-5 h-5 text-white"
+                      onClick={() => handleDeleteInitImage(index)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
             {selectedImages.map((item, index) => {
               return (
                 <div
@@ -108,13 +148,13 @@ export const ProductInfoSection = ({
                   <div className="bg-black w-full h-full flex items-center justify-center bg-opacity-40 z-10 absolute opacity-0 hover:opacity-100 transition-all duration-300">
                     <Trash2
                       className="w-5 h-5 text-white"
-                      onClick={() => handleDeleteImage(index)}
+                      onClick={() => handleDeleteImageFile(index)}
                     />
                   </div>
                 </div>
               );
             })}
-            {selectedImages.length < 5 && (
+            {(isUpdate ? detailData.images.length +(detailData as UpdateBookDetail).image_url.length < 5 :  detailData.images.length  < 5) && (
               <button
                 className="flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-md border border-dashed hover:bg-muted"
                 onClick={handleUploadFile}
@@ -135,17 +175,12 @@ export const ProductInfoSection = ({
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Danh muc</Label>
-          {/* <Input
-            id="categoryId"
-            name="categoryId"
-            placeholder="categoryId"
-            required
-            value={detailData.categoryId}
-            onChange={(e) =>
-              handleChangeInput({ name: "categoryId", value: e.target.value })
+          <Combobox
+            onChange={(value) =>
+              handleChangeInput({ name: "categoryId", value: value })
             }
-          /> */}
-          <Combobox onChange={(value)=> handleChangeInput({ name: "categoryId", value: value })}/>
+            initCategory={isUpdate ? detailData.initCategory : null}
+          />
         </div>
         <div className="grid grid-cols-[120px_1fr]  gap-4">
           <Label className="text-right">Mo ta san pham</Label>
@@ -175,7 +210,7 @@ export const ProductInfoSection = ({
               }
             />
           </div>
-          <div className="grid grid-cols-[120px_1fr]  gap-4">
+          <div className="grid grid-cols-[120px_1fr]  gap-4 ">
             <Label className="text-right">Gia ban</Label>
             <Input
               id="price"

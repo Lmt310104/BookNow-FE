@@ -1,46 +1,68 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { Button } from "@/components/ui/button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import bookService from "@/services/book.service";
 import { FormEvent, useEffect, useState } from "react";
-import { BookDetail } from "@/types/book";
+import { UpdateBookDetail } from "@/types/book";
 import { ProductInfoSection } from "@/components/product/product-info-section";
+import categoryService from "@/services/category.service";
+import { routes } from "@/config";
 // import { ProductInfoSection } from "@/components/product/product-info-section";
 
 export default function ProductDetailRoute() {
   const param = useParams();
-  const [detailData, setDetailData] = useState<BookDetail>({
+  const [detailData, setDetailData] = useState<UpdateBookDetail>({
     title: "",
     author: "NXBVN",
-    categoryId: "",
-    entryPrice: 0,
     price: 0,
-    stockQuantity: 0,
     description: "",
+    image_url: [],
+    id: "",
+    entryPrice: 0,
+    stockQuantity: 0,
+    categoryId: "",
     images: [],
-    preview: "",
+    initCategory: null,
   });
+
+  const navigate = useNavigate();
 
   const getBookDetail = async (id: string) => {
     try {
-      const response = await bookService.getBookById(id);
-      const responseData = response.data.data;
-      const imagePreview =
-        responseData.image_url.length > 0 && responseData.image_url[0];
+      const bookResponse = await bookService.getBookById(id);
+      const bookData = bookResponse.data.data;
+      const categoryResponse = await categoryService.getCategoryById(
+        bookData.category_id,
+      );
+
       setDetailData({
-        title: responseData.title,
-        author: responseData.author,
-        categoryId: responseData.category_id,
-        entryPrice: responseData.entry_price,
-        price: responseData.price,
-        stockQuantity: responseData.stock_quantity,
-        description: responseData.description,
+        title: bookData.title,
+        author: bookData.author,
+        price: bookData.price,
+        description: bookData.description,
+        image_url: bookData.image_url,
+        id: bookData.id,
+        entryPrice: bookData.entry_price,
+        stockQuantity: bookData.stock_quantity,
+        categoryId: bookData.category_id,
         images: [],
-        preview: imagePreview || "",
-        id: responseData.id
+        initCategory: categoryResponse.data.data,
       });
-      console.log(response);
+
+      // const imagePreview =
+      //   bookData.image_url.length > 0 && bookData.image_url[0];
+      // setDetailData({
+      //   title: bookData.title,
+      //   author: bookData.author,
+      //   categoryId: bookData.category_id,
+      //   entryPrice: bookData.entry_price,
+      //   price: bookData.price,
+      //   stockQuantity: bookData.stock_quantity,
+      //   description: bookData.description,
+      //   images: [],
+      //   preview: imagePreview || "",
+      //   id: bookData.id,
+      // });
     } catch (err) {
       console.log(err);
     }
@@ -63,7 +85,10 @@ export default function ProductDetailRoute() {
 
   return (
     <DashBoardLayout>
-      <form className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto"
+        onSubmit={handleSubmit}
+      >
         {/* <Tabs defaultValue="detail">
           <div className="flex items-center">
             <TabsList>
@@ -72,10 +97,15 @@ export default function ProductDetailRoute() {
             </TabsList>
           </div>
         </Tabs> */}
-        <ProductInfoSection detailData={detailData} onChange={setDetailData}/>
+        <ProductInfoSection detailData={detailData} onChange={setDetailData} />
         {/* <ProductSaleSection /> */}
         <div className="flex flex-row gap-4 mx-auto mb-12">
-          <Button variant="outline" className="w-40">
+          <Button
+            variant="outline"
+            className="w-40"
+            type="button"
+            onClick={() => navigate(routes.ADMIN.PRODUCT)}
+          >
             Huy
           </Button>
           <Button className="w-40" type="submit">

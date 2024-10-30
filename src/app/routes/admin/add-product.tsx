@@ -40,7 +40,12 @@ export default function AddProductRoute() {
         <ProductInfoSection detailData={detailData} onChange={setDetailData} />
         {/* <ProductSaleSection /> */}
         <div className="flex flex-row gap-4 mx-auto mb-12">
-          <Button variant="outline" className="w-40">
+          <Button
+            variant="outline"
+            className="w-40"
+            type="button"
+            onClick={() => navigate(routes.ADMIN.PRODUCT)}
+          >
             Huy
           </Button>
           <Button className="w-40" type="submit">
