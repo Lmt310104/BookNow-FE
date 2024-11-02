@@ -18,7 +18,7 @@ export default function CustomerLayout({
 
   return (
     <ProductLayout>
-      <div className="grid min-h-screen w-full grid-cols-[220px_1fr]">
+      <div className="grid w-full grid-cols-[220px_1fr]">
         <div className=" border-x bg-white">
           <div className="flex-1">
             <nav className="grid items-start  text-sm font-medium px-4 mt-6">

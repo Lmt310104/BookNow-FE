@@ -1,12 +1,20 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-export const CartTableHeader = () => {
+interface CartTableHeaderProps {
+  onCheck: (checked: boolean) => void;
+  isCheck: boolean;
+}
+
+export const CartTableHeader: React.FC<CartTableHeaderProps> = ({
+  onCheck,
+  isCheck,
+}) => {
   return (
-    <TableHeader>
+    <TableHeader className="bg-white shadow-sm">
       <TableRow>
         <TableHead className="w-[30px]">
-          <Checkbox />
+          <Checkbox checked={isCheck} onCheckedChange={onCheck} />
         </TableHead>
         <TableHead>San pham</TableHead>
         <TableHead>Don gia</TableHead>

@@ -37,7 +37,7 @@ export default function HomeRoute() {
 
   return (
     <ProductLayout>
-      <div className="w-full grid grid-cols-6 gap-4 py-4">
+      <div className="w-full grid grid-cols-5 gap-4 py-4">
         {books.map((item, index) => {
           return <ProductItemCard key={index} data={item} />;
         })}

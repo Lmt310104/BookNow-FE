@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { Order } from "@/types/order";
 import orderService from "@/services/order.service";
@@ -8,9 +7,10 @@ import { useEffect, useState } from "react";
 import SectionCard from "@/components/shared/section-card";
 import { ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
-import { OrderItemRow } from "@/components/order/order-item-row";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "@/config";
+import { ProductOrderDetailRow } from "@/components/order/product-order-detail-row";
+import { ProductOrderDetailHeader } from "@/components/order/product-order-detail-header";
 
 export default function AdminOrderDetailRoute() {
   const param = useParams();
@@ -65,7 +65,11 @@ export default function AdminOrderDetailRoute() {
           <SectionCard className="p-4 flex flex-row gap-4">
             {orderDetail.status === OrderStatus.PENDING && (
               <>
-                <Button variant="outline" className="ml-auto" onClick={handleCancelOrder}>
+                <Button
+                  variant="outline"
+                  className="ml-auto"
+                  onClick={handleCancelOrder}
+                >
                   Huy don hang
                 </Button>
                 <Button>Chuan bi hang</Button>
@@ -80,12 +84,12 @@ export default function AdminOrderDetailRoute() {
               <div>{`Dia chi: ${orderDetail.address}`}</div>
             </div>
           </SectionCard>
-          <SectionCard>
-            <div className="font-medium p-4">San Pham</div>
+          <SectionCard className="p-2">
+            <ProductOrderDetailHeader />
             <div>
               {orderDetail.OrderItems.map((item, index) => {
                 return (
-                  <OrderItemRow
+                  <ProductOrderDetailRow
                     key={index}
                     data={item}
                     onShowBookDetail={() => navigate(`/book/${item.book_id}`)}

@@ -8,11 +8,15 @@ import cartService from "@/services/cart.service";
 interface CartTableRowProps {
   data: ResCartItem;
   onRefetch: () => Promise<void>;
+  onCheck: (id: string) => void;
+  rowSelection: string[];
 }
 
 export const CartTableRow: React.FC<CartTableRowProps> = ({
   data,
   onRefetch,
+  onCheck,
+  rowSelection,
 }) => {
   const handleRemove = async () => {
     try {
@@ -23,9 +27,14 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
     }
   };
   return (
-    <TableRow>
+    <TableRow className="bg-white shadow-sm">
       <TableCell>
-        <Checkbox />
+        <Checkbox
+          checked={rowSelection.includes(data.book_id)}
+          onCheckedChange={() => {
+            onCheck(data.book_id);
+          }}
+        />
       </TableCell>
       <TableCell className="flex flex-row gap-4">
         <img
@@ -43,7 +52,9 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
       <TableCell>{data.quantity}</TableCell>
       <TableCell>{data.quantity * data.book.price}</TableCell>
       <TableCell>
-        <Button variant="outline" onClick={handleRemove}>Xoa</Button>
+        <Button variant="outline" onClick={handleRemove}>
+          Xoa
+        </Button>
       </TableCell>
     </TableRow>
   );
