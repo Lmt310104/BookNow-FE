@@ -1,6 +1,6 @@
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import { ResGetOrderById, ResGetOrdersByUser } from "@/types/order";
+import { CreateOrder, ResGetOrderById, ResGetOrdersByUser } from "@/types/order";
 
 class OrderService {
   async getOrdersByUser({page, take}: Page, status: string): Promise<ResGetOrdersByUser> {
@@ -24,6 +24,10 @@ class OrderService {
 
   async cancelOrder(id: string) {
     return api.patch(`orders/${id}/cancel-order`);
+  }
+
+  async createOrder(data: CreateOrder) {
+    return api.post('orders/create', data);
   }
 
 }

@@ -3,14 +3,14 @@ import orderService from "@/services/order.service";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-
-import { OrderItemRow } from "@/components/order/order-item-row";
 import { Order } from "@/types/order";
 import { useNavigate, useParams } from "react-router-dom";
 import SectionCard from "@/components/shared/section-card";
 import { ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
 import { routes } from "@/config";
+import { ProductOrderDetailRow } from "@/components/order/product-order-detail-row";
+import { ProductOrderDetailHeader } from "@/components/order/product-order-detail-header";
 
 export default function OrderDetailRoute() {
   const param = useParams();
@@ -67,12 +67,12 @@ export default function OrderDetailRoute() {
               <div>{`Dia chi: ${orderDetail.address}`}</div>
             </div>
           </SectionCard>
-          <SectionCard>
-            <div className="font-medium p-4">San Pham</div>
+          <SectionCard className="p-2">
+            <ProductOrderDetailHeader />
             <div>
               {orderDetail.OrderItems.map((item, index) => {
                 return (
-                  <OrderItemRow
+                  <ProductOrderDetailRow
                     key={index}
                     data={item}
                     onShowBookDetail={() => navigate(`/book/${item.book_id}`)}

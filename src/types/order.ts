@@ -40,3 +40,10 @@ export interface ResGetOrderById {
     data: Order;
   };
 }
+
+export interface CreateOrder {
+  fullName: string;
+  phoneNumber: string;
+  address: string;
+  items: { bookId: string; quantity: number }[];
+}

@@ -20,14 +20,17 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import debounce from "lodash.debounce";
 
 interface ComboboxProps {
-  onChange: (value: string)=> void
+  onChange: (value: string) => void;
+  initCategory?: Category | null;
 }
 
-export function Combobox({onChange}: ComboboxProps) {
+export function Combobox({ onChange, initCategory }: ComboboxProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [textSearch, setTextSearch] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
 
   const getAllCategories = useCallback(
     debounce(
@@ -49,6 +52,12 @@ export function Combobox({onChange}: ComboboxProps) {
   );
 
   useEffect(() => {
+    if (initCategory) {
+      setSelectedCategory(initCategory);
+    }
+  }, [initCategory]);
+
+  useEffect(() => {
     if (open) {
       getAllCategories(textSearch);
     } else {
@@ -57,13 +66,13 @@ export function Combobox({onChange}: ComboboxProps) {
     }
   }, [open]);
 
-  useEffect(()=>{
-    if(selectedCategory===null){
-      onChange('');
+  useEffect(() => {
+    if (selectedCategory === null) {
+      onChange("");
     } else {
       onChange(selectedCategory.id);
     }
-  }, [selectedCategory])
+  }, [selectedCategory]);
 
   const handleOnChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setTextSearch(e.target.value);
@@ -108,8 +117,12 @@ export function Combobox({onChange}: ComboboxProps) {
                   key={category.id}
                   value={category.id}
                   onSelect={(currentValue) => {
-                    console.log(currentValue)
-                    setSelectedCategory(selectedCategory&&selectedCategory.id=== currentValue ? null : category);
+                    console.log(currentValue);
+                    setSelectedCategory(
+                      selectedCategory && selectedCategory.id === currentValue
+                        ? null
+                        : category,
+                    );
                     setOpen(false);
                   }}
                 >
@@ -117,7 +130,9 @@ export function Combobox({onChange}: ComboboxProps) {
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      selectedCategory&&selectedCategory.id=== category.id ? "opacity-100" : "opacity-0",
+                      selectedCategory && selectedCategory.id === category.id
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                 </CommandItem>

@@ -34,15 +34,12 @@ import { CounterInput } from "@/components/shared/counter-input";
 import { ProductVariation } from "@/components/product/product-variation";
 import { useParams } from "react-router-dom";
 import bookService from "@/services/book.service";
-import { BookDetail, ResBookDetail } from "@/types/book";
+import { ResBookDetail } from "@/types/book";
 import cartService from "@/services/cart.service";
 
 const OPTIONS: EmblaOptionsType = {};
-// const SLIDE_COUNT = 10;
-// const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 export default function BookDetailRoute() {
-  // const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
   const param = useParams();
   const [detailData, setDetailData] = useState<ResBookDetail | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
