@@ -14,6 +14,9 @@ class CartService {
     return api.delete(`/carts/remove-from-cart/${bookId}`);
   }
 
+  async updateCartItemQuantity(data: CartItem) {
+    return api.put("/carts/update", data);
+  }
 }
 
 export default new CartService();
