@@ -1,3 +1,4 @@
+import { ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
@@ -24,8 +25,15 @@ class OrderService {
     return api.get(`orders/get-details/${id}`);
   }
 
-  async getOrdersByAdmin(): Promise<ResGetOrdersByUser> {
-    return api.get("orders/list");
+  async getOrdersByAdmin(
+    { page, take }: Page,
+    status: string,
+  ): Promise<ResGetOrdersByUser> {
+    if (status in ORDER_STATUS) {
+      return api.get(`/orders/list?page=${page}&take=${take}&status=${status}`);
+    } else {
+      return api.get(`/orders/list?page=${page}&take=${take}`);
+    }
   }
 
   async getOrderDetailByAdMin(id: string): Promise<ResGetOrderById> {

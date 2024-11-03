@@ -31,7 +31,6 @@ export default function PurchaseRoute() {
         page: meta.page,
         take: meta.take,
       },tabState );
-      console.log(response);
       setOrders(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {
@@ -54,7 +53,7 @@ export default function PurchaseRoute() {
             <TabsTrigger value={OrderStatus.DELIVERED} onClick={()=> setTabState(OrderStatus.DELIVERED)}>{ORDER_STATUS.DELIVERED}</TabsTrigger>
             <TabsTrigger value={OrderStatus.SUCCESS} onClick={()=> setTabState(OrderStatus.SUCCESS)}>{ORDER_STATUS.SUCCESS}</TabsTrigger>
             <TabsTrigger value={OrderStatus.CANCELLED} onClick={()=> setTabState(OrderStatus.CANCELLED)}>{ORDER_STATUS.CANCELLED}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.REJECT} onClick={()=> setTabState(OrderStatus.CANCELLED)}>{ORDER_STATUS.REJECT}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.REJECT} onClick={()=> setTabState(OrderStatus.REJECT)}>{ORDER_STATUS.REJECT}</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex flex-row gap-4">

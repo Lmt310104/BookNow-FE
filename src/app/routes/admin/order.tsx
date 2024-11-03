@@ -19,19 +19,25 @@ export default function OrderRoute() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
-    take: 20,
+    take: 2,
     itemCount: 0,
     pageCount: 0,
     hasPreviousPage: false,
     hasNextPage: false,
   });
+  const [tabState, setTabState] = useState<string>("all");
 
   const getOrdersByAdmin = async () => {
     try {
-      const response = await orderService.getOrdersByAdmin();
+      const response = await orderService.getOrdersByAdmin(
+        {
+          page: meta.page,
+          take: meta.take,
+        },
+        tabState,
+      );
       setOrders(response.data.data);
       setMeta(response.data.meta);
-      console.log(response)
     } catch (err) {
       console.log(err);
     }
@@ -39,21 +45,53 @@ export default function OrderRoute() {
 
   useEffect(() => {
     getOrdersByAdmin();
-  }, [meta.page]);
+  }, [meta.page, tabState]);
 
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <h1 className="text-lg font-semibold">Danh Sach Don Hang</h1>
-        <Tabs defaultValue="all">
+        <Tabs value={tabState}>
           <TabsList>
-            <TabsTrigger value="all">Tat ca</TabsTrigger>
-            <TabsTrigger value={OrderStatus.PENDING}>{ADMIN_ORDER_STATUS.PENDING}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.PROCESSING}>{ADMIN_ORDER_STATUS.PROCESSING}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.DELIVERED}>{ADMIN_ORDER_STATUS.DELIVERED}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.SUCCESS}>{ADMIN_ORDER_STATUS.SUCCESS}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.CANCELLED}>{ADMIN_ORDER_STATUS.CANCELLED}</TabsTrigger>
-            <TabsTrigger value={OrderStatus.REJECT} >{ADMIN_ORDER_STATUS.REJECT}</TabsTrigger>
+            <TabsTrigger value="all" onClick={() => setTabState("all")}>
+              Tat ca
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.PENDING}
+              onClick={() => setTabState(OrderStatus.PENDING)}
+            >
+              {ADMIN_ORDER_STATUS.PENDING}
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.PROCESSING}
+              onClick={() => setTabState(OrderStatus.PROCESSING)}
+            >
+              {ADMIN_ORDER_STATUS.PROCESSING}
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.DELIVERED}
+              onClick={() => setTabState(OrderStatus.DELIVERED)}
+            >
+              {ADMIN_ORDER_STATUS.DELIVERED}
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.SUCCESS}
+              onClick={() => setTabState(OrderStatus.SUCCESS)}
+            >
+              {ADMIN_ORDER_STATUS.SUCCESS}
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.CANCELLED}
+              onClick={() => setTabState(OrderStatus.CANCELLED)}
+            >
+              {ADMIN_ORDER_STATUS.CANCELLED}
+            </TabsTrigger>
+            <TabsTrigger
+              value={OrderStatus.REJECT}
+              onClick={() => setTabState(OrderStatus.REJECT)}
+            >
+              {ADMIN_ORDER_STATUS.REJECT}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         <Card x-chunk="dashboard-06-chunk-0">
@@ -68,9 +106,6 @@ export default function OrderRoute() {
                 />
               </div>
               <Button>Ap dung</Button>
-              <Button variant="outline" className="border border-black">
-                Nhap lai
-              </Button>
             </div>
             <div className="space-y-4">
               <OrderTableHeader />
