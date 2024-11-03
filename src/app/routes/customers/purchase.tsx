@@ -68,7 +68,7 @@ export default function PurchaseRoute() {
         </div>
         <div className="flex flex-col gap-3">
           {orders.map((item, index) => {
-            return <OrderRow key={index} data={item} />;
+            return <OrderRow key={index} data={item} onRefetch={getAllOrdersByUser}/>;
           })}
         </div>
         <TablePagination data={meta} onChange={setMeta} />

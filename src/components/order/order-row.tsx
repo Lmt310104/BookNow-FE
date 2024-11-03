@@ -10,9 +10,10 @@ import orderService from "@/services/order.service";
 
 interface OrderRowProps {
   data: Order;
+  onRefetch: () => Promise<void>;
 }
 
-export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
+export const OrderRow: React.FC<OrderRowProps> = ({ data,onRefetch }) => {
   const navigate = useNavigate();
   const handleShowDetail = () => {
     navigate(`/customer/purchase/${data.id}`);
@@ -22,6 +23,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
     if (data.id) {
       try {
         await orderService.cancelOrder(data.id);
+        await onRefetch();
       } catch (err) {
         console.log(err);
       }

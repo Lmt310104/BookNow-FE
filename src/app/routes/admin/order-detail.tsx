@@ -41,6 +41,9 @@ export default function AdminOrderDetailRoute() {
     if (orderDetail?.id) {
       try {
         await orderService.cancelOrder(orderDetail.id);
+        if (param?.orderId) {
+          getOrderById(param.orderId);
+        }
       } catch (err) {
         console.log(err);
       }

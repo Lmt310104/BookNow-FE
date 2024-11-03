@@ -58,6 +58,12 @@ export default function OrderDetailRoute() {
                 Huy don hang
               </Button>
             )}
+            {orderDetail.status === OrderStatus.REJECT && (
+              <div>Da bi huy boi nguoi ban</div>
+            )}
+            {orderDetail.status === OrderStatus.CANCELLED && (
+              <div>Da bi huy boi ban</div>
+            )}
           </SectionCard>
           <SectionCard className="p-4 space-y-4">
             <div className="font-medium">Địa chỉ nhận hàng</div>
