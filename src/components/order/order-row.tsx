@@ -44,14 +44,8 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data,onRefetch }) => {
       <div className="w-full  flex flex-col gap-4 p-4 items-end">
         <div>{`Tong tien: ${data.total_price}`}</div>
         <div className="w-full flex flex-row">
-          {data.status === OrderStatus.REJECT && (
-            <div>Da bi huy boi nguoi ban</div>
-          )}
-          {data.status === OrderStatus.CANCELLED && (
-            <div>Da bi huy boi ban</div>
-          )}
           <div className="flex flex-row gap-4 ml-auto">
-            {data.status === OrderStatus.PENDING && (
+            {(data.status===OrderStatus.PENDING || data.status===OrderStatus.PROCESSING) && (
               <Button variant="outline" onClick={handleCancelOrder}>
                 Huy don hang
               </Button>

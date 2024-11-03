@@ -11,6 +11,7 @@ import { Meta } from "@/types/api";
 import { Order } from "@/types/order";
 import { OrderRow } from "@/components/order/order-row";
 import { OrderStatus } from "@/common/enums";
+import { ORDER_STATUS } from "@/common/constants/order";
 
 export default function PurchaseRoute() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -48,11 +49,12 @@ export default function PurchaseRoute() {
         <Tabs value={tabState} className="mx-auto">
           <TabsList>
             <TabsTrigger value="all" onClick={()=> setTabState("all")}>Tat ca</TabsTrigger>
-            <TabsTrigger value={OrderStatus.PENDING} onClick={()=> setTabState(OrderStatus.PENDING)}>Cho xac nhan</TabsTrigger>
-            <TabsTrigger value={OrderStatus.PROCESSING} onClick={()=> setTabState(OrderStatus.PROCESSING)}>Dang xu ly</TabsTrigger>
-            <TabsTrigger value={OrderStatus.DELIVERED} onClick={()=> setTabState(OrderStatus.DELIVERED)}>Dang van chuyen</TabsTrigger>
-            <TabsTrigger value={OrderStatus.SUCCESS} onClick={()=> setTabState(OrderStatus.SUCCESS)}>Da giao hang</TabsTrigger>
-            <TabsTrigger value={OrderStatus.CANCELLED} onClick={()=> setTabState(OrderStatus.CANCELLED)}>Da huy</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PENDING} onClick={()=> setTabState(OrderStatus.PENDING)}>{ORDER_STATUS.PENDING}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PROCESSING} onClick={()=> setTabState(OrderStatus.PROCESSING)}>{ORDER_STATUS.PROCESSING}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.DELIVERED} onClick={()=> setTabState(OrderStatus.DELIVERED)}>{ORDER_STATUS.DELIVERED}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.SUCCESS} onClick={()=> setTabState(OrderStatus.SUCCESS)}>{ORDER_STATUS.SUCCESS}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.CANCELLED} onClick={()=> setTabState(OrderStatus.CANCELLED)}>{ORDER_STATUS.CANCELLED}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.REJECT} onClick={()=> setTabState(OrderStatus.CANCELLED)}>{ORDER_STATUS.REJECT}</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex flex-row gap-4">

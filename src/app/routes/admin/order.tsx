@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 
@@ -13,6 +12,8 @@ import { Order } from "@/types/order";
 import { Meta } from "@/types/api";
 import orderService from "@/services/order.service";
 import { useEffect, useState } from "react";
+import { OrderStatus } from "@/common/enums";
+import { ADMIN_ORDER_STATUS } from "@/common/constants/order";
 
 export default function OrderRoute() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -47,11 +48,12 @@ export default function OrderRoute() {
         <Tabs defaultValue="all">
           <TabsList>
             <TabsTrigger value="all">Tat ca</TabsTrigger>
-            <TabsTrigger value="awaiting">Cho xac nhan</TabsTrigger>
-            <TabsTrigger value="processing">Dang xu ly</TabsTrigger>
-            <TabsTrigger value="shipping">Dang van chuyen</TabsTrigger>
-            <TabsTrigger value="delivered">Da giao hang</TabsTrigger>
-            <TabsTrigger value="canceled">Da huy</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PENDING}>{ADMIN_ORDER_STATUS.PENDING}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.PROCESSING}>{ADMIN_ORDER_STATUS.PROCESSING}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.DELIVERED}>{ADMIN_ORDER_STATUS.DELIVERED}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.SUCCESS}>{ADMIN_ORDER_STATUS.SUCCESS}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.CANCELLED}>{ADMIN_ORDER_STATUS.CANCELLED}</TabsTrigger>
+            <TabsTrigger value={OrderStatus.REJECT} >{ADMIN_ORDER_STATUS.REJECT}</TabsTrigger>
           </TabsList>
         </Tabs>
         <Card x-chunk="dashboard-06-chunk-0">

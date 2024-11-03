@@ -37,6 +37,17 @@ export default function OrderDetailRoute() {
     navigate(routes.CUSTOMER.PURCHASE);
   };
 
+  const handleCancelOrder = async () => {
+    if (orderDetail?.id) {
+      try {
+        await orderService.cancelOrder(orderDetail.id);
+        await getOrderById(orderDetail.id);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <CustomerLayout>
       {orderDetail && (
@@ -49,20 +60,20 @@ export default function OrderDetailRoute() {
               <ChevronLeft className="h-5 w-5" />
               <span>TRỞ LẠI</span>
             </div>
-            <span className="ml-auto">{`MÃ ĐƠN HÀNG: ${orderDetail.id}`}</span>|
-            <span>{ORDER_STATUS[orderDetail.status]}</span>
+            <span className="ml-auto">{`MÃ ĐƠN HÀNG: ${orderDetail.id}`}</span>
           </SectionCard>
-          <SectionCard className="p-4 flex flex-row">
-            {orderDetail.status === OrderStatus.PENDING && (
-              <Button variant="outline" className="ml-auto">
+          <SectionCard className="p-4 flex flex-row  items-center">
+            <div>{ORDER_STATUS[orderDetail.status]}</div>
+            {(orderDetail.status === OrderStatus.PENDING ||
+              orderDetail.status === OrderStatus.PROCESSING) && (
+              <Button variant="outline" className="ml-auto" onClick={handleCancelOrder}>
                 Huy don hang
               </Button>
             )}
-            {orderDetail.status === OrderStatus.REJECT && (
-              <div>Da bi huy boi nguoi ban</div>
-            )}
-            {orderDetail.status === OrderStatus.CANCELLED && (
-              <div>Da bi huy boi ban</div>
+            {orderDetail.status === OrderStatus.SUCCESS && (
+              <Button className="ml-auto">
+                Danh gia
+              </Button>
             )}
           </SectionCard>
           <SectionCard className="p-4 space-y-4">
