@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import image from "@/assets/placeholder.svg";
 import { ResCartItem } from "@/types/cart";
 import cartService from "@/services/cart.service";
+import { CartCounterInput } from "./cart-counter-input";
 
 interface CartTableRowProps {
   data: ResCartItem;
@@ -21,6 +22,20 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
   const handleRemove = async () => {
     try {
       await cartService.removeFromCart(data.book_id);
+      await onRefetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUpdateCartItemQuantity = async (value: number) => {
+    try {
+      if (value > 0)
+        await cartService.updateCartItemQuantity({
+          bookId: data.book_id,
+          quantity: value,
+        });
+      else await cartService.removeFromCart(data.book_id);
       await onRefetch();
     } catch (err) {
       console.log(err);
@@ -49,7 +64,13 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
         </div>
       </TableCell>
       <TableCell>{data.book.price}</TableCell>
-      <TableCell>{data.quantity}</TableCell>
+      <TableCell>
+        <CartCounterInput
+          max={data.book.stock_quantity}
+          value={data.quantity}
+          onChange={handleUpdateCartItemQuantity}
+        />
+      </TableCell>
       <TableCell>{data.quantity * data.book.price}</TableCell>
       <TableCell>
         <Button variant="outline" onClick={handleRemove}>

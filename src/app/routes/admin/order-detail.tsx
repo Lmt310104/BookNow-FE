@@ -5,7 +5,7 @@ import { Order } from "@/types/order";
 import orderService from "@/services/order.service";
 import { useEffect, useState } from "react";
 import SectionCard from "@/components/shared/section-card";
-import { ORDER_STATUS } from "@/common/constants/order";
+import { ADMIN_ORDER_STATUS } from "@/common/constants/order";
 import { OrderStatus } from "@/common/enums";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "@/config";
@@ -41,6 +41,32 @@ export default function AdminOrderDetailRoute() {
     if (orderDetail?.id) {
       try {
         await orderService.cancelOrder(orderDetail.id);
+        await getOrderById(orderDetail.id);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handleUpdateOrderStatus = async () => {
+    if (orderDetail?.id) {
+      try {
+        if (orderDetail.status === OrderStatus.PENDING)
+          await orderService.updateOrderStatus({
+            id: orderDetail.id,
+            status: OrderStatus.PROCESSING,
+          });
+        else if (orderDetail.status === OrderStatus.PROCESSING)
+          await orderService.updateOrderStatus({
+            id: orderDetail.id,
+            status: OrderStatus.DELIVERED,
+          });
+        else if (orderDetail.status === OrderStatus.DELIVERED)
+          await orderService.updateOrderStatus({
+            id: orderDetail.id,
+            status: OrderStatus.SUCCESS,
+          });
+        await getOrderById(orderDetail.id);
       } catch (err) {
         console.log(err);
       }
@@ -59,21 +85,30 @@ export default function AdminOrderDetailRoute() {
               <ChevronLeft className="h-5 w-5" />
               <span>TRỞ LẠI</span>
             </div>
-            <span className="ml-auto">{`MÃ ĐƠN HÀNG: ${orderDetail.id}`}</span>|
-            <span>{ORDER_STATUS[orderDetail.status]}</span>
+            <span className="ml-auto">{`MÃ ĐƠN HÀNG: ${orderDetail.id}`}</span>
           </SectionCard>
-          <SectionCard className="p-4 flex flex-row gap-4">
+          <SectionCard className="p-4 flex flex-row gap-4 items-center">
+            <div>{ADMIN_ORDER_STATUS[orderDetail.status]}</div>
+            {(orderDetail.status === OrderStatus.PENDING ||
+              orderDetail.status === OrderStatus.PROCESSING) && (
+              <Button
+                variant="outline"
+                className="ml-auto"
+                onClick={handleCancelOrder}
+              >
+                Huy don hang
+              </Button>
+            )}
             {orderDetail.status === OrderStatus.PENDING && (
-              <>
-                <Button
-                  variant="outline"
-                  className="ml-auto"
-                  onClick={handleCancelOrder}
-                >
-                  Huy don hang
-                </Button>
-                <Button>Chuan bi hang</Button>
-              </>
+              <Button onClick={handleUpdateOrderStatus}>Chuan bi hang</Button>
+            )}
+            {orderDetail.status === OrderStatus.PROCESSING && (
+              <Button onClick={handleUpdateOrderStatus}>San sang giao</Button>
+            )}
+            {orderDetail.status === OrderStatus.DELIVERED && (
+              <Button className="ml-auto" onClick={handleUpdateOrderStatus}>
+                Da giao hang
+              </Button>
             )}
           </SectionCard>
           <SectionCard className="p-4 space-y-4">

@@ -10,9 +10,10 @@ import orderService from "@/services/order.service";
 
 interface OrderRowProps {
   data: Order;
+  onRefetch: () => Promise<void>;
 }
 
-export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
+export const OrderRow: React.FC<OrderRowProps> = ({ data,onRefetch }) => {
   const navigate = useNavigate();
   const handleShowDetail = () => {
     navigate(`/customer/purchase/${data.id}`);
@@ -22,6 +23,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
     if (data.id) {
       try {
         await orderService.cancelOrder(data.id);
+        await onRefetch();
       } catch (err) {
         console.log(err);
       }
@@ -42,14 +44,8 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data }) => {
       <div className="w-full  flex flex-col gap-4 p-4 items-end">
         <div>{`Tong tien: ${data.total_price}`}</div>
         <div className="w-full flex flex-row">
-          {data.status === OrderStatus.REJECT && (
-            <div>Da bi huy boi nguoi ban</div>
-          )}
-          {data.status === OrderStatus.CANCELLED && (
-            <div>Da bi huy boi ban</div>
-          )}
           <div className="flex flex-row gap-4 ml-auto">
-            {data.status === OrderStatus.PENDING && (
+            {(data.status===OrderStatus.PENDING || data.status===OrderStatus.PROCESSING) && (
               <Button variant="outline" onClick={handleCancelOrder}>
                 Huy don hang
               </Button>
