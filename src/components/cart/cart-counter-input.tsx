@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CounterInputProps {
   max: number;
@@ -45,6 +45,10 @@ export const CartCounterInput: React.FC<CounterInputProps> = ({
   const handleBlur = async () => {
     await onChange(inputValue);
   };
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   return (
     <div className="max-w-xs flex flex-row items-center gap-4 w-fit">
