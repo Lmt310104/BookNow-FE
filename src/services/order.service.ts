@@ -7,6 +7,7 @@ import {
   ResGetOrderById,
   ResGetOrdersByUser,
 } from "@/types/order";
+import { Review } from "@/types/review";
 
 class OrderService {
   async getOrdersByUser(
@@ -50,6 +51,24 @@ class OrderService {
 
   async updateOrderStatus({ id, status }: { id: string; status: OrderStatus }) {
     return api.post(`orders/status/update/${id}`, { status: status });
+  }
+
+  async reviewBook({
+    orderId,
+    orderDetailId,
+    bookId,
+    star,
+    description,
+    title,
+  }: Review) {
+    return api.post(
+      `orders/get-details/${orderId}/order-details/${orderDetailId}/${bookId}`,
+      {
+        star,
+        description,
+        title,
+      },
+    );
   }
 }
 

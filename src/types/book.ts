@@ -36,6 +36,7 @@ export interface ResBookDetail extends Book {
   sold_quantity: number;
   total_reviews: number;
   avg_stars: number;
+  Category?:Category
 }
 
 export interface ResGetAllBooks extends Response {
