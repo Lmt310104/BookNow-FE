@@ -29,6 +29,7 @@ class BookService {
   async getAllBooks(
     { page, take }: Page,
     status: string,
+
   ): Promise<ResGetAllBooks> {
     if (status === BookStatus.ACTIVE || status === BookStatus.INACTIVE) {
       return api.get(

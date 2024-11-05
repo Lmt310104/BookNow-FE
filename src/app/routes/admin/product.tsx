@@ -8,17 +8,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Search } from "lucide-react";
+import { MoveDown, MoveUp, PlusCircle, Search } from "lucide-react";
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ProductTableHeader } from "@/components/product/product-table-header";
 import { ProductTableRow } from "@/components/product/product-table-row";
 import { useNavigate } from "react-router-dom";
 import bookService from "@/services/book.service";
-import { useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { Meta } from "@/types/api";
 import { ResBookDetail } from "@/types/book";
 import { BookStatus } from "@/common/enums";
+import { Select } from "@radix-ui/react-select";
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ProductRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
@@ -32,14 +39,22 @@ export default function ProductRoute() {
   });
   const navigate = useNavigate();
   const [tabState, setTabState] = useState<string>("all");
+  const [searchText, setSearchText] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("created_at");
+  const [order, setOrder] = useState<string>("desc");
 
   const getAllBooks = async () => {
-  
     try {
-      const response = await bookService.getAllBooks({
-        page: meta.page,
-        take: meta.take,
-      }, tabState);
+      const response = await bookService.getAllBooks(
+        {
+          page: meta.page,
+          take: meta.take,
+        },
+        tabState,
+        searchText,
+        sortBy,
+        order,
+      );
 
       setBooks(response.data.data);
       setMeta(response.data.meta);
@@ -51,6 +66,12 @@ export default function ProductRoute() {
   useEffect(() => {
     getAllBooks();
   }, [meta.page, tabState]);
+
+  const handleEnterPress = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      await getAllBooks();
+    }
+  };
 
   return (
     <DashBoardLayout>
@@ -71,7 +92,10 @@ export default function ProductRoute() {
               <TabsTrigger value="all" onClick={() => setTabState("all")}>
                 Tat ca
               </TabsTrigger>
-              <TabsTrigger value={BookStatus.ACTIVE} onClick={() => setTabState(BookStatus.ACTIVE)}>
+              <TabsTrigger
+                value={BookStatus.ACTIVE}
+                onClick={() => setTabState(BookStatus.ACTIVE)}
+              >
                 Dang ban
               </TabsTrigger>
               <TabsTrigger
@@ -91,8 +115,39 @@ export default function ProductRoute() {
                 type="search"
                 placeholder="Nhap ten san pham"
                 className="w-full rounded-lg bg-background pl-8"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={handleEnterPress}
               />
-              <Button>Ap dung</Button>
+              <Select
+                value={sortBy}
+                onValueChange={(value) => setSortBy(value)}
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Select a statetus" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at">Thoi gian</SelectItem>
+                  <SelectItem value="title">Ten</SelectItem>
+                  <SelectItem value="price">Gia ban</SelectItem>
+                  <SelectItem value="entry_price">Gia nhap</SelectItem>
+                  <SelectItem value="stock_quantity">Ton kho</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={order} onValueChange={(value) => setOrder(value)}>
+                <SelectTrigger className="w-[50px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="desc">
+                    <MoveDown className="w-4 h-4" />
+                  </SelectItem>
+                  <SelectItem value="asc">
+                    <MoveUp className="w-4 h-4" />
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={async () => getAllBooks()}>Ap dung</Button>
             </div>
           </CardHeader>
           <CardContent>

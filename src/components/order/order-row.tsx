@@ -11,9 +11,10 @@ import orderService from "@/services/order.service";
 interface OrderRowProps {
   data: Order;
   onRefetch: () => Promise<void>;
+  onReview: (id:string)=> void
 }
 
-export const OrderRow: React.FC<OrderRowProps> = ({ data,onRefetch }) => {
+export const OrderRow: React.FC<OrderRowProps> = ({ data, onRefetch, onReview }) => {
   const navigate = useNavigate();
   const handleShowDetail = () => {
     navigate(`/customer/purchase/${data.id}`);
@@ -45,11 +46,13 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data,onRefetch }) => {
         <div>{`Tong tien: ${data.total_price}`}</div>
         <div className="w-full flex flex-row">
           <div className="flex flex-row gap-4 ml-auto">
-            {(data.status===OrderStatus.PENDING || data.status===OrderStatus.PROCESSING) && (
+            {(data.status === OrderStatus.PENDING ||
+              data.status === OrderStatus.PROCESSING) && (
               <Button variant="outline" onClick={handleCancelOrder}>
                 Huy don hang
               </Button>
             )}
+            {data.status === OrderStatus.SUCCESS && <Button onClick={()=> onReview(data.id)}>Danh gia</Button>}
             <Button variant="outline" onClick={handleShowDetail}>
               Xem chi tiet
             </Button>

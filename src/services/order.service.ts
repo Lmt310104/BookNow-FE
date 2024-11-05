@@ -7,17 +7,19 @@ import {
   ResGetOrderById,
   ResGetOrdersByUser,
 } from "@/types/order";
+import { Review } from "@/types/review";
 
 class OrderService {
   async getOrdersByUser(
     { page, take }: Page,
     status: string,
+    search:string
   ): Promise<ResGetOrdersByUser> {
     if (status === "all")
-      return api.get(`orders/get-all?page=${page}&take=${take}`);
+      return api.get(`orders/get-all?page=${page}&take=${take}&search=${search}`);
     else
       return api.get(
-        `orders/get-all?page=${page}&take=${take}&status=${status}`,
+        `orders/get-all?page=${page}&take=${take}&status=${status}&search=${search}`,
       );
   }
 
@@ -28,11 +30,12 @@ class OrderService {
   async getOrdersByAdmin(
     { page, take }: Page,
     status: string,
+    search: string
   ): Promise<ResGetOrdersByUser> {
     if (status in ORDER_STATUS) {
-      return api.get(`/orders/list?page=${page}&take=${take}&status=${status}`);
+      return api.get(`/orders/list?page=${page}&take=${take}&status=${status}&search=${search}`);
     } else {
-      return api.get(`/orders/list?page=${page}&take=${take}`);
+      return api.get(`/orders/list?page=${page}&take=${take}&search=${search}`);
     }
   }
 
@@ -50,6 +53,24 @@ class OrderService {
 
   async updateOrderStatus({ id, status }: { id: string; status: OrderStatus }) {
     return api.post(`orders/status/update/${id}`, { status: status });
+  }
+
+  async reviewBook({
+    orderId,
+    orderDetailId,
+    bookId,
+    star,
+    description,
+    title,
+  }: Review) {
+    return api.post(
+      `orders/get-details/${orderId}/order-details/${orderDetailId}/${bookId}`,
+      {
+        star,
+        description,
+        title,
+      },
+    );
   }
 }
 

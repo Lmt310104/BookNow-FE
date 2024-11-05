@@ -47,6 +47,7 @@ export default function BookDetailRoute() {
   const getBookDetail = async (id: string) => {
     try {
       const response = await bookService.getBookById(id);
+      console.log(response)
       setDetailData(response.data.data);
       console.log(response);
     } catch (err) {
@@ -71,7 +72,6 @@ export default function BookDetailRoute() {
           bookId: detailData.id,
           quantity: quantity,
         });
-        console.log(response);
       } catch (err) {
         console.log(err);
       }
