@@ -11,7 +11,7 @@ import { TablePagination } from "@/components/shared/table-pagination";
 import { Order } from "@/types/order";
 import { Meta } from "@/types/api";
 import orderService from "@/services/order.service";
-import { useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { OrderStatus } from "@/common/enums";
 import { ADMIN_ORDER_STATUS } from "@/common/constants/order";
 
@@ -26,6 +26,7 @@ export default function OrderRoute() {
     hasNextPage: false,
   });
   const [tabState, setTabState] = useState<string>("all");
+  const [searchText, setSearchText] = useState<string>("");
 
   const getOrdersByAdmin = async () => {
     try {
@@ -35,6 +36,7 @@ export default function OrderRoute() {
           take: meta.take,
         },
         tabState,
+        searchText,
       );
       setOrders(response.data.data);
       setMeta(response.data.meta);
@@ -46,6 +48,12 @@ export default function OrderRoute() {
   useEffect(() => {
     getOrdersByAdmin();
   }, [meta.page, tabState]);
+
+  const handleEnterPress = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      await getOrdersByAdmin();
+    }
+  };
 
   return (
     <DashBoardLayout>
@@ -103,9 +111,12 @@ export default function OrderRoute() {
                   type="search"
                   placeholder="Nhap ma don hang"
                   className="w-full rounded-lg bg-background pl-8"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onKeyDown={handleEnterPress}
                 />
               </div>
-              <Button>Ap dung</Button>
+              <Button  onClick={async () => getOrdersByAdmin()}>Ap dung</Button>
             </div>
             <div className="space-y-4">
               <OrderTableHeader />

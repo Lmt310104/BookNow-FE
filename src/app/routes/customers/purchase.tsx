@@ -1,6 +1,6 @@
 import CustomerLayout from "@/components/layouts/customer-layout";
 import orderService from "@/services/order.service";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -27,6 +27,7 @@ export default function PurchaseRoute() {
   });
   const [tabState, setTabState] = useState<string>("all");
   const reviewDialogRef = useRef<ReviewDialogRef>(null);
+  const [searchText, setSearchText] = useState<string>("");
 
   const getAllOrdersByUser = async () => {
     try {
@@ -36,6 +37,7 @@ export default function PurchaseRoute() {
           take: meta.take,
         },
         tabState,
+        searchText,
       );
       setOrders(response.data.data);
       setMeta(response.data.meta);
@@ -48,13 +50,19 @@ export default function PurchaseRoute() {
     getAllOrdersByUser();
   }, [meta.page, tabState]);
 
-  const handleRevieww = (id:string) => {
+  const handleRevieww = (id: string) => {
     reviewDialogRef.current?.onOpen(id);
+  };
+
+  const handleEnterPress = async (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      await getAllOrdersByUser();
+    }
   };
 
   return (
     <CustomerLayout>
-      <ReviewDialog ref={reviewDialogRef} onRefetch={getAllOrdersByUser}/>
+      <ReviewDialog ref={reviewDialogRef} onRefetch={getAllOrdersByUser} />
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
         <Tabs value={tabState} className="mx-auto">
           <TabsList>
@@ -106,9 +114,12 @@ export default function PurchaseRoute() {
               type="search"
               placeholder="Nhap ID don hang hoac ten san pham"
               className="w-full rounded-lg bg-background pl-8"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
           </div>
-          <Button>Ap dung</Button>
+          <Button onClick={async () => getAllOrdersByUser()}>Ap dung</Button>
         </div>
         <div className="flex flex-col gap-3">
           {orders.map((item, index) => {

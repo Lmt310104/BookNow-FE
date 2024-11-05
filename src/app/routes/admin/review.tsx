@@ -24,8 +24,23 @@ import { Label } from "@radix-ui/react-label";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ReviewTableHeader } from "@/components/review/review-table-header";
 import { ReviewTableBody } from "@/components/review/review-table-body";
+import reviewService from "@/services/review.service";
+import { useEffect } from "react";
 
 export default function ReviewRoute() {
+  const getAllReviews = async () => {
+    try {
+      const response = await reviewService.getAllReviews();
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getAllReviews();
+  }, []);
+  
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">

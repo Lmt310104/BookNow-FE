@@ -13,12 +13,13 @@ class OrderService {
   async getOrdersByUser(
     { page, take }: Page,
     status: string,
+    search:string
   ): Promise<ResGetOrdersByUser> {
     if (status === "all")
-      return api.get(`orders/get-all?page=${page}&take=${take}`);
+      return api.get(`orders/get-all?page=${page}&take=${take}&search=${search}`);
     else
       return api.get(
-        `orders/get-all?page=${page}&take=${take}&status=${status}`,
+        `orders/get-all?page=${page}&take=${take}&status=${status}&search=${search}`,
       );
   }
 
@@ -29,11 +30,12 @@ class OrderService {
   async getOrdersByAdmin(
     { page, take }: Page,
     status: string,
+    search: string
   ): Promise<ResGetOrdersByUser> {
     if (status in ORDER_STATUS) {
-      return api.get(`/orders/list?page=${page}&take=${take}&status=${status}`);
+      return api.get(`/orders/list?page=${page}&take=${take}&status=${status}&search=${search}`);
     } else {
-      return api.get(`/orders/list?page=${page}&take=${take}`);
+      return api.get(`/orders/list?page=${page}&take=${take}&search=${search}`);
     }
   }
 
