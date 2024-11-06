@@ -7,10 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MessageSquareReply, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ResReview } from "@/types/review";
+import { REVIEW_sTATUS } from "@/common/constants";
 
-export const ReviewTableRow = () => {
+interface ReviewTableRowProps {
+  data: ResReview;
+}
+
+export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({ data }) => {
   return (
     <TableRow>
       <TableCell>2252</TableCell>
@@ -25,28 +31,19 @@ export const ReviewTableRow = () => {
         Laser Lemonade Machine
       </TableCell>
 
-      <TableCell>5</TableCell>
-      <TableCell>San pham tuyet lam</TableCell>
-      <TableCell>Le Minh Toan</TableCell>
-      <TableCell>13/10/2024</TableCell>
-      <TableCell>cam on ban da mua hang</TableCell>
+      <TableCell>{data.rating}</TableCell>
+      <TableCell>{data.description}</TableCell>
+      <TableCell>{"data.user_id"}</TableCell>
+      <TableCell>{data.created_at.toString()}</TableCell>
+      {/* <TableCell>cam on ban da mua hang</TableCell> */}
 
       <TableCell>
-        <Badge variant="outline">Draft</Badge>
+        <Badge variant="outline">{REVIEW_sTATUS[data.state]}</Badge>
       </TableCell>
       <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Chinh sua</DropdownMenuItem>
-            <DropdownMenuItem>An</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button aria-haspopup="true" size="icon" variant="ghost">
+        <MessageSquareReply className="h-4 w-4" />
+        </Button>
       </TableCell>
     </TableRow>
   );

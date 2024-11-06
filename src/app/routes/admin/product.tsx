@@ -51,9 +51,6 @@ export default function ProductRoute() {
           take: meta.take,
         },
         tabState,
-        searchText,
-        sortBy,
-        order,
       );
 
       setBooks(response.data.data);

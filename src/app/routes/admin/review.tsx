@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 
 import { Input } from "@/components/ui/input";
-import { Table } from "@/components/ui/table";
+import { Table, TableBody } from "@/components/ui/table";
 import { Search } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,15 +23,28 @@ import {
 import { Label } from "@radix-ui/react-label";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ReviewTableHeader } from "@/components/review/review-table-header";
-import { ReviewTableBody } from "@/components/review/review-table-body";
 import reviewService from "@/services/review.service";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ResReview } from "@/types/review";
+import { Meta } from "@/types/api";
+import { ReviewTableRow } from "@/components/review/review-table-row";
 
 export default function ReviewRoute() {
+  const [reviews, setReviews] = useState<ResReview[]>([]);
+  const [meta, setMeta] = useState<Meta>({
+    page: 1,
+    take: 20,
+    itemCount: 0,
+    pageCount: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+
   const getAllReviews = async () => {
     try {
       const response = await reviewService.getAllReviews();
-      console.log(response);
+      setReviews(response.data.data);
+      setMeta(response.data.meta);
     } catch (err) {
       console.log(err);
     }
@@ -40,7 +53,7 @@ export default function ReviewRoute() {
   useEffect(() => {
     getAllReviews();
   }, []);
-  
+
   return (
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
@@ -94,19 +107,20 @@ export default function ReviewRoute() {
                 </SelectContent>
               </Select>
               <Button>Ap dung</Button>
-              <Button variant="outline" className="border border-black">
-                Nhap lai
-              </Button>
             </div>
           </CardHeader>
           <CardContent>
             <Table>
               <ReviewTableHeader />
-              <ReviewTableBody />
+              <TableBody>
+                {reviews.map((review, index) => (
+                  <ReviewTableRow key={index} data={review} />
+                ))}
+              </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="bg-muted/50">
-            <TablePagination />
+            <TablePagination data={meta} onChange={setMeta} />
           </CardFooter>
         </Card>
       </main>

@@ -1,4 +1,6 @@
+import { ReviewStatus } from "@/common/enums";
 import { ResBookDetail } from "./book";
+import { Meta } from "./api";
 
 export interface Review {
   book?: ResBookDetail;
@@ -6,6 +8,25 @@ export interface Review {
   orderDetailId: string;
   bookId: string;
   star: number;
-  description: string| undefined;
+  description: string | undefined;
   title: string;
+}
+
+export interface ResReview {
+  book_id: string;
+  created_at: Date;
+  description: string;
+  id: number;
+  rating: number;
+  reply_review_id: null;
+  state: ReviewStatus;
+  title: string;
+  user_id: string;
+}
+
+export interface GetAllReviews {
+  data: {
+    data: ResReview[],
+    meta: Meta
+  }
 }
