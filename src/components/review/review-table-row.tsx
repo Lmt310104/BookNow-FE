@@ -1,16 +1,11 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import image from "@/assets/placeholder.svg";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MessageSquareReply, MoreHorizontal } from "lucide-react";
+import { MessageSquareReply } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResReview } from "@/types/review";
 import { REVIEW_sTATUS } from "@/common/constants";
+import { dateToVNString } from "@/utils/format";
 
 interface ReviewTableRowProps {
   data: ResReview;
@@ -19,7 +14,7 @@ interface ReviewTableRowProps {
 export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({ data }) => {
   return (
     <TableRow>
-      <TableCell>2252</TableCell>
+      <TableCell>{"data.id"}</TableCell>
       <TableCell className="font-medium flex flex-row gap-4 items-center">
         <img
           alt="Product image"
@@ -34,7 +29,7 @@ export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({ data }) => {
       <TableCell>{data.rating}</TableCell>
       <TableCell>{data.description}</TableCell>
       <TableCell>{"data.user_id"}</TableCell>
-      <TableCell>{data.created_at.toString()}</TableCell>
+      <TableCell>{dateToVNString(new Date(data.created_at))}</TableCell>
       {/* <TableCell>cam on ban da mua hang</TableCell> */}
 
       <TableCell>

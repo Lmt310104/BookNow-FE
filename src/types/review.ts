@@ -14,7 +14,7 @@ export interface Review {
 
 export interface ResReview {
   book_id: string;
-  created_at: Date;
+  created_at: string;
   description: string;
   id: number;
   rating: number;
@@ -26,7 +26,14 @@ export interface ResReview {
 
 export interface GetAllReviews {
   data: {
-    data: ResReview[],
-    meta: Meta
-  }
+    data: ResReview[];
+    meta: Meta;
+  };
+}
+
+export interface GetAllReviewData {
+  search?: string;
+  rating: number[];
+  date: Date | null;
+  state: string;
 }
