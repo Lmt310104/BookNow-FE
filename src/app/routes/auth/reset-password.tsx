@@ -13,6 +13,7 @@ import { FormEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import InputOTPPattern from "./Input-otp-pattern";
 import { routes } from "@/config";
+import { PasswordInput } from "@/components/shared/password-input";
 
 export default function ResetPasswordRoute() {
   const location = useLocation();
@@ -41,9 +42,9 @@ export default function ResetPasswordRoute() {
     await resetPassword();
   };
 
-  const handleCancel = ()=>{
+  const handleCancel = () => {
     navigate(routes.AUTH.FORGOT_PASSWORD);
-  }
+  };
 
   return (
     <form
@@ -65,12 +66,19 @@ export default function ResetPasswordRoute() {
           )}
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input
+            {/* <Input
               id="password"
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+            /> */}
+            <PasswordInput
+              id="password"
+              name="password"
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
           </div>
         </CardContent>

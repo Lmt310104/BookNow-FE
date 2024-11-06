@@ -50,7 +50,7 @@ export default function PurchaseRoute() {
     getAllOrdersByUser();
   }, [meta.page, tabState]);
 
-  const handleRevieww = (id: string) => {
+  const handleReview = (id: string) => {
     reviewDialogRef.current?.onOpen(id);
   };
 
@@ -128,7 +128,7 @@ export default function PurchaseRoute() {
                 key={index}
                 data={item}
                 onRefetch={getAllOrdersByUser}
-                onReview={handleRevieww}
+                onReview={handleReview}
               />
             );
           })}

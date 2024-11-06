@@ -24,13 +24,14 @@ import { Label } from "@radix-ui/react-label";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { ReviewTableHeader } from "@/components/review/review-table-header";
 import reviewService from "@/services/review.service";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { ResReview } from "@/types/review";
 import { Meta } from "@/types/api";
 import { ReviewTableRow } from "@/components/review/review-table-row";
 import { ReviewStatus } from "@/common/enums";
 import { REVIEW_sTATUS } from "@/common/constants";
 import { dateToString, stringToDate } from "@/utils/format";
+import ReplyDialog, { ReplyDialogRef } from "@/components/review/reply-dialog";
 
 export default function ReviewRoute() {
   const [reviews, setReviews] = useState<ResReview[]>([]);
@@ -43,10 +44,11 @@ export default function ReviewRoute() {
     hasNextPage: false,
   });
   const [searchText, setSearchText] = useState<string>("");
-  const [rating, setRating] = useState<number[]>([]);
-  const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
+  const [rating, setRating] = useState<number[]>([1,2,3,4,5]);
+  const [isAllSelected, setIsAllSelected] = useState<boolean>(true);
   const [date, setDate] = useState<Date | null>(null);
   const [reviewwState, serReviewState] = useState<string>("all");
+  const replyDialogRef = useRef<ReplyDialogRef>(null);
 
   const getAllReviews = async () => {
     try {
@@ -99,6 +101,7 @@ export default function ReviewRoute() {
 
   return (
     <DashBoardLayout>
+      <ReplyDialog ref={replyDialogRef} onRefetch={getAllReviews} />
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <h1 className="text-lg font-semibold ">Danh Sach Danh Gia</h1>
         <Card x-chunk="dashboard-06-chunk-0">
@@ -171,9 +174,7 @@ export default function ReviewRoute() {
                 className="w-fit rounded-lg bg-background pl-8"
                 value={date ? dateToString(date) : undefined}
                 onChange={(e) =>
-                  setDate(
-                    e.target.value ? stringToDate(e.target.value) : null,
-                  )
+                  setDate(e.target.value ? stringToDate(e.target.value) : null)
                 }
               />
               <Select
@@ -201,7 +202,11 @@ export default function ReviewRoute() {
               <ReviewTableHeader />
               <TableBody>
                 {reviews.map((review, index) => (
-                  <ReviewTableRow key={index} data={review} />
+                  <ReviewTableRow
+                    key={index}
+                    data={review}
+                    onReply={() => replyDialogRef.current?.onOpen(review.id)}
+                  />
                 ))}
               </TableBody>
             </Table>

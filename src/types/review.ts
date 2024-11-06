@@ -16,7 +16,7 @@ export interface ResReview {
   book_id: string;
   created_at: string;
   description: string;
-  id: number;
+  id: string;
   rating: number;
   reply_review_id: null;
   state: ReviewStatus;

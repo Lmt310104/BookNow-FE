@@ -103,7 +103,10 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setReviews([]);
+                  setIsOpen(false);
+                }}
               >
                 Tro lai
               </Button>

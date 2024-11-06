@@ -1,7 +1,7 @@
 import { ReviewStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import { GetAllReviewData, GetAllReviews } from "@/types/review";
+import { GetAllReviewData, GetAllReviews, ResReview } from "@/types/review";
 
 class ReviewService {
   async getAllReviews(
@@ -25,6 +25,14 @@ class ReviewService {
       url += `&state=${data.state}`;
     }
     return api.get(url);
+  }
+
+  async getReviewById(id: string): Promise<{ data: ResReview }> {
+    return api.get(`reviews/${id}`);
+  }
+
+  async reply(id: string, reply: string) {
+    return api.post(`reviews/${id}/reply`, { reply: reply });
   }
 }
 

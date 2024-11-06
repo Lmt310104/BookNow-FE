@@ -9,9 +9,13 @@ import { dateToVNString } from "@/utils/format";
 
 interface ReviewTableRowProps {
   data: ResReview;
+  onReply: () => void;
 }
 
-export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({ data }) => {
+export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({
+  data,
+  onReply,
+}) => {
   return (
     <TableRow>
       <TableCell>{"data.id"}</TableCell>
@@ -36,8 +40,13 @@ export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({ data }) => {
         <Badge variant="outline">{REVIEW_sTATUS[data.state]}</Badge>
       </TableCell>
       <TableCell>
-        <Button aria-haspopup="true" size="icon" variant="ghost">
-        <MessageSquareReply className="h-4 w-4" />
+        <Button
+          aria-haspopup="true"
+          size="icon"
+          variant="ghost"
+          onClick={onReply}
+        >
+          <MessageSquareReply className="h-4 w-4" />
         </Button>
       </TableCell>
     </TableRow>
