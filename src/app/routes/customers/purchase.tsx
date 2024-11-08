@@ -39,6 +39,7 @@ export default function PurchaseRoute() {
         tabState,
         searchText,
       );
+      console.log("getAllOrdersByUser",response);
       setOrders(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {

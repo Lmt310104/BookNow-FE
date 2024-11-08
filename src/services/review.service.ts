@@ -1,28 +1,28 @@
 import { ReviewStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
-import { GetAllReviewData, GetAllReviews, ResReview } from "@/types/review";
+import { GetAllReviewQueries, GetAllReviews, ResReview } from "@/types/review";
 
 class ReviewService {
   async getAllReviews(
     { page, take }: Page,
-    data: GetAllReviewData,
+    query: GetAllReviewQueries,
   ): Promise<GetAllReviews> {
     let url = `reviews/get-all?page=${page}&take=${take}`;
-    if (data.date) {
-      url += `&date=${data.date}`;
+    if (query.date) {
+      url += `&date=${query.date}`;
     }
-    if (data.search) {
-      url += `&search=${data.search}`;
+    if (query.search) {
+      url += `&search=${query.search}`;
     }
-    if (data.rating.length > 0) {
-      const ratingParams = data.rating
+    if (query.rating.length > 0) {
+      const ratingParams = query.rating
         .map((rating) => `rating[]=${rating}`)
         .join("&");
       url += `&${ratingParams}`;
     }
-    if (data.state in ReviewStatus) {
-      url += `&state=${data.state}`;
+    if (query.state in ReviewStatus) {
+      url += `&state=${query.state}`;
     }
     return api.get(url);
   }

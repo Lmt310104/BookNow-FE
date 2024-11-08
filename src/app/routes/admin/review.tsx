@@ -59,6 +59,7 @@ export default function ReviewRoute() {
         },
         { rating: rating, search: searchText, date: date, state: reviewwState },
       );
+      console.log(response)
       setReviews(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {
@@ -102,7 +103,7 @@ export default function ReviewRoute() {
   return (
     <DashBoardLayout>
       <ReplyDialog ref={replyDialogRef} onRefetch={getAllReviews} />
-      <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
+      <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto w-full">
         <h1 className="text-lg font-semibold ">Danh Sach Danh Gia</h1>
         <Card x-chunk="dashboard-06-chunk-0">
           <CardHeader className="flex flex-col gap-4">
@@ -197,9 +198,9 @@ export default function ReviewRoute() {
               <Button onClick={async () => getAllReviews()}>Ap dung</Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <ReviewTableHeader />
+          <CardContent className="w-full">
+            <Table className="overflow-x-auto w-[1600px]">
+              <ReviewTableHeader/>
               <TableBody>
                 {reviews.map((review, index) => (
                   <ReviewTableRow

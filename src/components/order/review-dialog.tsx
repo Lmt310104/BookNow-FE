@@ -38,7 +38,7 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
               title: "comment",
               book: item.book,
             };
-          }),
+          })
         );
         setIsOpen(true);
       } catch (err) {
@@ -46,22 +46,26 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
       }
     };
 
-    useImperativeHandle(ref, () => {
-      return {
-        async onOpen(id: string) {
-          await getOrderById(id);
-        },
-        onClose() {
-          setIsOpen(false);
-          setReviews([]);
-        },
-      };
-    }, []);
+    useImperativeHandle(
+      ref,
+      () => {
+        return {
+          async onOpen(id: string) {
+            await getOrderById(id);
+          },
+          onClose() {
+            setIsOpen(false);
+            setReviews([]);
+          },
+        };
+      },
+      []
+    );
     const reviewBook = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
         await Promise.all(
-          reviews.map((reivew) => orderService.reviewBook(reivew)),
+          reviews.map((reivew) => orderService.reviewBook(reivew))
         );
         setIsOpen(false);
         setReviews([]);
@@ -74,12 +78,12 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
     const handleOnChangeInput = (
       bookId: string,
       name: string,
-      value: string | number,
+      value: string | number
     ) => {
-      setReviews((preState) =>
+         setReviews((preState) =>
         preState.map((review) =>
-          review.bookId === bookId ? { ...review, [name]: value } : review,
-        ),
+          review.bookId === bookId ? { ...review, [name]: value } : review
+        )
       );
     };
 
@@ -116,7 +120,7 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
         </DialogContent>
       </Dialog>
     );
-  },
+  }
 );
 
 export default ReviewDialog;

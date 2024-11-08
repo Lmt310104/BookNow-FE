@@ -1,6 +1,7 @@
 import { ReviewStatus } from "@/common/enums";
 import { ResBookDetail } from "./book";
 import { Meta } from "./api";
+import { ResUser } from "./user";
 
 export interface Review {
   book?: ResBookDetail;
@@ -22,6 +23,9 @@ export interface ResReview {
   state: ReviewStatus;
   title: string;
   user_id: string;
+  order_id: string;
+  book: ResBookDetail;
+  user: ResUser
 }
 
 export interface GetAllReviews {
@@ -31,7 +35,7 @@ export interface GetAllReviews {
   };
 }
 
-export interface GetAllReviewData {
+export interface GetAllReviewQueries {
   search?: string;
   rating: number[];
   date: Date | null;

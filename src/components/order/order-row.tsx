@@ -52,7 +52,8 @@ export const OrderRow: React.FC<OrderRowProps> = ({ data, onRefetch, onReview })
                 Huy don hang
               </Button>
             )}
-            {data.status === OrderStatus.SUCCESS && <Button onClick={()=> onReview(data.id)}>Danh gia</Button>}
+            {data.status === OrderStatus.SUCCESS && data.review_state==="UNANSWERED" && <Button onClick={()=> onReview(data.id)}>Danh gia</Button>}
+            {data.status === OrderStatus.SUCCESS && data.review_state==="ANSWERED" && <Button onClick={()=> onReview(data.id)}>Xem danh gia</Button>}
             <Button variant="outline" onClick={handleShowDetail}>
               Xem chi tiet
             </Button>
