@@ -1,5 +1,5 @@
 import { ORDER_STATUS } from "@/common/constants/order";
-import { OrderStatus, ReviewStatus } from "@/common/enums";
+import { OrderStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
 import {

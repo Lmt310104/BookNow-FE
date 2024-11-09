@@ -67,3 +67,10 @@ export interface GetAllReviewQueries {
   date: Date | null;
   state: string;
 }
+
+export interface GetReviewByBookId {
+  data: {
+    data: ResReview[],
+    meta: Meta
+  }
+}
