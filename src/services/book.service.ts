@@ -2,6 +2,7 @@ import { BookStatus } from "@/common/enums";
 import { api } from "@/lib/api-client";
 import { Page } from "@/types/api";
 import {
+  BookQuery,
   CreateBookDetail,
   ResGetAllBooks,
   ResGetBookById,
@@ -28,16 +29,16 @@ class BookService {
 
   async getAllBooks(
     { page, take }: Page,
-    status: string,
-
+    query: BookQuery,
   ): Promise<ResGetAllBooks> {
-    if (status === BookStatus.ACTIVE || status === BookStatus.INACTIVE) {
-      return api.get(
-        `/books/get-all?page=${page}&take=${take}&status=${status}`,
-      );
-    } else {
-      return api.get(`/books/get-all?page=${page}&take=${take}`);
+    let url = `/books/get-all?page=${page}&take=${take}&order=${query.order}&sortBy=${query.sortBy}`;
+    if (query.status in BookStatus) {
+      url += `&status=${query.status}`;
     }
+    if (query.title) {
+      url += `&title=${query.title}`
+    }
+    return api.get(url);
   }
 
   async getBookById(id: string): Promise<ResGetBookById> {
@@ -55,7 +56,7 @@ class BookService {
     formData.append("author", "John");
     if (data.image_url && data.image_url.length > 0) {
       data.image_url.forEach((image) => {
-        formData.append("image_url", image);
+        formData.append("image_url[]", image);
       });
     }
 

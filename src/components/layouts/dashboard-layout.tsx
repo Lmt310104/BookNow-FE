@@ -26,7 +26,7 @@ export default function DashBoardLayout({
   const { pathname } = location;
 
   return (
-    <div className="grid min-h-screen w-full grid-cols-[220px_1fr]">
+    <div className="grid min-h-screen  w-full grid-cols-[220px_1fr]">
       <div className=" border-r">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex  items-center border-b h-[60px] px-6">
@@ -109,7 +109,7 @@ export default function DashBoardLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-screen w-full overflow-hidden">
         <header className="flex justify-end  h-[60px] items-center gap-4 border-b  px-6 ">
           <UserDropDownMenu />
         </header>

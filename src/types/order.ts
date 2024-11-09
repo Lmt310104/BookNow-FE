@@ -26,6 +26,7 @@ export interface Order {
     full_name: string;
     id: string;
   };
+  review_state: string;
 }
 
 export interface ResGetOrdersByUser {

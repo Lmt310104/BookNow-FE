@@ -9,6 +9,7 @@ import { JWTDecode } from "@/context/auth";
 import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
 import { setAccessToken } from "@/lib/api-client";
+import { PasswordInput } from "@/components/shared/password-input";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 export default function SignInRoute() {
@@ -16,7 +17,13 @@ export default function SignInRoute() {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
 
-  const handleChangeInput = ({name,value,}: {name: string;value: string;}) => {
+  const handleChangeInput = ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string;
+  }) => {
     setinput((currentInfo) => {
       const newInfo = {
         ...currentInfo,
@@ -56,14 +63,14 @@ export default function SignInRoute() {
     }
   };
 
-  const handleSignInWithGoogle = async ()=>{
-    try{
-      const googleAuthUrl = `${URL_SERVER}/auth/google`
+  const handleSignInWithGoogle = async () => {
+    try {
+      const googleAuthUrl = `${URL_SERVER}/auth/google`;
       window.location.href = googleAuthUrl;
-    } catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
     <div className="w-full grid grid-cols-2 h-screen">
@@ -84,15 +91,27 @@ export default function SignInRoute() {
                 required
                 value={input.email_phone}
                 onChange={(e) =>
-                  handleChangeInput({ name: "email_phone", value: e.target.value })
+                  handleChangeInput({
+                    name: "email_phone",
+                    value: e.target.value,
+                  })
                 }
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mat khau</Label>
-              <Input
+              {/* <Input
                 id="password"
                 type="password"
+                name="password"
+                required
+                value={input.password}
+                onChange={(e) =>
+                  handleChangeInput({ name: "password", value: e.target.value })
+                }
+              /> */}
+              <PasswordInput
+                id="password"
                 name="password"
                 required
                 value={input.password}
@@ -110,7 +129,12 @@ export default function SignInRoute() {
             <Button className="w-full" type="submit">
               Dang Nhap
             </Button>
-            <Button variant="outline" type='button' className="w-full" onClick={handleSignInWithGoogle}>
+            <Button
+              variant="outline"
+              type="button"
+              className="w-full"
+              onClick={handleSignInWithGoogle}
+            >
               Dang Nhap voi Google
             </Button>
           </form>
