@@ -8,7 +8,7 @@ export interface Review {
   orderId: string;
   orderDetailId: string;
   bookId: string;
-  star: number;
+  rating: number;
   description: string | undefined;
   title: string;
 }
@@ -19,18 +19,44 @@ export interface ResReview {
   description: string;
   id: string;
   rating: number;
-  reply_review_id: null;
+  reply_review_id: string | null;
   state: ReviewStatus;
   title: string;
   user_id: string;
-  order_id: string;
+  order_item_id: string;
   book: ResBookDetail;
-  user: ResUser
+  user: ResUser;
+  ReplyReviews: ReplyReviews | null;
+}
+
+export interface ReplyReviews {
+  created_at: string;
+  id: string;
+  reply: string;
+  review_id: string;
+}
+
+export interface ResReviewOfAdmin {
+  book_id: string;
+  created_at: string;
+  description: string;
+  id: string;
+  rating: number;
+  reply_review_id: string | null;
+  state: ReviewStatus;
+  title: string;
+  user_id: string;
+  order_item_id: string;
+  book: ResBookDetail;
+  user: ResUser;
+  OrderItem: {
+    order_id: string
+  };
 }
 
 export interface GetAllReviews {
   data: {
-    data: ResReview[];
+    data: ResReviewOfAdmin[];
     meta: Meta;
   };
 }

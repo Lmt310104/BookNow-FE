@@ -27,12 +27,16 @@ class ReviewService {
     return api.get(url);
   }
 
-  async getReviewById(id: string): Promise<{ data: ResReview }> {
+  async getReviewById(id: string) {
     return api.get(`reviews/${id}`);
   }
 
   async reply(id: string, reply: string) {
     return api.post(`reviews/${id}/reply`, { reply: reply });
+  }
+
+  async getReviewsByOrderId(orderId: string): Promise<{ data: { data: ResReview[] } }> {
+    return api.get(`reviews/get-review-by-order-id/${orderId}`)
   }
 }
 

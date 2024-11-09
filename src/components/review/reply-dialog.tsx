@@ -30,33 +30,37 @@ const ReplyDialog = forwardRef<ReplyDialogRef, ReplyDialogProps>(
     const getOrderById = async (id: string) => {
       try {
         const response = await reviewService.getReviewById(id);
-        setReview(response.data);
         console.log(response);
+        setReview(response.data);
         setIsOpen(true);
       } catch (err) {
         console.log(err);
       }
     };
 
-    useImperativeHandle(ref, () => {
-      return {
-        async onOpen(id: string) {
-          await getOrderById(id);
-        },
-        onClose() {
-          setIsOpen(false);
-          setReview(null);
-        },
-      };
-    }, []);
+    useImperativeHandle(
+      ref,
+      () => {
+        return {
+          async onOpen(id: string) {
+            await getOrderById(id);
+          },
+          onClose() {
+            setReview(null);
+            setIsOpen(false);
+          },
+        };
+      },
+      []
+    );
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!review) return;
       try {
         await reviewService.reply(review.id, reply);
-        setIsOpen(false);
         setReview(null);
+        setIsOpen(false);
         await onRefetch();
       } catch (err) {
         console.log(err);
@@ -124,7 +128,7 @@ const ReplyDialog = forwardRef<ReplyDialogRef, ReplyDialogProps>(
         </Dialog>
       )
     );
-  },
+  }
 );
 
 export default ReplyDialog;

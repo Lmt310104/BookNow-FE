@@ -25,7 +25,7 @@ import { TablePagination } from "@/components/shared/table-pagination";
 import { ReviewTableHeader } from "@/components/review/review-table-header";
 import reviewService from "@/services/review.service";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { ResReview } from "@/types/review";
+import { ResReviewOfAdmin } from "@/types/review";
 import { Meta } from "@/types/api";
 import { ReviewTableRow } from "@/components/review/review-table-row";
 import { ReviewStatus } from "@/common/enums";
@@ -34,7 +34,7 @@ import { dateToString, stringToDate } from "@/utils/format";
 import ReplyDialog, { ReplyDialogRef } from "@/components/review/reply-dialog";
 
 export default function ReviewRoute() {
-  const [reviews, setReviews] = useState<ResReview[]>([]);
+  const [reviews, setReviews] = useState<ResReviewOfAdmin[]>([]);
   const [meta, setMeta] = useState<Meta>({
     page: 1,
     take: 20,
@@ -44,7 +44,7 @@ export default function ReviewRoute() {
     hasNextPage: false,
   });
   const [searchText, setSearchText] = useState<string>("");
-  const [rating, setRating] = useState<number[]>([1,2,3,4,5]);
+  const [rating, setRating] = useState<number[]>([1, 2, 3, 4, 5]);
   const [isAllSelected, setIsAllSelected] = useState<boolean>(true);
   const [date, setDate] = useState<Date | null>(null);
   const [reviewwState, serReviewState] = useState<string>("all");
@@ -57,9 +57,9 @@ export default function ReviewRoute() {
           page: meta.page,
           take: meta.take,
         },
-        { rating: rating, search: searchText, date: date, state: reviewwState },
+        { rating: rating, search: searchText, date: date, state: reviewwState }
       );
-      console.log(response)
+      console.log(response);
       setReviews(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {
@@ -187,11 +187,11 @@ export default function ReviewRoute() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tat ca</SelectItem>
-                  <SelectItem value={ReviewStatus.UNANSWERED}>
-                    {REVIEW_sTATUS[ReviewStatus.UNANSWERED]}
+                  <SelectItem value={ReviewStatus.UNREVIEW}>
+                    {REVIEW_sTATUS[ReviewStatus.UNREVIEW]}
                   </SelectItem>
-                  <SelectItem value={ReviewStatus.ANSWERED}>
-                    {REVIEW_sTATUS[ReviewStatus.ANSWERED]}
+                  <SelectItem value={ReviewStatus.REPLIED}>
+                    {REVIEW_sTATUS[ReviewStatus.REPLIED]}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -200,7 +200,7 @@ export default function ReviewRoute() {
           </CardHeader>
           <CardContent className="w-full">
             <Table className="overflow-x-auto w-[1600px]">
-              <ReviewTableHeader/>
+              <ReviewTableHeader />
               <TableBody>
                 {reviews.map((review, index) => (
                   <ReviewTableRow

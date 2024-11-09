@@ -1,4 +1,5 @@
 export const REVIEW_sTATUS = {
-  UNANSWERED: "Can phan hoi",
-  ANSWERED: "Da tra loi",
+  REPLIED: "Da tra loi",
+  UNREVIEW: "Can phan hoi",
+  REVIEWED: "Can phan hoi",
 };

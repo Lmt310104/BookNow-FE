@@ -1,4 +1,5 @@
 export enum ReviewStatus {
-  UNANSWERED = "UNANSWERED",
-  ANSWERED = "ANSWERED",
+  UNREVIEW = "UNREVIEW",
+  REVIEWED = "REVIEWED",
+  REPLIED = "REPLIED"
 }
