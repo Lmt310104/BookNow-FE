@@ -10,6 +10,7 @@ import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
 import { setAccessToken } from "@/lib/api-client";
 import { PasswordInput } from "@/components/shared/password-input";
+import customerService from "@/services/customer.service";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 export default function SignInRoute() {
@@ -48,6 +49,8 @@ export default function SignInRoute() {
         setAccessToken(accessToken);
         setinput({ email_phone: "", password: "" });
         const { id, role }: JWTDecode = jwtDecode(accessToken);
+        const user = await customerService.getAccountById(id);
+        
         setAuth({
           userId: id,
           role,
