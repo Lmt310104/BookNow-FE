@@ -36,19 +36,7 @@ export interface ReplyReviews {
   review_id: string;
 }
 
-export interface ResReviewOfAdmin {
-  book_id: string;
-  created_at: string;
-  description: string;
-  id: string;
-  rating: number;
-  reply_review_id: string | null;
-  state: ReviewStatus;
-  title: string;
-  user_id: string;
-  order_item_id: string;
-  book: ResBookDetail;
-  user: ResUser;
+export interface ResReviewOfAdmin extends ResReview {
   OrderItem: {
     order_id: string
   };
@@ -66,4 +54,11 @@ export interface GetAllReviewQueries {
   rating: number[];
   date: Date | null;
   state: string;
+}
+
+export interface GetReviewByBookId {
+  data: {
+    data: ResReview[],
+    meta: Meta
+  }
 }
