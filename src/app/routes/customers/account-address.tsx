@@ -5,14 +5,29 @@ import { CustomerAddress } from "@/components/customer/customer-address";
 import AddressDialog, {
   AddressDialogRef,
 } from "@/components/customer/address-dialog";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import addressService from "@/services/address.service";
+import { ResAddress } from "@/types/address";
 
 export default function AccountAddressRoute() {
   const dialogRef = useRef<AddressDialogRef>(null);
-
+  const [addresses, setAddresses] = useState<ResAddress[]>([]);
   const handleAddNew = () => {
     dialogRef.current?.onOpen();
   };
+
+  const getAllAddress = async () => {
+    try {
+      const response = await addressService.getAllAddressByUser();
+      setAddresses(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getAllAddress();
+  }, []);
 
   return (
     <CustomerLayout>
@@ -30,14 +45,9 @@ export default function AccountAddressRoute() {
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
-          <CustomerAddress />
+          {addresses.map((address, index) => {
+            return <CustomerAddress key={index} data={address} />;
+          })}
         </div>
       </main>
     </CustomerLayout>
