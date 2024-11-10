@@ -53,8 +53,12 @@ export interface ResGetBookById extends Response {
 }
 
 export interface BookQuery {
-  status: string,
-  order: string,
-  sortBy: string,
-  title: string
+  status?: string,
+  order?: string,
+  sortBy?: string,
+  title?: string,
+  min_price?: number;
+  max_price?: number;
+  min_star?: number;
+  category?: string
 }

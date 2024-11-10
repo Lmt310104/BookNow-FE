@@ -17,9 +17,7 @@ import { UserRole } from "@/common/enums";
 import authService from "@/services/auth.service";
 import { removeAccessToken } from "@/lib/api-client";
 import useUser from "@/hooks/useUser";
-
-const defaultAvatarUrl =
-  "https://firebasestorage.googleapis.com/v0/b/booknow-22cff.appspot.com/o/book%2F1729848448797-default-user.jpeg?alt=media&token=c10f8393-cf17-4aa8-8b5f-a793a7058456";
+import { DEFAULT_AVATAR_URL } from "@/common/constants/user";
 
 export default function UserDropDownMenu() {
   const [auth, setAuth] = useAuth();
@@ -49,7 +47,7 @@ export default function UserDropDownMenu() {
         >
           <img
             className="w-full h-full object-cover"
-            src={user?.avatar_url ?? defaultAvatarUrl}
+            src={user?.avatar_url ?? DEFAULT_AVATAR_URL}
           />
           <span className="sr-only">Toggle user menu</span>
         </Button>
@@ -59,7 +57,7 @@ export default function UserDropDownMenu() {
           <div className="rounded-full overflow-hidden aspect-square h-7 w-7 mr-2">
             <img
               className="w-full h-full object-cover"
-              src={user?.avatar_url ?? defaultAvatarUrl}
+              src={user?.avatar_url ?? DEFAULT_AVATAR_URL}
             />
           </div>
           <span>{user?.full_name || ""}</span>

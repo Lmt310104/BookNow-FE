@@ -4,6 +4,8 @@ import { Textarea } from "../ui/textarea";
 import { ResReview, Review } from "@/types/review";
 import { useState } from "react";
 import { ReviewStatus } from "@/common/enums";
+import useUser from "@/hooks/useUser";
+import { DEFAULT_AVATAR_URL } from "@/common/constants/user";
 
 interface ReviewPerProductProps {
   data: Review | ResReview;
@@ -17,6 +19,7 @@ export default function ReviewPerProduct({
   action,
 }: ReviewPerProductProps) {
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
+  const [user] = useUser();
 
   return (
     <div className="space-y-4">
@@ -71,11 +74,11 @@ export default function ReviewPerProduct({
       {action !== ReviewStatus.UNREVIEW && (
         <>
           <div className="grid grid-cols-[44px_1fr] gap-4">
-            <div className="overflow-hidden rounded-full w-11 aspect-square border border-red-500">
+            <div className="overflow-hidden rounded-full w-11 aspect-square">
               <img
-                alt="Product image"
+                alt="Avatar"
                 className="object-cover w-full h-full"
-                src={image}
+                src={user?.avatar_url ?? DEFAULT_AVATAR_URL}
               />
             </div>
             <div className="flex flex-col gap-1">

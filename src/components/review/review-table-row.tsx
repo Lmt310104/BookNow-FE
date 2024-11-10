@@ -7,6 +7,7 @@ import { ResReviewOfAdmin } from "@/types/review";
 import { REVIEW_sTATUS } from "@/common/constants";
 import { dateToVNString } from "@/utils/format";
 import { ReviewStatus } from "@/common/enums";
+import { DEFAULT_AVATAR_URL } from "@/common/constants/user";
 
 interface ReviewTableRowProps {
   data: ResReviewOfAdmin;
@@ -35,9 +36,22 @@ export const ReviewTableRow: React.FC<ReviewTableRowProps> = ({
 
       <TableCell>{data.rating}</TableCell>
       <TableCell>{data.description}</TableCell>
-      <TableCell>{data.user.full_name}</TableCell>
+      <TableCell>
+        <div className="flex flex-row gap-2 items-center">
+          <div className="w-5 h-5 aspect-square rounded-full overflow-hidden">
+            <img
+              alt="avt"
+              className="w-full h-full object-cover"
+              src={data.user.avatar_url || DEFAULT_AVATAR_URL}
+            />
+          </div>
+          <span>{data.user.full_name}</span>
+        </div>
+      </TableCell>
       <TableCell>{dateToVNString(new Date(data.created_at))}</TableCell>
-      <TableCell>cam on ban da mua hang</TableCell>
+      <TableCell>
+        {(data.ReplyReviews && data.ReplyReviews.reply) || ""}
+      </TableCell>
 
       <TableCell className="w-[130px]  sticky right-[97px] bg-gray-50 z-10">
         <Badge variant="outline">{REVIEW_sTATUS[data.state]}</Badge>
