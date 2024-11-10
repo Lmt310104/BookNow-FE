@@ -31,7 +31,7 @@ export default function AccountAddressRoute() {
 
   return (
     <CustomerLayout>
-      <AddressDialog ref={dialogRef} />
+      <AddressDialog ref={dialogRef} onRefetch={getAllAddress} />
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6">
         <div className="flex items-center">
           <h1 className="text-lg font-semibold md:text-2xl">Dia Chi Cua Toi</h1>
@@ -51,6 +51,7 @@ export default function AccountAddressRoute() {
                 key={index}
                 data={address}
                 onRefetch={getAllAddress}
+                onUpdate={() => dialogRef.current?.onOpen(address)}
               />
             );
           })}

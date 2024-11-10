@@ -14,16 +14,16 @@ import {
 } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Address } from "@/types/address";
+import { Address, ResAddress } from "@/types/address";
 import addressService from "@/services/address.service";
 
 export interface AddressDialogRef {
-  onOpen: (id?: string) => Promise<void>;
+  onOpen: (data?: ResAddress) => Promise<void>;
   onClose: () => void;
 }
 
 interface AddressDialogProps {
-  onRefetch?: () => Promise<void>;
+  onRefetch: () => Promise<void>;
 }
 
 const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
@@ -39,16 +39,19 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
       ref,
       () => {
         return {
-          async onOpen(id?: string) {
-            if (id) {
-              // try {
-              //   const response = await categoryService.getCategoryById(id);
-              //   setCategory(response.data.data);
-              //   setInput(response.data.data.name);
-              //   setIsOpen(true);
-              // } catch (err) {
-              //   console.log(err);
-              // }
+          onOpen(data?: ResAddress) {
+            if (data) {
+              try {
+                setAddress({
+                  address: data.address,
+                  fullName: data.full_name,
+                  phoneNumber: data.phone_number,
+                  id: data.id,
+                });
+                setIsOpen(true);
+              } catch (err) {
+                console.log(err);
+              }
             } else {
               setIsOpen(true);
             }
@@ -73,28 +76,25 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      // if (category.id) {
-      //   try {
-      //     await categoryService.upDateCategory({
-      //       id: category.id,
-      //       name: input,
-      //     });
-      //     await onRefetch();
-      //   } catch (err) {
-      //     console.log(err);
-      //   }
-      // } else {
-      try {
-        await addressService.createAddress({
-          address: address.address,
-          fullName: address.fullName,
-          phoneNumber: address.phoneNumber,
-        });
-        // await onRefetch();
-      } catch (err) {
-        console.log(err);
+      if (address.id) {
+        try {
+          await addressService.updateAddressById(address);
+          await onRefetch();
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        try {
+          await addressService.createAddress({
+            address: address.address,
+            fullName: address.fullName,
+            phoneNumber: address.phoneNumber,
+          });
+          await onRefetch();
+        } catch (err) {
+          console.log(err);
+        }
       }
-      // }
       setIsOpen(false);
       setAddress({
         address: "",

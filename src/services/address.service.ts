@@ -13,6 +13,10 @@ class AddressService {
     async deleteAddressById(id: string) {
         return api.delete(`address/delete/${id}`);
     }
+
+    async updateAddressById(data: Address) {
+        return api.post(`address/update/${data.id}`, { address: data.address, phoneNumber: data.phoneNumber, fullName: data.fullName })
+    }
 }
 
 export default new AddressService();

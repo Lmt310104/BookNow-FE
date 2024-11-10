@@ -7,11 +7,13 @@ import addressService from "@/services/address.service";
 interface CustomerAddressProps {
   data: ResAddress;
   onRefetch: () => Promise<void>;
+  onUpdate: () => void;
 }
 
 export const CustomerAddress: React.FC<CustomerAddressProps> = ({
   data,
   onRefetch,
+  onUpdate,
 }) => {
   const handleDeleteAddress = async () => {
     try {
@@ -35,7 +37,9 @@ export const CustomerAddress: React.FC<CustomerAddressProps> = ({
         </div>
       </div>
       <div className="flex flex-row gap-4 items-center">
-        <Button variant="secondary">Chinh sua</Button>
+        <Button variant="secondary" onClick={onUpdate}>
+          Chinh sua
+        </Button>
         <Button variant="outline" onClick={handleDeleteAddress}>
           Xoa
         </Button>
