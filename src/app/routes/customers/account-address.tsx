@@ -46,7 +46,13 @@ export default function AccountAddressRoute() {
         </div>
         <div className="flex flex-col gap-3">
           {addresses.map((address, index) => {
-            return <CustomerAddress key={index} data={address} />;
+            return (
+              <CustomerAddress
+                key={index}
+                data={address}
+                onRefetch={getAllAddress}
+              />
+            );
           })}
         </div>
       </main>

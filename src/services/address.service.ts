@@ -9,6 +9,10 @@ class AddressService {
     async getAllAddressByUser(): Promise<{ data: { data: ResAddress[] } }> {
         return api.get('address/get-all-by-user');
     }
+
+    async deleteAddressById(id: string) {
+        return api.delete(`address/delete/${id}`);
+    }
 }
 
 export default new AddressService();

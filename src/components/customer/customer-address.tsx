@@ -2,12 +2,25 @@ import { Button } from "@/components/ui/button";
 import SectionCard from "../shared/section-card";
 import { ResAddress } from "@/types/address";
 import React from "react";
+import addressService from "@/services/address.service";
 
 interface CustomerAddressProps {
   data: ResAddress;
+  onRefetch: () => Promise<void>;
 }
 
-export const CustomerAddress: React.FC<CustomerAddressProps> = ({ data }) => {
+export const CustomerAddress: React.FC<CustomerAddressProps> = ({
+  data,
+  onRefetch,
+}) => {
+  const handleDeleteAddress = async () => {
+    try {
+      await addressService.deleteAddressById(data.id);
+      await onRefetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <SectionCard className="flex flex-row justify-between  p-4">
       <div className="flex flex-col gap-1">
@@ -23,7 +36,9 @@ export const CustomerAddress: React.FC<CustomerAddressProps> = ({ data }) => {
       </div>
       <div className="flex flex-row gap-4 items-center">
         <Button variant="secondary">Chinh sua</Button>
-        <Button variant="outline">Xoa</Button>
+        <Button variant="outline" onClick={handleDeleteAddress}>
+          Xoa
+        </Button>
       </div>
     </SectionCard>
   );
