@@ -1,3 +1,3 @@
-export default function BookReportRoute() {
+export const BookReportRoute = () => {
   return <div>BookReportRoute</div>;
-}
+};

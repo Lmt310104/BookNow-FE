@@ -1,24 +1,37 @@
+import { queryConfig } from "@/lib/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as React from "react";
+// import { Spinner } from '@/components/ui/spinner';
 import { ErrorBoundary } from "react-error-boundary";
+import { HelmetProvider } from "react-helmet-async";
 import { MainErrorFallback } from "@/components/errors/main";
-import { Suspense, ReactNode } from "react";
-import AuthProvider from "@/context/auth";
 
 type AppProviderProps = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
-export default function AppProvider({ children }: AppProviderProps) {
+export const AppProvider = ({ children }: AppProviderProps) => {
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: queryConfig,
+      }),
+  );
   return (
-    <Suspense
+    <React.Suspense
       fallback={
         <div className="flex h-screen w-screen items-center justify-center">
-          Loading....
+          {/* <Spinner size="xl" /> */}
         </div>
       }
     >
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
-        <AuthProvider>{children}</AuthProvider>
+        <HelmetProvider>
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        </HelmetProvider>
       </ErrorBoundary>
-    </Suspense>
+    </React.Suspense>
   );
-}
+};
