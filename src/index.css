@@ -86,6 +86,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   scrollbar-color: #2c2c2c60 #f1f1f1;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
 
 @media (prefers-color-scheme: light) {
   :root {
