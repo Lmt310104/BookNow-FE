@@ -1,9 +1,80 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "@/services/auth.service";
+import { jwtDecode } from "jwt-decode";
+import { JWTDecode } from "@/context/auth";
+import { UserRole } from "@/common/enums";
+import useAuth from "@/hooks/useAuth";
+import { setAccessToken } from "@/lib/api-client";
+import { PasswordInput } from "@/components/shared/password-input";
+import customerService from "@/services/customer.service";
+const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
-export function SignInRoute() {
+export default function SignInRoute() {
+  const [input, setinput] = useState({ email_phone: "", password: "" });
+  const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
+
+  const handleChangeInput = ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string;
+  }) => {
+    setinput((currentInfo) => {
+      const newInfo = {
+        ...currentInfo,
+        [name]: value,
+      };
+      return newInfo;
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      let response;
+      if (/^\d+$/.test(input.email_phone)) {
+        response = await authService.singInWithPhone(input);
+      } else {
+        response = await authService.signInWithEmail(input);
+      }
+
+      if (response.data) {
+        const accessToken: string = response.data.access_token;
+        setAccessToken(accessToken);
+        setinput({ email_phone: "", password: "" });
+        const { id, role }: JWTDecode = jwtDecode(accessToken);
+        const user = await customerService.getAccountById(id);
+        
+        setAuth({
+          userId: id,
+          role,
+        });
+        if (role === UserRole.ADMIN) {
+          navigate("/dashboad");
+        } else if (role === UserRole.CUSTOMER) {
+          navigate("/");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSignInWithGoogle = async () => {
+    try {
+      const googleAuthUrl = `${URL_SERVER}/auth/google`;
+      window.location.href = googleAuthUrl;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="w-full grid grid-cols-2 h-screen">
       <div className="bg-black"></div>
@@ -12,19 +83,45 @@ export function SignInRoute() {
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Dang Nhap</h1>
           </div>
-          <div className="grid gap-4">
+          <form className="grid gap-4" onSubmit={handleSubmit}>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="phone-email">Email hoac So dien thoai</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="phone-email"
+                type="text"
+                name="phone-email"
+                placeholder="Email hoac So dien thoai"
                 required
+                value={input.email_phone}
+                onChange={(e) =>
+                  handleChangeInput({
+                    name: "email_phone",
+                    value: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Mat khau</Label>
-              <Input id="password" type="password" required />
+              {/* <Input
+                id="password"
+                type="password"
+                name="password"
+                required
+                value={input.password}
+                onChange={(e) =>
+                  handleChangeInput({ name: "password", value: e.target.value })
+                }
+              /> */}
+              <PasswordInput
+                id="password"
+                name="password"
+                required
+                value={input.password}
+                onChange={(e) =>
+                  handleChangeInput({ name: "password", value: e.target.value })
+                }
+              />
             </div>
             <a
               href="./forgot-password"
@@ -33,12 +130,17 @@ export function SignInRoute() {
               Quen mat khau?
             </a>
             <Button className="w-full" type="submit">
-              <Link to="/dashboad">Dang Nhap</Link>
+              Dang Nhap
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              type="button"
+              className="w-full"
+              onClick={handleSignInWithGoogle}
+            >
               Dang Nhap voi Google
             </Button>
-          </div>
+          </form>
 
           <div className="mt-4 text-center text-sm">
             Chua co tai khoan?{" "}

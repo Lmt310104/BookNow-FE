@@ -1,25 +1,23 @@
 import { Button } from "@/components/ui/button";
-import useVerificationEmail from "@/features/auth/apis/verification";
+import authService from "@/services/auth.service";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
-export const VerificationRoute = () => {
+
+export default function VerificationRoute() {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const token = params.get("token");
-  const verificationEmail = useVerificationEmail({
-    mutationConfig: {
-      onSuccess: () => {
-        navigate("/verification/success");
-      },
-      onError: () => {
-        navigate("/verification/failed");
-      },
-    },
-  });
-  const handleClickVerify = () => {
+
+  const handleClickVerify = async () => {
     if (token) {
-      verificationEmail.mutate({ token });
+      try {
+        await authService.verificationEmail({ token });
+        navigate("/verification/success");
+      } catch (err) {
+        console.log(err);
+        navigate("/verification/failed");
+      }
     } else {
       console.error("Token is null");
     }
@@ -28,15 +26,15 @@ export const VerificationRoute = () => {
     <div className="flex flex-col justify-center items-center h-[100vh] gap-10">
       <MdMarkEmailUnread size={48} color="#4caf50" />
       <span className="text-2xl text-[#4caf50] font-bold">
-        Account verification
+      Xác minh tài khoản
       </span>
-      <span className="font-bold">You're already have a BookNow account</span>
+      <span className="font-bold">Bạn đã có tài khoản BookNow</span>
       <div className="flex flex-col items-center gap-5">
-        <span>To continue:</span>
+        <span>Để tiếp tục:</span>
         <Button className="h-10" onClick={handleClickVerify}>
-          Verify your email here
+        Xác minh email của bạn tại đây
         </Button>
       </div>
     </div>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { MapPin, ShoppingCart, UserRound } from "lucide-react";
+import { ClipboardList, MapPin, UserRound } from "lucide-react";
 import { routes } from "@/config";
 import { useLocation } from "react-router-dom";
 import ProductLayout from "./product-layout";
@@ -18,8 +18,8 @@ export default function CustomerLayout({
 
   return (
     <ProductLayout>
-      <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
-        <div className=" border-r bg-white">
+      <div className="grid w-full grid-cols-[220px_1fr]">
+        <div className=" border-x bg-white">
           <div className="flex-1">
             <nav className="grid items-start  text-sm font-medium px-4 mt-6">
               <a
@@ -36,10 +36,12 @@ export default function CustomerLayout({
               <a
                 href={routes.CUSTOMER.PURCHASE}
                 className={
-                  pathname === routes.CUSTOMER.PURCHASE ? active : inActive
+                  pathname.includes(routes.CUSTOMER.PURCHASE)
+                    ? active
+                    : inActive
                 }
               >
-                <ShoppingCart className="h-4 w-4" />
+                <ClipboardList className="w-4 h-4" />
                 Don Mua
               </a>
               <a
@@ -56,7 +58,7 @@ export default function CustomerLayout({
             </nav>
           </div>
         </div>
-        <div className="flex flex-col h-screen">{children}</div>
+        <div className="flex flex-col">{children}</div>
       </div>
     </ProductLayout>
   );
