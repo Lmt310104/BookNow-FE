@@ -1,68 +1,40 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import useSignUpByEmail from "@/features/auth/apis/sign-up";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import authService from "@/services/auth.service";
-import { User } from "@/types/user";
-import { dateToString, stringToDate } from "@/utils/format";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Gender } from "@/common/enums";
-import { PasswordInput } from "@/components/shared/password-input";
 
-export default function SignUpRoute() {
-  const [input, setinput] = useState<User>({
+export const SignUpRoute = () => {
+  const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
     fullName: "",
-    gender: Gender.MALE,
-    birthday: new Date(),
   });
+
   const navigate = useNavigate();
+  const signUpByEmailMutation = useSignUpByEmail({
+    mutationConfig: {
+      onSuccess: () => {
+        navigate("/");
+      },
+    },
+  });
 
   function handleChangeInput({ name, value }: { name: string; value: string }) {
-    if (name === "birthday") {
-      setinput((currentInfo) => {
-        const newInfo = {
-          ...currentInfo,
-          [name]: stringToDate(value),
-        };
-        return newInfo;
-      });
-    } else {
-      setinput((currentInfo) => {
-        const newInfo = {
-          ...currentInfo,
-          [name]: value,
-        };
-        return newInfo;
-      });
-    }
+    setUserInfo((currentInfo) => {
+      const newInfo = {
+        ...currentInfo,
+        [name]: value,
+      };
+      return newInfo;
+    });
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    try {
-      await authService.signUpByEmail(input);
-      setinput({
-        email: "",
-        password: "",
-        fullName: "",
-        gender: Gender.MALE,
-        birthday: new Date(),
-      });
-      navigate("/auth/sign-in");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    signUpByEmailMutation.mutate(userInfo);
+  }
 
   return (
     <div className="w-full grid grid-cols-2 h-screen">
@@ -77,88 +49,33 @@ export default function SignUpRoute() {
               <Input
                 id="name"
                 type="text"
-                name="name"
                 required
-                value={input.fullName}
+                value={userInfo.fullName}
                 onChange={(e) =>
-                  handleChangeInput({
-                    name: "fullName",
-                    value: e.target.value,
-                  })
+                  handleChangeInput({ name: "fullName", value: e.target.value })
                 }
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="birthday">Ngay sinh</Label>
-                <Input
-                  id="birthday"
-                  type="date"
-                  name="birthday"
-                  required
-                  value={dateToString(input.birthday || new Date())}
-                  onChange={(e) =>
-                    handleChangeInput({
-                      name: "birthday",
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="gender">Gioi tinh</Label>
-                <Select
-                  value={input.gender}
-                  onValueChange={(e) =>
-                    handleChangeInput({
-                      name: "gender",
-                      value: e,
-                    })
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Gioi tinh" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value={Gender.MALE}>Nam</SelectItem>
-                      <SelectItem value={Gender.FEMALE}>Nu</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="email@example.com"
+                placeholder="m@example.com"
                 required
-                value={input.email}
+                value={userInfo.email}
                 onChange={(e) =>
                   handleChangeInput({ name: "email", value: e.target.value })
                 }
               />
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="email">Mat khau</Label>
-              {/* <Input
+              <Input
                 id="password"
                 type="password"
                 required
-                value={input.password}
-                onChange={(e) =>
-                  handleChangeInput({ name: "password", value: e.target.value })
-                }
-              /> */}
-              <PasswordInput
-                id="password"
-                name="password"
-                required
-                value={input.password}
+                value={userInfo.password}
                 onChange={(e) =>
                   handleChangeInput({ name: "password", value: e.target.value })
                 }
@@ -168,9 +85,9 @@ export default function SignUpRoute() {
             <Button className="w-full" type="submit">
               Tiep tuc
             </Button>
-            {/* <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full">
               Dang Ky voi Google
-            </Button> */}
+            </Button>
           </form>
 
           <div className="mt-4 text-center text-sm">
@@ -184,4 +101,4 @@ export default function SignUpRoute() {
       <div className="bg-black"></div>
     </div>
   );
-}
+};

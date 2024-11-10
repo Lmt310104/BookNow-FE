@@ -1,10 +1,10 @@
-import AppProvider from "./provider";
-import AppRouter from "./router";
+import { AppProvider } from "./provider";
+import { AppRouter } from "./router";
 
-export default function App() {
+export const App = () => {
   return (
-      <AppProvider>
-        <AppRouter />
-      </AppProvider>
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
   );
-}
+};
