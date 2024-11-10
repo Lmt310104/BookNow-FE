@@ -18,7 +18,7 @@ import { Address, ResAddress } from "@/types/address";
 import addressService from "@/services/address.service";
 
 export interface AddressDialogRef {
-  onOpen: (data?: ResAddress) => Promise<void>;
+  onOpen: (data?: ResAddress) => void;
   onClose: () => void;
 }
 
@@ -41,17 +41,13 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
         return {
           onOpen(data?: ResAddress) {
             if (data) {
-              try {
-                setAddress({
-                  address: data.address,
-                  fullName: data.full_name,
-                  phoneNumber: data.phone_number,
-                  id: data.id,
-                });
-                setIsOpen(true);
-              } catch (err) {
-                console.log(err);
-              }
+              setAddress({
+                address: data.address,
+                fullName: data.full_name,
+                phoneNumber: data.phone_number,
+                id: data.id,
+              });
+              setIsOpen(true);
             } else {
               setIsOpen(true);
             }

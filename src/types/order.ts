@@ -44,7 +44,7 @@ export interface ResGetOrderById {
 
 export interface CreateOrder {
   fullName: string;
-  phoneNumber: string;
+  phoneNumber: number | undefined;
   address: string;
   items: { bookId: string; quantity: number }[];
 }

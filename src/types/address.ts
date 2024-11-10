@@ -7,7 +7,7 @@ export interface Address {
 
 export interface ResAddress {
     full_name: string;
-    phone_number: number;
+    phone_number: number | undefined;
     address: string;
     id: string
 }
