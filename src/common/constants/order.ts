@@ -1,17 +1,17 @@
 export const ORDER_STATUS = {
-  PENDING: "Cho xac nhan",
-  PROCESSING: "Dang xu ly",
-  DELIVERED: "Dang van chuyen",
-  SUCCESS: "Hoan tat",
-  CANCELLED: "Da huy boi ban",
-  REJECT: "Da huy boi nguoi ban",
+  PENDING: "Chờ xác nhận",
+  PROCESSING: "Đang xử lý",
+  DELIVERED: "Đang vận chuyển",
+  SUCCESS: "Hoàn tất",
+  CANCELLED: "Đã hủy bởi bạn",
+  REJECT: "Đã hủy bởi người bán",
 };
 
 export const ADMIN_ORDER_STATUS = {
-  PENDING: "Cho xac nhan",
-  PROCESSING: "Dang xu ly",
-  DELIVERED: "Dang van chuyen",
-  SUCCESS: "Hoan tat",
-  CANCELLED: "Da huy boi nguoi mua",
-  REJECT: "Da huy boi ban",
+  PENDING: "Chờ xác nhận",
+  PROCESSING: "Đang xử lý",
+  DELIVERED: "Đang vận chuyển",
+  SUCCESS: "Hoàn tất",
+  CANCELLED: "Đã hủy bởi người mua",
+  REJECT: "Đã hủy bởi người bán",
 }

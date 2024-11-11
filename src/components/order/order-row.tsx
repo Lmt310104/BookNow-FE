@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductOrderRow } from "./product-order-row";
 import SectionCard from "../shared/section-card";
 import orderService from "@/services/order.service";
+import { formatNumber } from "@/utils/format";
 
 interface OrderRowProps {
   data: Order;
@@ -38,7 +39,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
   return (
     <SectionCard>
       <div className="flex flex-row justify-between p-4">
-        <span>{`Ma Don Hang: ${data.id}`}</span>
+        <span>{`Mã đơn hàng: ${data.id}`}</span>
         <span>{ORDER_STATUS[data.status]}</span>
       </div>
       <div onClick={handleShowDetail}>
@@ -47,13 +48,13 @@ export const OrderRow: React.FC<OrderRowProps> = ({
         })}
       </div>
       <div className="w-full  flex flex-col gap-4 p-4 items-end">
-        <div>{`Tong tien: ${data.total_price}`}</div>
+        <div>{`Tong tien: ${formatNumber(data.total_price)}`}</div>
         <div className="w-full flex flex-row">
           <div className="flex flex-row gap-4 ml-auto">
             {(data.status === OrderStatus.PENDING ||
               data.status === OrderStatus.PROCESSING) && (
               <Button variant="outline" onClick={handleCancelOrder}>
-                Huy don hang
+                Hủy đơn hàng
               </Button>
             )}
             {data.status === OrderStatus.SUCCESS &&
@@ -61,7 +62,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
                 <Button
                   onClick={() => onReview(data.id, ReviewStatus.UNREVIEW)}
                 >
-                  Danh gia
+                  Đánh giá
                 </Button>
               )}
             {data.status === OrderStatus.SUCCESS &&
@@ -69,20 +70,17 @@ export const OrderRow: React.FC<OrderRowProps> = ({
                 <Button
                   onClick={() => onReview(data.id, ReviewStatus.REVIEWED)}
                 >
-                  Xem danh gia
+                  Xem đánh giá
                 </Button>
               )}
             {data.status === OrderStatus.SUCCESS &&
               data.review_state === ReviewStatus.REPLIED && (
                 <Button onClick={() => onReview(data.id, ReviewStatus.REPLIED)}>
-                  Xem phan hoi
+                  Xem phản hồi
                 </Button>
               )}
-            <Button
-              variant="outline"
-              onClick={() => onReview(data.id, ReviewStatus.REPLIED)}
-            >
-              Xem chi tiet
+            <Button variant="outline" onClick={handleShowDetail}>
+              Xem chi tiết
             </Button>
           </div>
         </div>

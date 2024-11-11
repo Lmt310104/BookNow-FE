@@ -120,7 +120,7 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Danh gia</DialogTitle>
+            <DialogTitle>Đánh Giá</DialogTitle>
           </DialogHeader>
           <form className="space-y-6" onSubmit={reviewBook}>
             {reviews.map((item, index) => {
@@ -143,12 +143,12 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
                   setIsOpen(false);
                 }}
               >
-                Tro lai
+                Trở lại
               </Button>
 
               {action === ReviewStatus.UNREVIEW && (
                 <Button type="submit" className="w-1/2">
-                  Hoan thanh
+                  Hoàn thành
                 </Button>
               )}
             </div>

@@ -25,6 +25,15 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 import authService from "@/services/auth.service";
 import useUser from "@/hooks/useUser";
+import { AxiosError } from "axios";
+
+type ErrorState = {
+  email?: string;
+  fullName?: string;
+  gender?: string;
+  birthday?: string;
+  phone?: string;
+};
 
 export default function AccountInfo() {
   const [accountData, setAccountData] = useState<ResUser>({
@@ -35,6 +44,7 @@ export default function AccountInfo() {
     phone: undefined,
     avatar_url: undefined,
   });
+  const [errors, setErrors] = useState<ErrorState>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [auth] = useAuth();
   const [user, setUser] = useUser();
@@ -56,6 +66,31 @@ export default function AccountInfo() {
     }
   }, [auth]);
 
+  const validateInputs = () => {
+    const newErrors: ErrorState = {};
+
+    if (!accountData.email.trim()) {
+      newErrors.email = "Email không được để trống";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(accountData.email)) {
+        newErrors.email = "Email chưa đúng định dạng";
+      }
+    }
+
+    if (!accountData.full_name?.trim()) {
+      newErrors.fullName = "Họ và tên không được để trống";
+    }
+    const phoneRegex = /^\d{10}$/;
+    if (accountData.phone && !phoneRegex.test(accountData.phone.toString())) {
+      newErrors.phone = "Số điện thoại chưa đúng định dạng";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChangePass = async () => {
     if (auth) {
       try {
@@ -73,6 +108,7 @@ export default function AccountInfo() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateInputs()) return;
     try {
       const response = await customerService.updateAccount(
         accountData,
@@ -83,6 +119,11 @@ export default function AccountInfo() {
         full_name: response.data.data.full_name,
       });
     } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === 400) {
+        setErrors({
+          email: "Email đã được sử dụng. Vui lòng chọn email khác",
+        });
+      }
       console.log(err);
     }
   };
@@ -144,12 +185,15 @@ export default function AccountInfo() {
   return (
     <Card className="w-full">
       <CardContent>
-        <form className="flex flex-col gap-6 mt-6" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-6 mt-6"
+          onSubmit={handleSubmit}
+          noValidate
+        >
           <div className="relative mx-auto">
             <img
               className="w-28 h-28 rounded-full border-4 border-[#C2E1FF]"
               src={accountData.avatar_url || image}
-              alt="Rounded avatar"
             />
             <div
               className="absolute bottom-[10px] left-[90px] w-4 h-4 bg-[#64646D] rounded-full flex justify-center items-center hover:cursor-pointer"
@@ -167,11 +211,10 @@ export default function AccountInfo() {
           />
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Ho va ten</Label>
+              <Label>Họ và tên</Label>
               <Input
                 id="fullName"
                 type="fullName"
-                required
                 value={accountData?.full_name}
                 onChange={(e) =>
                   handleChangeInput({
@@ -180,13 +223,15 @@ export default function AccountInfo() {
                   })
                 }
               />
+              {errors?.fullName && (
+                <p className="text-red-500 text-xs">{errors.fullName}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label>Ngay sinh</Label>
+              <Label>Ngày sinh</Label>
               <Input
                 id="birthday"
                 type="date"
-                required
                 value={dateToString(
                   (accountData?.birthday && new Date(accountData?.birthday)) ||
                     new Date()
@@ -197,12 +242,13 @@ export default function AccountInfo() {
                     value: e.target.value,
                   })
                 }
+                max={new Date().toISOString().split("T")[0]}
               />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Gioi tinh</Label>
+              <Label>Giới tính</Label>
               <Select
                 defaultValue={Gender.MALE}
                 value={accountData?.gender}
@@ -219,16 +265,17 @@ export default function AccountInfo() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value={Gender.MALE}>Nam</SelectItem>
-                    <SelectItem value={Gender.FEMALE}>Nu</SelectItem>
+                    <SelectItem value={Gender.FEMALE}>Nữ</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>So dien thoai</Label>
+              <Label>Số điện thoại</Label>
               <Input
                 id="phone"
                 type="number"
+                placeholder="Số điện thoại"
                 value={accountData.phone}
                 onChange={(e) =>
                   handleChangeInput({
@@ -237,6 +284,9 @@ export default function AccountInfo() {
                   })
                 }
               />
+              {errors?.phone && (
+                <p className="text-red-500 text-xs">{errors.phone}</p>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-6">
@@ -245,7 +295,7 @@ export default function AccountInfo() {
               <Input
                 id="email"
                 type="email"
-                required
+                placeholder="email@example.com"
                 value={accountData?.email}
                 onChange={(e) =>
                   handleChangeInput({
@@ -254,15 +304,18 @@ export default function AccountInfo() {
                   })
                 }
               />
+              {errors?.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Password</Label>
+              <Label>Mật khẩu</Label>
               <Button
                 variant="secondary"
                 type="button"
                 onClick={handleChangePass}
               >
-                Doi mat khau
+                Đổi mật khẩu
               </Button>
             </div>
           </div>
@@ -273,10 +326,10 @@ export default function AccountInfo() {
               type="button"
               onClick={handleCancel}
             >
-              Huy
+              Hủy
             </Button>
             <Button className="w-40" type="submit">
-              Xac nhan
+              Xác Nhận
             </Button>
           </div>
         </form>

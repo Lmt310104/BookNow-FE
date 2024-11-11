@@ -26,6 +26,12 @@ interface AddressDialogProps {
   onRefetch: () => Promise<void>;
 }
 
+type ErrorState = {
+  address?: string;
+  fullName?: string;
+  phoneNumber?: string;
+};
+
 const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
   function AddressDialog({ onRefetch }, ref) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -34,6 +40,28 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
       fullName: "",
       phoneNumber: undefined,
     });
+    const [errors, setErrors] = useState<ErrorState>({});
+
+    const validateInputs = () => {
+      const newErrors: ErrorState = {};
+
+      if (!address.fullName?.trim()) {
+        newErrors.fullName = "Họ và tên không được để trống";
+      }
+      if (!address.address?.trim()) {
+        newErrors.address = "Địa chỉ không được để trống";
+      }
+      const phoneRegex = /^\d{10}$/;
+      if (!address.phoneNumber) {
+        newErrors.phoneNumber = "Số điện thoại không được để trống";
+      } else if (!phoneRegex.test(address.phoneNumber.toString())) {
+        newErrors.phoneNumber = "Số điện thoại chưa đúng định dạng";
+      }
+
+      setErrors(newErrors);
+
+      return Object.keys(newErrors).length === 0;
+    };
 
     useImperativeHandle(
       ref,
@@ -72,6 +100,7 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      if (!validateInputs()) return;
       if (address.id) {
         try {
           await addressService.updateAddressById(address);
@@ -116,43 +145,49 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
         <DialogContent className="max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {address.id ? "Chinh sua dia chi" : "Them dia chi moi"}
+              {address.id ? "Chỉnh Sửa Địa Chỉ" : "Thêm Địa Chỉ Mới"}
             </DialogTitle>
           </DialogHeader>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit} noValidate>
             <div className="flex flex-col gap-4">
-              <Label htmlFor="fullName">Ho va ten</Label>
+              <Label htmlFor="fullName">Họ và tên</Label>
               <Input
                 id="fullName"
-                placeholder="Ho va ten"
+                placeholder="Họ và tên"
                 value={address.fullName}
                 onChange={(e) => handleChangeInput("fullName", e.target.value)}
-                required
               />
+              {errors?.fullName && (
+                <p className="text-red-500 text-xs">{errors.fullName}</p>
+              )}
             </div>
             <div className="flex flex-col gap-4">
-              <Label htmlFor="phoneNumber">So dien thoai</Label>
+              <Label htmlFor="phoneNumber">Số điện thoại</Label>
               <Input
                 type="number"
                 min={0}
                 id="phoneNumber"
-                placeholder="So dien thoai"
+                placeholder="Số điện thoại"
                 value={address.phoneNumber}
                 onChange={(e) =>
                   handleChangeInput("phoneNumber", e.target.value)
                 }
-                required
               />
+              {errors?.phoneNumber && (
+                <p className="text-red-500 text-xs">{errors.phoneNumber}</p>
+              )}
             </div>
             <div className="flex flex-col gap-4">
-              <Label htmlFor="name">Dia chi</Label>
+              <Label htmlFor="name">Địa chỉ</Label>
               <Input
                 id="address"
-                placeholder="Dia chi"
+                placeholder="Địa chỉ"
                 value={address.address}
                 onChange={(e) => handleChangeInput("address", e.target.value)}
-                required
               />
+              {errors?.address && (
+                <p className="text-red-500 text-xs">{errors.address}</p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Button
@@ -160,9 +195,9 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
                 variant="outline"
                 onClick={() => setIsOpen(false)}
               >
-                Huy
+                Hủy
               </Button>
-              <Button type="submit">Luu</Button>
+              <Button type="submit">Lưu</Button>
             </div>
           </form>
         </DialogContent>

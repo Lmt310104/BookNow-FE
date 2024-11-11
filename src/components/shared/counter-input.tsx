@@ -1,3 +1,4 @@
+import { formatNumber } from "@/utils/format";
 import { Dispatch, SetStateAction } from "react";
 
 interface CounterInputProps {
@@ -56,16 +57,14 @@ export const CounterInput: React.FC<CounterInputProps> = ({
           </svg>
         </button>
         <input
-          type="number"
           id="quantity-input"
           data-input-counter
           aria-describedby="helper-text-explanation"
-          className="bg-gray-50 border-x-0 border-gray-300 h-8 text-center text-gray-900 text-sm"
+          className="bg-gray-50 border-y border-gray-300 p-[2px] h-8 text-center text-gray-900 text-sm w-9"
           value={value}
           onChange={handleChangeInput}
           min={0}
           max={max}
-          required
         />
         <button
           type="button"
@@ -91,7 +90,7 @@ export const CounterInput: React.FC<CounterInputProps> = ({
           </svg>
         </button>
       </div>
-      <p>{`${max} san pham co san`}</p>
+      <p>{`${formatNumber(max)} sản phẩm có sẵn`}</p>
     </div>
   );
 };

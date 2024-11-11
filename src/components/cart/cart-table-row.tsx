@@ -5,6 +5,7 @@ import image from "@/assets/placeholder.svg";
 import { ResCartItem } from "@/types/cart";
 import cartService from "@/services/cart.service";
 import { CartCounterInput } from "./cart-counter-input";
+import { formatNumber } from "@/utils/format";
 
 interface CartTableRowProps {
   data: ResCartItem;
@@ -63,7 +64,7 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
           <div className="font-medium">{data.book.title}</div>
         </div>
       </TableCell>
-      <TableCell>{data.book.price}</TableCell>
+      <TableCell>{formatNumber(data.book.price)}</TableCell>
       <TableCell>
         <CartCounterInput
           max={data.book.stock_quantity}
@@ -71,10 +72,10 @@ export const CartTableRow: React.FC<CartTableRowProps> = ({
           onChange={handleUpdateCartItemQuantity}
         />
       </TableCell>
-      <TableCell>{data.quantity * data.book.price}</TableCell>
+      <TableCell>{formatNumber(data.quantity * data.book.price)}</TableCell>
       <TableCell>
         <Button variant="outline" onClick={handleRemove}>
-          Xoa
+          xóa
         </Button>
       </TableCell>
     </TableRow>

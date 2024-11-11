@@ -68,7 +68,7 @@ export default function UserDropDownMenu() {
             onClick={() => navigate(routes.ADMIN.ACCOUNT_PROFILE)}
           >
             <User className="w-4 h-4 mr-2" />
-            <span>Tai khoan cua toi</span>
+            <span>Tài khoản của tôi</span>
           </DropdownMenuItem>
         )}
         {auth && auth.role === UserRole.CUSTOMER && (
@@ -77,20 +77,20 @@ export default function UserDropDownMenu() {
               onClick={() => navigate(routes.CUSTOMER.ACCOUNT_PROFILE)}
             >
               <User className="w-4 h-4 mr-2" />
-              <span>Tai khoan cua toi</span>
+              <span>Tài khoản của tôi</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(routes.CUSTOMER.PURCHASE)}
             >
               <ClipboardList className="w-4 h-4 mr-2" />
-              <span>Don mua</span>
+              <span>Đơn mua</span>
             </DropdownMenuItem>
           </>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogOut}>
           <LogOut className="w-4 h-4 mr-2" />
-          <span>Dang xuat</span>
+          <span>Đăng xuất</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

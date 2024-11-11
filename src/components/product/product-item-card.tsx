@@ -1,5 +1,6 @@
 import image from "@/assets/placeholder.svg";
 import { ResBookDetail } from "@/types/book";
+import { formatNumber } from "@/utils/format";
 import { useNavigate } from "react-router-dom";
 
 interface ProductItemCardProps {
@@ -25,8 +26,8 @@ export default function ProductItemCard({ data }: ProductItemCardProps) {
           {data.title}
         </p>
         <div className="flex flex-row justify-between">
-          <span>{data.stock_quantity}</span>
-          <span>{`Da ban: ${data.sold_quantity}`}</span>
+          <span>{formatNumber(data.price)}</span>
+          <span>{`Đã bán: ${data.sold_quantity}`}</span>
         </div>
       </div>
     </div>

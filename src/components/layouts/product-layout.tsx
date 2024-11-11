@@ -38,15 +38,15 @@ const ProductLayout = forwardRef<ProductLayoutRef, ProductLayoutProps>(
 
     const handleSearch = () => {
       if (location.pathname !== routes.CUSTOMER.HOME) {
-        if (searchText !== "")
-          navigate(`${routes.CUSTOMER.HOME}?title=${searchText}`);
+        if (searchText.trim() !== "")
+          navigate(`${routes.CUSTOMER.HOME}?title=${searchText.trim()}`);
         else {
           navigate(`${routes.CUSTOMER.HOME}`);
         }
       } else {
         const searchParams = new URLSearchParams(location.search);
         const param = Object.fromEntries(searchParams.entries());
-        const newParams = { ...param, title: searchText };
+        const newParams = { ...param, title: searchText.trim() };
         const newSearchParams = new URLSearchParams();
         Object.entries(newParams).forEach(([key, value]) => {
           if (value !== undefined && value !== null && value !== "") {
@@ -80,7 +80,7 @@ const ProductLayout = forwardRef<ProductLayoutRef, ProductLayoutProps>(
             <input
               className="w-full pl-2"
               type="search"
-              placeholder="Tim sach..."
+              placeholder="Tìm sách..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               onKeyDown={handleEnterPress}

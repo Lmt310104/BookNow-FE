@@ -8,6 +8,7 @@ import { routes } from "@/config";
 import cartService from "@/services/cart.service";
 import { Meta } from "@/types/api";
 import { ResCartItem } from "@/types/cart";
+import { formatNumber } from "@/utils/format";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -75,8 +76,19 @@ export default function CartRoute() {
   const handlePurchase = () => {
     if (rowSelection.length > 0) {
       const query = rowSelection.map(String).join(",");
-      console.log(query)
+      console.log(query);
       navigate(`${routes.CUSTOMER.CHECKOUT}?state=${query}`);
+    }
+  };
+
+  const handleDeleteMany = async () => {
+    try {
+      await Promise.all(
+        rowSelection.map((item) => cartService.removeFromCart(item))
+      );
+      await getCart();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -110,14 +122,21 @@ export default function CartRoute() {
               checked={isAllSelected}
               onCheckedChange={handleSelectAll}
             />
-            <div onClick={() => handleSelectAll(!isAllSelected)}>
-              Chon tat ca
+            <div
+              className="hover:text-gray-500"
+              onClick={() => handleSelectAll(!isAllSelected)}
+            >
+              Chọn tất cả
             </div>
-            <div>Xoa</div>
+            <div className="hover:text-gray-500" onClick={handleDeleteMany}>
+              Xóa
+            </div>
           </div>
           <div className="flex flex-row items-center gap-4">
-            <div>{`Tong thanh toan (${rowSelection.length} san pham): ${handleCountTotalPrice()}d`}</div>
-            <Button onClick={handlePurchase}>Mua hang</Button>
+            <div>{`Tổng thanh toán (${
+              rowSelection.length
+            } sản phẩm): ${formatNumber(handleCountTotalPrice())}`}</div>
+            <Button onClick={handlePurchase}>Mua hàng</Button>
           </div>
         </div>
       </main>

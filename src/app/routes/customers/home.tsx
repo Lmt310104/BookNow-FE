@@ -158,9 +158,9 @@ export default function HomeRoute() {
     <ProductLayout ref={homeRef}>
       <div className="grid grid-cols-[220px_1fr] py-4 gap-4 h-full">
         <div className="w-full h-full bg-white rounded-md p-4 space-y-4">
-          <p className="font-bold">BO LOC TIM KIEM</p>
+          <p className="font-bold">BỘ LỌC TÌM KIẾM</p>
           <div className="space-y-2">
-            <div className="font-medium mb-4">Theo danh muc</div>
+            <div className="font-medium mb-4">Theo danh mục</div>
             {categories.map((item, index) => {
               return (
                 <div
@@ -178,28 +178,28 @@ export default function HomeRoute() {
             })}
             {categoryMeta.hasNextPage && (
               <div
-                className="flex flex-row gap-2 hover:text-blue-800"
+                className="flex flex-row gap-2 hover:text-gray-400"
                 onClick={handleLoadMoreCategories}
               >
-                <span>Them</span>
+                <span>Thêm</span>
                 <ChevronDown className="w-4 h-4" />
               </div>
             )}
           </div>
           <hr />
           <div className="space-y-2">
-            <div className="font-medium mb-4">Khoang gia</div>
+            <div className="font-medium mb-4">Khoảng giá</div>
             <div>
               <div className="flex flex-row gap-4 mb-4">
                 <Input
-                  placeholder="Tu"
+                  placeholder="Từ"
                   value={priceRange.min || ""}
                   onChange={(e) =>
                     handleSetPriceRange("min", e.target.value.trim())
                   }
                 />
                 <Input
-                  placeholder="Den"
+                  placeholder="Dến"
                   value={priceRange.max || ""}
                   onChange={(e) =>
                     handleSetPriceRange("max", e.target.value.trim())
@@ -207,12 +207,12 @@ export default function HomeRoute() {
                 />
               </div>
               <Button className="w-full" onClick={handleApplyPriceRange}>
-                Ap dung
+                Áp dụng
               </Button>
             </div>
           </div>
           <div className="space-y-2">
-            <div className="font-medium mb-4">Danh gia</div>
+            <div className="font-medium mb-4">Đánh giá</div>
             {[5, 4, 3, 2, 1].map((value) => (
               <div
                 key={value}
@@ -224,34 +224,34 @@ export default function HomeRoute() {
                 onClick={() => handleSetParam({ min_star: value })}
               >
                 <FiveStars value={value} />
-                {value !== 5 && <span>tro len</span>}
+                {value !== 5 && <span>trở lên</span>}
               </div>
             ))}
           </div>
           <hr />
           <Button className="w-full" onClick={handleRemoveParams}>
-            Xoa tat ca
+            Xóa tất cả
           </Button>
         </div>
         <div>
           <div className="p-4 bg-muted flex flex-row gap-4 items-center mb-6">
-            <span className="font-semibold">Sap xep theo</span>
+            <span className="font-semibold">Sắp xếp theo</span>
             <FilterButton
-              value="Moi nhat"
+              value="Mới nhất"
               isActive={
                 param?.sortBy && param.sortBy !== "created_at" ? false : true
               }
               onClick={() => handleSetParam({ sortBy: "created_at" })}
             />
             <FilterButton
-              value="Ban chay"
+              value="Bán chạy"
               isActive={
                 (param?.sortBy && param.sortBy === "sold_quantity") || false
               }
               onClick={() => handleSetParam({ sortBy: "sold_quantity" })}
             />
             <FilterButton
-              value="Giao cao den thap"
+              value="Giá cao đến thấp"
               isActive={
                 (param?.sortBy &&
                   param.sortBy === "price" &&
@@ -261,7 +261,7 @@ export default function HomeRoute() {
               onClick={() => handleSetParam({ sortBy: "price" })}
             />
             <FilterButton
-              value="Gia thap den cao"
+              value="Giá thấp đến cao"
               isActive={
                 (param?.sortBy &&
                   param.sortBy === "price" &&

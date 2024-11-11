@@ -10,19 +10,47 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { routes } from "@/config";
 import authService from "@/services/auth.service";
+import { AxiosError } from "axios";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+type ErrorState = {
+  email?: string;
+};
+
 export default function ForgotPasswordRoute() {
   const [input, setInput] = useState("");
+  const [errors, setErrors] = useState<ErrorState>({});
   const navigate = useNavigate();
   const forgotPassword = async (email: string) => {
     try {
       await authService.forgotPassword(email);
       navigate(`${routes.AUTH.RESET_PASSWORD}?email=${input}`);
     } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === 400) {
+        setErrors({
+          email: "Email không tồn tại. Vui lòng kiểm tra lại",
+        });
+      }
       console.log(err);
     }
+  };
+
+  const validateInputs = () => {
+    const newErrors: ErrorState = {};
+
+    if (!input.trim()) {
+      newErrors.email = "Email không được để trống";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(input)) {
+        newErrors.email = "Email chưa đúng định dạng";
+      }
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +59,7 @@ export default function ForgotPasswordRoute() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateInputs()) return;
     await forgotPassword(input);
   };
 
@@ -42,10 +71,11 @@ export default function ForgotPasswordRoute() {
     <form
       className="justify-center items-center flex h-screen"
       onSubmit={handleSubmit}
+      noValidate
     >
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Nhap Email Cua Ban</CardTitle>
+          <CardTitle className="text-2xl">Nhập Email Của Bạn</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
@@ -56,8 +86,10 @@ export default function ForgotPasswordRoute() {
               placeholder="email@example.com"
               value={input}
               onChange={handleChangeInput}
-              required
             />
+            {errors?.email && (
+              <p className="text-red-500 text-xs">{errors.email}</p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
