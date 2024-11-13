@@ -10,12 +10,21 @@ import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
 import { setAccessToken } from "@/lib/api-client";
 import { PasswordInput } from "@/components/shared/password-input";
-import customerService from "@/services/customer.service";
+import { AxiosError } from "axios";
+import { toastSuccess } from "@/utils/toast";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
+type ErrorState = {
+  email?: string;
+  password?: string;
+  general?: string;
+};
+
 export default function SignInRoute() {
-  const [input, setinput] = useState({ email_phone: "", password: "" });
   const [auth, setAuth] = useAuth();
+  const [input, setinput] = useState({ email_phone: "", password: "" });
+  const [errors, setErrors] = useState<ErrorState>({});
+
   const navigate = useNavigate();
 
   const handleChangeInput = ({
@@ -34,11 +43,41 @@ export default function SignInRoute() {
     });
   };
 
+  const validateInputs = () => {
+    const newErrors: ErrorState = {};
+
+    if (!input.email_phone.trim()) {
+      newErrors.email = "Email hoặc số điện thoại không được để trống";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\d{10}$/;
+
+      if (
+        !emailRegex.test(input.email_phone) &&
+        !phoneRegex.test(input.email_phone)
+      ) {
+        newErrors.email = "Email hoặc số điện thoại chưa đúng định dạng";
+      }
+    }
+
+    if (!input.password.trim()) {
+      newErrors.password = "Mật khẩu không được để trống";
+    } else if (input.password.trim().length < 6) {
+      newErrors.password = "Mật khẩu phải tối thiểu 6 ký tự";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validateInputs()) return;
     try {
       let response;
-      if (/^\d+$/.test(input.email_phone)) {
+      if (/^\d{10}$/.test(input.email_phone)) {
         response = await authService.singInWithPhone(input);
       } else {
         response = await authService.signInWithEmail(input);
@@ -49,12 +88,12 @@ export default function SignInRoute() {
         setAccessToken(accessToken);
         setinput({ email_phone: "", password: "" });
         const { id, role }: JWTDecode = jwtDecode(accessToken);
-        const user = await customerService.getAccountById(id);
-        
+
         setAuth({
           userId: id,
           role,
         });
+        toastSuccess("Đăng nhập thành công");
         if (role === UserRole.ADMIN) {
           navigate("/dashboad");
         } else if (role === UserRole.CUSTOMER) {
@@ -62,6 +101,12 @@ export default function SignInRoute() {
         }
       }
     } catch (err) {
+      if (err instanceof AxiosError && err.response?.status === 400) {
+        setErrors({
+          general: "Email hoặc mật khẩu chưa đúng",
+        });
+      }
+
       console.log(err);
     }
   };
@@ -81,17 +126,16 @@ export default function SignInRoute() {
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Dang Nhap</h1>
+            <h1 className="text-3xl font-bold">Đăng Nhập</h1>
           </div>
-          <form className="grid gap-4" onSubmit={handleSubmit}>
+          <form className="grid gap-4" onSubmit={handleSubmit} noValidate>
             <div className="grid gap-2">
-              <Label htmlFor="phone-email">Email hoac So dien thoai</Label>
+              <Label htmlFor="phone-email">Email hoặc Số điện thoại</Label>
               <Input
                 id="phone-email"
                 type="text"
                 name="phone-email"
-                placeholder="Email hoac So dien thoai"
-                required
+                placeholder="Email hoặc Số điện thoại"
                 value={input.email_phone}
                 onChange={(e) =>
                   handleChangeInput({
@@ -100,37 +144,36 @@ export default function SignInRoute() {
                   })
                 }
               />
+              {errors?.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Mat khau</Label>
-              {/* <Input
-                id="password"
-                type="password"
-                name="password"
-                required
-                value={input.password}
-                onChange={(e) =>
-                  handleChangeInput({ name: "password", value: e.target.value })
-                }
-              /> */}
+              <Label htmlFor="password">Mật khẩu</Label>
               <PasswordInput
                 id="password"
                 name="password"
-                required
+                placeholder="Mật khẩu"
                 value={input.password}
                 onChange={(e) =>
                   handleChangeInput({ name: "password", value: e.target.value })
                 }
               />
+              {errors?.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
+              {errors?.general && (
+                <p className="text-red-500 text-xs">{errors.general}</p>
+              )}
             </div>
             <a
               href="./forgot-password"
               className="ml-auto inline-block text-sm underline"
             >
-              Quen mat khau?
+              Quên mật khẩu?
             </a>
             <Button className="w-full" type="submit">
-              Dang Nhap
+              Đăng nhập
             </Button>
             <Button
               variant="outline"
@@ -138,14 +181,14 @@ export default function SignInRoute() {
               className="w-full"
               onClick={handleSignInWithGoogle}
             >
-              Dang Nhap voi Google
+              Đăng nhập với Google
             </Button>
           </form>
 
           <div className="mt-4 text-center text-sm">
-            Chua co tai khoan?{" "}
+            Chưa có tài khoản?{" "}
             <a href="./sign-up" className="underline">
-              Dang Ky
+              Đăng ký
             </a>
           </div>
         </div>
