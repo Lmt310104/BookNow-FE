@@ -1,4 +1,4 @@
 export const BOOK_STATUS = {
-  INACTIVE: "Da an",
-  ACTIVE: "Dang ban",
+  INACTIVE: "Đã ẩn",
+  ACTIVE: "Đang bán",
 };

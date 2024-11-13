@@ -14,6 +14,7 @@ import InputOTPPattern from "./Input-otp-pattern";
 import { routes } from "@/config";
 import { PasswordInput } from "@/components/shared/password-input";
 import { AxiosError } from "axios";
+import { toastSuccess } from "@/utils/toast";
 
 type ErrorState = {
   password?: string;
@@ -37,6 +38,7 @@ export default function ResetPasswordRoute() {
         newPassword: newPassword,
         code: code,
       });
+      toastSuccess("Thiết lập mật khẩu mới thành công");
       navigate(routes.AUTH.SIGN_IN);
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 400) {

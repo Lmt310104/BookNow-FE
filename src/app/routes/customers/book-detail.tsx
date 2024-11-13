@@ -43,6 +43,7 @@ import { TablePagination } from "@/components/shared/table-pagination";
 import { ReviewItem } from "@/components/product/review-item";
 import { StarButton } from "@/components/product/star-button";
 import { formatNumber } from "@/utils/format";
+import { toastSuccess } from "@/utils/toast";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -108,6 +109,7 @@ export default function BookDetailRoute() {
           bookId: detailData.id,
           quantity: quantity,
         });
+        toastSuccess("Thêm vào giỏ hàng thành công");
       } catch (err) {
         console.log(err);
       }
@@ -222,7 +224,11 @@ export default function BookDetailRoute() {
                     onChange={setQuantity}
                   />
                 </fieldset>
-                <Button onClick={handleAddToCart} type="button">
+                <Button
+                  onClick={handleAddToCart}
+                  type="button"
+                  disabled={detailData.stock_quantity === 0}
+                >
                   Thêm vào giỏ hàng
                 </Button>
               </div>

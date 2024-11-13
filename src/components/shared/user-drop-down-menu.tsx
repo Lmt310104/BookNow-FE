@@ -18,6 +18,7 @@ import authService from "@/services/auth.service";
 import { removeAccessToken } from "@/lib/api-client";
 import useUser from "@/hooks/useUser";
 import { DEFAULT_AVATAR_URL } from "@/common/constants/user";
+import { toastSuccess } from "@/utils/toast";
 
 export default function UserDropDownMenu() {
   const [auth, setAuth] = useAuth();
@@ -27,6 +28,7 @@ export default function UserDropDownMenu() {
   const handleLogOut = async () => {
     try {
       const response = await authService.logOut();
+      toastSuccess("Đăng xuất thành công");
       if (response) {
         setAuth(null);
         removeAccessToken();

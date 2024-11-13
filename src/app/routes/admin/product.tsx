@@ -82,32 +82,32 @@ export default function ProductRoute() {
     <DashBoardLayout>
       <main className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto">
         <div className="flex">
-          <h1 className="text-lg font-semibold">San Pham</h1>
+          <h1 className="text-lg font-semibold">Sản phẩm</h1>
           <Button
             className="gap-1 ml-auto"
             onClick={() => navigate("/portal/book/new")}
           >
             <PlusCircle className="h-3.5 w-3.5" />
-            <span>Them san pham moi</span>
+            <span>Thêm sản phẩm mới</span>
           </Button>
         </div>
         <Tabs value={tabState}>
           <div className="flex items-center">
             <TabsList>
               <TabsTrigger value="all" onClick={() => setTabState("all")}>
-                Tat ca
+                Tất cả
               </TabsTrigger>
               <TabsTrigger
                 value={BookStatus.ACTIVE}
                 onClick={() => setTabState(BookStatus.ACTIVE)}
               >
-                Dang ban
+                Đang bán
               </TabsTrigger>
               <TabsTrigger
                 value={BookStatus.INACTIVE}
                 onClick={() => setTabState(BookStatus.INACTIVE)}
               >
-                Da an
+                Đã ẩn
               </TabsTrigger>
             </TabsList>
           </div>
@@ -118,13 +118,13 @@ export default function ProductRoute() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Nhap ten san pham"
+                placeholder="Nhập tên sản phẩm"
                 className="w-full rounded-lg bg-background pl-8"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
-              <Button onClick={async () => getAllBooks()}>Ap dung</Button>
+              <Button onClick={async () => getAllBooks()}>Áp dụng</Button>
             </div>
           </CardHeader>
           <CardContent>

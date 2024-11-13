@@ -11,6 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import { setAccessToken } from "@/lib/api-client";
 import { PasswordInput } from "@/components/shared/password-input";
 import { AxiosError } from "axios";
+import { toastSuccess } from "@/utils/toast";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 type ErrorState = {
@@ -92,6 +93,7 @@ export default function SignInRoute() {
           userId: id,
           role,
         });
+        toastSuccess("Đăng nhập thành công");
         if (role === UserRole.ADMIN) {
           navigate("/dashboad");
         } else if (role === UserRole.CUSTOMER) {

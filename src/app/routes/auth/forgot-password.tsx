@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { routes } from "@/config";
 import authService from "@/services/auth.service";
+import { toastSuccess } from "@/utils/toast";
 import { AxiosError } from "axios";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ export default function ForgotPasswordRoute() {
   const forgotPassword = async (email: string) => {
     try {
       await authService.forgotPassword(email);
+      toastSuccess("OTP đã được gửi đến email của bạn");
       navigate(`${routes.AUTH.RESET_PASSWORD}?email=${input}`);
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 400) {

@@ -15,12 +15,17 @@ import ReviewDialog, {
   ReviewDialogRef,
 } from "@/components/order/review-dialog";
 import { formatNumber } from "@/utils/format";
+import CustomAlertDialog, {
+  CustomAlertDialogRef,
+} from "@/components/shared/alert-dialog";
+import { toastSuccess } from "@/utils/toast";
 
 export default function OrderDetailRoute() {
   const param = useParams();
   const navigate = useNavigate();
   const [orderDetail, setOrderDetail] = useState<Order | null>(null);
   const reviewDialogRef = useRef<ReviewDialogRef>(null);
+  const alertDialogRef = useRef<CustomAlertDialogRef | null>(null);
 
   const getOrderById = async (id: string) => {
     try {
@@ -44,12 +49,21 @@ export default function OrderDetailRoute() {
 
   const handleCancelOrder = async () => {
     if (orderDetail?.id) {
-      try {
-        await orderService.cancelOrder(orderDetail.id);
-        await getOrderById(orderDetail.id);
-      } catch (err) {
-        console.log(err);
-      }
+      alertDialogRef.current?.onOpen(
+        {
+          title: `Bạn có chắc chắn muốn hủy đơn hàng không?`,
+          description: "Bạn sẽ cần đặt lại đơn hàng nếu muốn tiếp tục mua sắm.",
+        },
+        async () => {
+          try {
+            await orderService.cancelOrder(orderDetail.id);
+            toastSuccess("Đơn hàng đã được hủy");
+            await getOrderById(orderDetail.id);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      );
     }
   };
 
@@ -61,6 +75,7 @@ export default function OrderDetailRoute() {
     <CustomerLayout>
       {orderDetail && (
         <>
+          <CustomAlertDialog ref={alertDialogRef} />
           <ReviewDialog
             ref={reviewDialogRef}
             onRefetch={() => getOrderById(orderDetail.id)}

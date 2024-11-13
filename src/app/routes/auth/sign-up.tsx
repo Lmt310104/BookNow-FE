@@ -17,6 +17,7 @@ import {
 import { Gender } from "@/common/enums";
 import { PasswordInput } from "@/components/shared/password-input";
 import { AxiosError } from "axios";
+import { toastSuccess } from "@/utils/toast";
 
 type ErrorState = {
   email?: string;
@@ -97,6 +98,7 @@ export default function SignUpRoute() {
         gender: Gender.MALE,
         birthday: new Date(),
       });
+      toastSuccess("Email xác nhận tài khoản đã được gửi đến bạn");
       navigate("/auth/sign-in");
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 400) {

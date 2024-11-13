@@ -101,7 +101,7 @@ const ProductLayout = forwardRef<ProductLayoutRef, ProductLayoutProps>(
             </div>
           </div>
         </div>
-        <div className="px-40 flex flex-col gap-6 bg-[#f9f9f9] overflow-y-auto">
+        <div className="px-[10%] flex flex-col gap-6 bg-[#f9f9f9] overflow-y-auto">
           {children}
         </div>
       </div>

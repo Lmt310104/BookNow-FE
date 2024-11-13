@@ -62,7 +62,7 @@ export default function ReviewPerProduct({
             </div>
           </div>
           <Textarea
-            placeholder="Hay chia se nhung gi ban thich ve san pham."
+            placeholder="Hãy chia sẻ những gì bạn thích về sản phẩm."
             value={data.description}
             onChange={(e) =>
               onChange((data as Review).bookId, "description", e.target.value)

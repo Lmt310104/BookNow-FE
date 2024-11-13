@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { UserRole } from "@/common/enums";
 import useAuth from "@/hooks/useAuth";
 import useUser from "@/hooks/useUser";
+import { toastSuccess } from "@/utils/toast";
 
 type ErrorState = {
   password?: string;
@@ -62,6 +63,7 @@ export default function AccountPassword() {
           code: code,
         });
         await authService.logOut();
+        toastSuccess("Thay đổi mật khẩu thành công");
         setAuth(null);
         removeAccessToken();
         navigate(routes.AUTH.SIGN_IN);
@@ -77,8 +79,12 @@ export default function AccountPassword() {
   };
 
   const handleCancel = () => {
-    setCode("");
-    setNewPassword("");
+    if (!auth) return;
+    if (auth.role === UserRole.ADMIN) {
+      navigate(routes.ADMIN.ACCOUNT_PROFILE);
+    } else if (auth.role === UserRole.CUSTOMER) {
+      navigate(routes.CUSTOMER.ACCOUNT_PROFILE);
+    }
   };
 
   return (
@@ -117,9 +123,9 @@ export default function AccountPassword() {
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
           <Button variant="outline" type="button" onClick={handleCancel}>
-            Huy
+            Hủy
           </Button>
-          <Button type="submit">Tiep Tuc</Button>
+          <Button type="submit">Tiếp tục</Button>
         </CardFooter>
       </Card>
     </form>

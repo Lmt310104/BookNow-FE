@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Address, ResAddress } from "@/types/address";
 import addressService from "@/services/address.service";
+import { toastSuccess } from "@/utils/toast";
 
 export interface AddressDialogRef {
   onOpen: (data?: ResAddress) => void;
@@ -75,10 +76,15 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
                 phoneNumber: data.phone_number,
                 id: data.id,
               });
-              setIsOpen(true);
             } else {
-              setIsOpen(true);
+              setAddress({
+                address: "",
+                fullName: "",
+                phoneNumber: undefined,
+              });
             }
+            setErrors({});
+            setIsOpen(true);
           },
           onClose() {
             setIsOpen(false);
@@ -88,22 +94,13 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
       []
     );
 
-    useEffect(() => {
-      if (!isOpen) {
-        setAddress({
-          address: "",
-          fullName: "",
-          phoneNumber: undefined,
-        });
-      }
-    }, [isOpen]);
-
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!validateInputs()) return;
       if (address.id) {
         try {
           await addressService.updateAddressById(address);
+          toastSuccess("Cập nhật địa chỉ thành công");
           await onRefetch();
         } catch (err) {
           console.log(err);
@@ -115,6 +112,7 @@ const AddressDialog = forwardRef<AddressDialogRef, AddressDialogProps>(
             fullName: address.fullName,
             phoneNumber: address.phoneNumber,
           });
+          toastSuccess("Thêm mới địa chỉ thành công");
           await onRefetch();
         } catch (err) {
           console.log(err);

@@ -26,6 +26,7 @@ import { routes } from "@/config";
 import authService from "@/services/auth.service";
 import useUser from "@/hooks/useUser";
 import { AxiosError } from "axios";
+import { toastSuccess } from "@/utils/toast";
 
 type ErrorState = {
   email?: string;
@@ -95,6 +96,7 @@ export default function AccountInfo() {
     if (auth) {
       try {
         await authService.forgotPassword(accountData.email);
+        toastSuccess("OTP đã được gửi đến email của bạn");
         if (auth.role === UserRole.ADMIN) {
           navigate(routes.ADMIN.CHANGE_PASSWORD);
         } else if (auth.role === UserRole.CUSTOMER) {
@@ -117,7 +119,9 @@ export default function AccountInfo() {
       setUser({
         avatar_url: response.data.data.avatar_url,
         full_name: response.data.data.full_name,
+        email: response.data.data.email,
       });
+      toastSuccess("Cập nhật tài khoản thành công");
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 400) {
         setErrors({

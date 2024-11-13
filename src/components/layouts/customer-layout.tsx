@@ -56,17 +56,6 @@ export default function CustomerLayout({
                 <MapPin className="h-4 w-4" />
                 Địa Chỉ
               </button>
-              <button
-                onClick={() => navigate(routes.CUSTOMER.CHANGE_PASSWORD)}
-                className={
-                  pathname === routes.CUSTOMER.CHANGE_PASSWORD
-                    ? active
-                    : inActive
-                }
-              >
-                <Lock className="h-4 w-4" />
-                Bảo Mật
-              </button>
             </nav>
           </div>
         </div>

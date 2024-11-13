@@ -1,6 +1,10 @@
 import { CartTableHeader } from "@/components/cart/cart-table-header";
 import { CartTableRow } from "@/components/cart/cart-table-row";
 import ProductLayout from "@/components/layouts/product-layout";
+import CustomAlertDialog, {
+  CustomAlertDialogRef,
+} from "@/components/shared/alert-dialog";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody } from "@/components/ui/table";
@@ -9,7 +13,8 @@ import cartService from "@/services/cart.service";
 import { Meta } from "@/types/api";
 import { ResCartItem } from "@/types/cart";
 import { formatNumber } from "@/utils/format";
-import { useEffect, useState } from "react";
+import { toastSuccess, toastWarning } from "@/utils/toast";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function CartRoute() {
@@ -25,6 +30,7 @@ export default function CartRoute() {
   const [rowSelection, setRowSelection] = useState<string[]>([]);
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
   const navigate = useNavigate();
+  const alertDialogRef = useRef<CustomAlertDialogRef | null>(null);
 
   const getCart = async () => {
     try {
@@ -66,6 +72,11 @@ export default function CartRoute() {
     }, 0);
 
   const handleSelectAll = (checked: boolean) => {
+    if (cart.length === 0) {
+      toastWarning("Giỏ hàng đang trống");
+      return;
+    }
+
     if (checked) {
       setRowSelection(cart.map((item) => item.book_id));
     } else {
@@ -76,24 +87,40 @@ export default function CartRoute() {
   const handlePurchase = () => {
     if (rowSelection.length > 0) {
       const query = rowSelection.map(String).join(",");
-      console.log(query);
       navigate(`${routes.CUSTOMER.CHECKOUT}?state=${query}`);
+    } else {
+      toastWarning("Bạn vẫn chưa chọn sản phẩm nào để mua.");
     }
   };
 
   const handleDeleteMany = async () => {
-    try {
-      await Promise.all(
-        rowSelection.map((item) => cartService.removeFromCart(item))
-      );
-      await getCart();
-    } catch (err) {
-      console.log(err);
+    if (rowSelection.length === 0) {
+      toastWarning("Vui lòng chọn sản phẩm");
+      return;
     }
+    alertDialogRef.current?.onOpen(
+      {
+        title: `Bạn có chắc chắn muốn xóa ${rowSelection.length} sản phẩm?`,
+        description: "Bạn có thể thêm lại sản phẩm nếu muốn sau này",
+      },
+      async () => {
+        try {
+          await Promise.all(
+            rowSelection.map((item) => cartService.removeFromCart(item))
+          );
+          toastSuccess(`Xóa ${rowSelection.length} sản phẩm thành công`);
+          setRowSelection([]);
+          await getCart();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    );
   };
 
   return (
     <ProductLayout>
+      <CustomAlertDialog ref={alertDialogRef} />
       <main className="flex flex-1 flex-col gap-6 py-6 pl-6 relative">
         <Table className="table-auto border-separate border-spacing-y-2 w-full">
           <CartTableHeader onCheck={handleSelectAll} isCheck={isAllSelected} />
