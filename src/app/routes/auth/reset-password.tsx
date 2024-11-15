@@ -118,9 +118,9 @@ export default function ResetPasswordRoute() {
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
           <Button variant="outline" type="button" onClick={handleCancel}>
-            Huy
+            Hủy
           </Button>
-          <Button type="submit">Tiep Tuc</Button>
+          <Button type="submit">Tiếp tục</Button>
         </CardFooter>
       </Card>
     </form>

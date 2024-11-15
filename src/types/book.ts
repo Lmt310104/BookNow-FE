@@ -61,4 +61,5 @@ export interface BookQuery {
   max_price?: number;
   min_star?: number;
   categoryId?: string
+  categoryStatus?: boolean
 }

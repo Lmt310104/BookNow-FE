@@ -51,7 +51,6 @@ export default function HomeRoute() {
   });
 
   const getAllBooks = async () => {
-    console.log(param);
     try {
       const response = await bookService.getAllBooks(
         {
@@ -63,6 +62,7 @@ export default function HomeRoute() {
         },
         {
           status: BookStatus.ACTIVE,
+          categoryStatus: false,
           ...param,
         }
       );
@@ -101,7 +101,6 @@ export default function HomeRoute() {
 
   const handleSetParam = (data: Record<string, string | number | null>) => {
     const newParams = { ...param, ...data };
-    if (!("sortBy" in data)) delete newParams.sortBy;
     const newSearchParams = new URLSearchParams();
     Object.entries(newParams).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
@@ -166,11 +165,11 @@ export default function HomeRoute() {
                 <div
                   key={index}
                   className={"flex flex-row gap-2 rounded-md p-2 hover:bg-muted".concat(
-                    param?.category && param.category === item.id
+                    param?.categoryId && param.categoryId === item.id
                       ? " bg-muted"
                       : " bg-transparent"
                   )}
-                  onClick={() => handleSetParam({ category: item.id })}
+                  onClick={() => handleSetParam({ categoryId: item.id })}
                 >
                   {item.name}
                 </div>
@@ -199,7 +198,7 @@ export default function HomeRoute() {
                   }
                 />
                 <Input
-                  placeholder="Dến"
+                  placeholder="Đến"
                   value={priceRange.max || ""}
                   onChange={(e) =>
                     handleSetPriceRange("max", e.target.value.trim())
@@ -241,14 +240,18 @@ export default function HomeRoute() {
               isActive={
                 param?.sortBy && param.sortBy !== "created_at" ? false : true
               }
-              onClick={() => handleSetParam({ sortBy: "created_at" })}
+              onClick={() =>
+                handleSetParam({ sortBy: "created_at", order: "desc" })
+              }
             />
             <FilterButton
               value="Bán chạy"
               isActive={
                 (param?.sortBy && param.sortBy === "sold_quantity") || false
               }
-              onClick={() => handleSetParam({ sortBy: "sold_quantity" })}
+              onClick={() =>
+                handleSetParam({ sortBy: "sold_quantity", order: "desc" })
+              }
             />
             <FilterButton
               value="Giá cao đến thấp"
@@ -258,7 +261,7 @@ export default function HomeRoute() {
                   !(param?.order && param?.order === "asc")) ||
                 false
               }
-              onClick={() => handleSetParam({ sortBy: "price" })}
+              onClick={() => handleSetParam({ sortBy: "price", order: "desc" })}
             />
             <FilterButton
               value="Giá thấp đến cao"

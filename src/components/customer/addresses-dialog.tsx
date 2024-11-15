@@ -88,12 +88,12 @@ const AddressesDialog = forwardRef<AddressesDialogRef, AddressesDialogProps>(
       <>
         <AddressDialog ref={dialogRef} onRefetch={getAllAddress} />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="max-w-[425px] max-h-[80%]">
-            <DialogHeader>
+          <DialogContent className="max-w-[425px] max-h-[80%] flex flex-col">
+            <DialogHeader className="flex-none">
               <DialogTitle>Địa chỉ của tôi</DialogTitle>
             </DialogHeader>
             <RadioGroup
-              className="overflow-y-auto no-scrollbar"
+              className="overflow-y-auto flex-1"
               defaultValue={addressId}
               onValueChange={(value) => {
                 const selectedAddress = addresses.find(
@@ -148,7 +148,7 @@ const AddressesDialog = forwardRef<AddressesDialogRef, AddressesDialogProps>(
               </Button>
             </RadioGroup>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 flex-none">
               <Button
                 type="button"
                 variant="outline"

@@ -95,8 +95,7 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
       []
     );
 
-    const reviewBook = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    const reviewBook = async () => {
       const unreviewItem = reviews.find(
         (item) => item.rating < 1 || !item.description?.trim()
       );
@@ -150,11 +149,11 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
       <>
         <CustomAlertDialog ref={alertDialogRef} />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="max-w-[425px]">
-            <DialogHeader>
+          <DialogContent className="max-w-[425px] max-h-[80%] flex flex-col">
+            <DialogHeader className="flex-none">
               <DialogTitle>Đánh Giá</DialogTitle>
             </DialogHeader>
-            <form className="space-y-6" onSubmit={reviewBook} noValidate>
+            <div className="overflow-y-auto flex-1 flex flex-col gap-6 p-1">
               {reviews.map((item, index) => {
                 return (
                   <ReviewPerProduct
@@ -165,26 +164,25 @@ const ReviewDialog = forwardRef<ReviewDialogRef, ReviewDialogProps>(
                   />
                 );
               })}
-              <div className="flex flex-row gap-4 justify-end">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-1/2"
-                  onClick={() => {
-                    setReviews([]);
-                    setIsOpen(false);
-                  }}
-                >
-                  Trở lại
+            </div>
+            <div className="flex flex-row gap-4 justify-end flex-none">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-1/2"
+                onClick={() => {
+                  setReviews([]);
+                  setIsOpen(false);
+                }}
+              >
+                Trở lại
+              </Button>
+              {action === ReviewStatus.UNREVIEW && (
+                <Button type="button" onClick={reviewBook} className="w-1/2">
+                  Hoàn thành
                 </Button>
-
-                {action === ReviewStatus.UNREVIEW && (
-                  <Button type="submit" className="w-1/2">
-                    Hoàn thành
-                  </Button>
-                )}
-              </div>
-            </form>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       </>

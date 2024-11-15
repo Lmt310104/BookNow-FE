@@ -53,6 +53,8 @@ class BookService {
       url += `&min_star=${trimmedData.min_star}`;
     if (trimmedData?.categoryId)
       url += `&categoryId=${trimmedData.categoryId}`;
+    if ("categoryStatus" in trimmedData)
+      url += `&categoryStatus=${trimmedData.categoryStatus}`
     return api.get(url);
   }
 
