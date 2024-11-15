@@ -31,7 +31,7 @@ export default function ForgotPasswordRoute() {
     } catch (err) {
       if (err instanceof AxiosError && err.response?.status === 400) {
         setErrors({
-          email: "Email không tồn tại. Vui lòng kiểm tra lại",
+          email: "Email không tồn tại hoặc đã bị khóa.",
         });
       }
       console.log(err);
@@ -96,9 +96,9 @@ export default function ForgotPasswordRoute() {
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
           <Button variant="outline" type="button" onClick={handleCancel}>
-            Huy
+            Hủy
           </Button>
-          <Button type="submit">Tiep Tuc</Button>
+          <Button type="submit">Tiếp tục</Button>
         </CardFooter>
       </Card>
     </form>

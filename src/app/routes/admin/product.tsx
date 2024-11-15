@@ -19,6 +19,7 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import { Meta } from "@/types/api";
 import { ResBookDetail } from "@/types/book";
 import { BookStatus } from "@/common/enums";
+import { BOOK_STATUS } from "@/common/constants";
 
 export default function ProductRoute() {
   const [books, setBooks] = useState<ResBookDetail[]>([]);
@@ -101,13 +102,13 @@ export default function ProductRoute() {
                 value={BookStatus.ACTIVE}
                 onClick={() => setTabState(BookStatus.ACTIVE)}
               >
-                Đang bán
+                {BOOK_STATUS[BookStatus.ACTIVE]}
               </TabsTrigger>
               <TabsTrigger
                 value={BookStatus.INACTIVE}
                 onClick={() => setTabState(BookStatus.INACTIVE)}
               >
-                Đã ẩn
+                    {BOOK_STATUS[BookStatus.INACTIVE]}
               </TabsTrigger>
             </TabsList>
           </div>

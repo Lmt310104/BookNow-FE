@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import authService from "@/services/auth.service";
 import { jwtDecode } from "jwt-decode";
 import { JWTDecode } from "@/context/auth";
@@ -12,6 +12,7 @@ import { setAccessToken } from "@/lib/api-client";
 import { PasswordInput } from "@/components/shared/password-input";
 import { AxiosError } from "axios";
 import { toastSuccess } from "@/utils/toast";
+import { routes } from "@/config";
 const URL_SERVER = import.meta.env.VITE_URL_SERVER;
 
 type ErrorState = {
@@ -166,12 +167,12 @@ export default function SignInRoute() {
                 <p className="text-red-500 text-xs">{errors.general}</p>
               )}
             </div>
-            <a
-              href="./forgot-password"
+            <Link
+              to={routes.AUTH.FORGOT_PASSWORD}
               className="ml-auto inline-block text-sm underline"
             >
               Quên mật khẩu?
-            </a>
+            </Link>
             <Button className="w-full" type="submit">
               Đăng nhập
             </Button>
@@ -187,9 +188,9 @@ export default function SignInRoute() {
 
           <div className="mt-4 text-center text-sm">
             Chưa có tài khoản?{" "}
-            <a href="./sign-up" className="underline">
+            <Link to={routes.AUTH.SIGN_UP} className="underline">
               Đăng ký
-            </a>
+            </Link>
           </div>
         </div>
       </div>

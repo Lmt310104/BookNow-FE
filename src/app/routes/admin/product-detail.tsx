@@ -7,6 +7,8 @@ import { UpdateBookDetail } from "@/types/book";
 import { ProductInfoSection } from "@/components/product/product-info-section";
 import categoryService from "@/services/category.service";
 import { routes } from "@/config";
+import { AddProductErrorState } from "./add-product";
+import { toastSuccess } from "@/utils/toast";
 // import { ProductInfoSection } from "@/components/product/product-info-section";
 
 export default function ProductDetailRoute() {
@@ -24,7 +26,7 @@ export default function ProductDetailRoute() {
     images: [],
     initCategory: null,
   });
-
+  const [errors, setErrors] = useState<AddProductErrorState>({});
   const navigate = useNavigate();
 
   const getBookDetail = async (id: string) => {
@@ -32,37 +34,79 @@ export default function ProductDetailRoute() {
       const bookResponse = await bookService.getBookById(id);
       const bookData = bookResponse.data.data;
       const categoryResponse = await categoryService.getCategoryById(
-        bookData.category_id,
+        bookData.category_id
       );
 
       setDetailData({
         title: bookData.title,
         author: bookData.author,
-        price: bookData.price,
+        price: +bookData.price,
         description: bookData.description,
         image_url: bookData.image_url,
         id: bookData.id,
-        entryPrice: bookData.entry_price,
-        stockQuantity: bookData.stock_quantity,
+        entryPrice: +bookData.entry_price,
+        stockQuantity: +bookData.stock_quantity,
         categoryId: bookData.category_id,
         images: [],
         initCategory: categoryResponse.data.data,
       });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-      // const imagePreview =
-      //   bookData.image_url.length > 0 && bookData.image_url[0];
-      // setDetailData({
-      //   title: bookData.title,
-      //   author: bookData.author,
-      //   categoryId: bookData.category_id,
-      //   entryPrice: bookData.entry_price,
-      //   price: bookData.price,
-      //   stockQuantity: bookData.stock_quantity,
-      //   description: bookData.description,
-      //   images: [],
-      //   preview: imagePreview || "",
-      //   id: bookData.id,
-      // });
+  const validateInputs = () => {
+    const newErrors: AddProductErrorState = {};
+
+    if (!detailData.title.trim()) {
+      newErrors.title = "Tên sách không được để trống";
+    }
+
+    if (!detailData.categoryId.trim()) {
+      newErrors.categoryId = "Danh mục không được để trống";
+    }
+
+    if (detailData.entryPrice <= 0) {
+      newErrors.entryPrice = "Giá nhập phải lớn hơn 0";
+    }
+
+    if (detailData.price <= 0) {
+      newErrors.price = "Giá bán phải lớn hơn 0";
+    }
+
+    if (detailData.price < detailData.entryPrice) {
+      newErrors.price = "Giá bán không được nhỏ hơn giá nhập";
+    }
+
+    if (detailData.stockQuantity < 0) {
+      newErrors.stockQuantity = "Số lượng tồn kho không được nhỏ hơn 0";
+    }
+
+    if (!detailData.description.trim()) {
+      newErrors.description = "Mô tả không được để trống";
+    }
+
+    if (detailData.images.length + detailData.image_url.length < 1) {
+      newErrors.images = "Hình ảnh không được để trống";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(
+      detailData,
+      typeof detailData.price,
+      detailData.price < detailData.entryPrice
+    );
+    if (!validateInputs()) return;
+    try {
+      await bookService.updateBookById(detailData);
+      toastSuccess("Cập nhật sách thành công");
+      navigate(routes.ADMIN.PRODUCT);
     } catch (err) {
       console.log(err);
     }
@@ -74,20 +118,12 @@ export default function ProductDetailRoute() {
     }
   }, [param]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      await bookService.updateBookById(detailData);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <DashBoardLayout>
       <form
         className="flex flex-1 flex-col gap-6 p-6  bg-muted/40 overflow-y-auto"
         onSubmit={handleSubmit}
+        noValidate
       >
         {/* <Tabs defaultValue="detail">
           <div className="flex items-center">
@@ -97,7 +133,11 @@ export default function ProductDetailRoute() {
             </TabsList>
           </div>
         </Tabs> */}
-        <ProductInfoSection detailData={detailData} onChange={setDetailData} />
+        <ProductInfoSection
+          detailData={detailData}
+          onChange={setDetailData}
+          errors={errors}
+        />
         {/* <ProductSaleSection /> */}
         <div className="flex flex-row gap-4 mx-auto mb-12">
           <Button
@@ -106,10 +146,10 @@ export default function ProductDetailRoute() {
             type="button"
             onClick={() => navigate(routes.ADMIN.PRODUCT)}
           >
-            Huy
+            Hủy
           </Button>
           <Button className="w-40" type="submit">
-            Luu
+            Lưu
           </Button>
         </div>
       </form>

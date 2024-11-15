@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import authService from "@/services/auth.service";
 import { User } from "@/types/user";
 import { dateToString, stringToDate } from "@/utils/format";
@@ -18,6 +18,7 @@ import { Gender } from "@/common/enums";
 import { PasswordInput } from "@/components/shared/password-input";
 import { AxiosError } from "axios";
 import { toastSuccess } from "@/utils/toast";
+import { routes } from "@/config";
 
 type ErrorState = {
   email?: string;
@@ -218,9 +219,9 @@ export default function SignUpRoute() {
 
           <div className="mt-4 text-center text-sm">
             Đã có tài khoản?{" "}
-            <a href="./sign-in" className="underline">
+            <Link to={routes.AUTH.SIGN_IN} className="underline">
               Đăng nhập
-            </a>
+            </Link>
           </div>
         </div>
       </div>

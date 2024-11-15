@@ -1,4 +1,4 @@
 export const BOOK_STATUS = {
-  INACTIVE: "Đã ẩn",
-  ACTIVE: "Đang bán",
+  INACTIVE: "Chưa được đăng",
+  ACTIVE: "Đang hoạt động",
 };

@@ -26,6 +26,7 @@ export const CustomerTableRow: React.FC<CustomerTableRowProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const alertDialogRef = useRef<CustomAlertDialogRef | null>(null);
+  
   const handleActive = async () => {
     alertDialogRef.current?.onOpen(
       {
