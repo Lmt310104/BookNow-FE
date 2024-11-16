@@ -1,7 +1,7 @@
 import {
+  ChartColumnIncreasing,
   Grid2x2,
   Home,
-  Lock,
   MessageSquareMore,
   Package,
   Package2,
@@ -77,9 +77,6 @@ export default function DashBoardLayout({
               >
                 <ShoppingCart className="h-4 w-4" />
                 Quản Lý Đơn Hàng
-                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  6
-                </Badge> */}
               </button>
               <button
                 onClick={() => navigate(routes.ADMIN.REVIEW)}
@@ -97,7 +94,15 @@ export default function DashBoardLayout({
                 <Users className="h-4 w-4" />
                 Quản Lý Khách Hàng
               </button>
-
+              <button
+                onClick={() => navigate(routes.ADMIN.REPORT)}
+                className={
+                  pathname === routes.ADMIN.REPORT ? active : inActive
+                }
+              >
+                <ChartColumnIncreasing className="h-4 w-4" />
+                Phân Tích Bán Hàng
+              </button>
               <button
                 onClick={() => navigate(routes.ADMIN.ACCOUNT_PROFILE)}
                 className={

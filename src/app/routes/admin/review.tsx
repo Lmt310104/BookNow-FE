@@ -182,7 +182,7 @@ export default function ReviewRoute() {
                 onValueChange={(value) => serReviewState(value)}
               >
                 <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Select a statetus" />
+                  <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tất cả</SelectItem>
