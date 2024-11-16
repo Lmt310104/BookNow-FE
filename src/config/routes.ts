@@ -29,6 +29,7 @@ const routes = {
     PRODUCT_DETAIL: "/portal/book/:bookId",
     CATEGORY: "/portal/category",
     REVIEW: "/portal/rating",
+    REPORT: "/datacenter/overview",
     BOOK_REPORT: "/datacenter/book/overview",
     INCOME_REPORT: "/datacenter/income/overview",
     ACCOUNT_PROFILE: "/admin/account/profile",
