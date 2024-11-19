@@ -68,7 +68,7 @@ export default function ReviewRoute() {
 
   useEffect(() => {
     getAllReviews();
-  }, []);
+  }, [meta.page]);
 
   useEffect(() => {
     if (rating.length === 5) {

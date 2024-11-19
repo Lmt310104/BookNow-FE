@@ -5,7 +5,7 @@ interface OptionCardProps {
   value: number;
   description: string;
   icon: React.ReactNode
-  className?: string
+  className?: string;
 }
 
 export default function OptionCard({ title, value, description, icon, className='' }: OptionCardProps) {
