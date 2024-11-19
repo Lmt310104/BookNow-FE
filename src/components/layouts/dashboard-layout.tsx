@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UserDropDownMenu from "../shared/user-drop-down-menu";
 
 const inActive =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary";
+  "flex items-center gap-3 rounded-lg bg-transparent px-3 py-2 text-muted-foreground transition-all hover:text-primary";
 const active =
   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary";
 
@@ -97,7 +97,7 @@ export default function DashBoardLayout({
               <button
                 onClick={() => navigate(routes.ADMIN.REPORT)}
                 className={
-                  pathname === routes.ADMIN.REPORT ? active : inActive
+                  pathname.includes(routes.ADMIN.REPORT) ? active : inActive
                 }
               >
                 <ChartColumnIncreasing className="h-4 w-4" />
