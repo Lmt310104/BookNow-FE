@@ -6,6 +6,7 @@ export interface StatisticQuery {
     fromDate: string;
     toDate: string;
     status: string;
+    top?:number;
 }
 
 export interface ResGetProductStatisticByRevenue { data: { data: Array<{ book: ResBookDetail, totalRevenue: number }> } }

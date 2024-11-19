@@ -4,7 +4,7 @@ import { ResGetProductStatisticByOrder, ResGetProductStatisticByRevenue, ResGetP
 
 
 class StatisticService {
-    async getOverviewStatistic(query: StatisticQuery) {
+    async getOverviewStatistic(query: StatisticQuery): Promise<{ data: { data: { revenue: number; totalOrders: number } } }> {
         let url = 'statistic/get-statistic?fromDate=' + query.fromDate + '&toDate=' + query.toDate;
         if (query.status in OrderStatus) url += '&status=' + query.status;
         return api.get(url);
@@ -12,11 +12,13 @@ class StatisticService {
     async getProductStatisticByRevenue(query: StatisticQuery): Promise<ResGetProductStatisticByRevenue> {
         let url = 'statistic/get-product-statistic?fromDate=' + query.fromDate + '&toDate=' + query.toDate;
         if (query.status in OrderStatus) url += '&status=' + query.status;
+        if (query.top) url += '&top=' + query.top;
         return api.get(url);
     }
     async getProductStatisticBySoldQuantity(query: StatisticQuery): Promise<ResGetProductStatisticBySoldQuantity> {
         let url = 'statistic/get-product-statistic-sold-quantity?fromDate=' + query.fromDate + '&toDate=' + query.toDate;
         if (query.status in OrderStatus) url += '&status=' + query.status;
+        if (query.top) url += '&top=' + query.top;
         return api.get(url);
     }
     async getProductStatisticByOrder(query: StatisticQuery): Promise<ResGetProductStatisticByOrder> {
@@ -27,6 +29,7 @@ class StatisticService {
     async getRevenueStatisticByCategory(query: StatisticQuery): Promise<ResGetRevenueStatisticByCategory> {
         let url = 'statistic/get-revenue-statistic-category?fromDate=' + query.fromDate + '&toDate=' + query.toDate;
         if (query.status in OrderStatus) url += '&status=' + query.status;
+        if (query.top) url += '&top=' + query.top;
         return api.get(url);
     }
     async getRevenueStatisticByCustomer(query: StatisticQuery): Promise<ResGetRevenueStatisticByCustomer> {

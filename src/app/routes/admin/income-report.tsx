@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 import CategorySection from "@/components/report/revenue/categories-section";
 import UserSection from "@/components/report/revenue/user-section";
+import { OrderStatus } from "@/common/enums";
 
 dayjs.extend(isoWeek);
 dayjs.locale("vi");
@@ -22,7 +23,6 @@ export default function IncomeReportRoute() {
     "date" | "week" | "month" | "year"
   >("week");
   const [selectedDayjs, setSelectedDayjs] = useState<Dayjs>(dayjs());
-  const [orderStatus, setOrderStatus] = useState<string>("all");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -73,12 +73,12 @@ export default function IncomeReportRoute() {
         <CategorySection
           pickerType={pickerType}
           date={selectedDayjs}
-          status={orderStatus}
+          status={OrderStatus.SUCCESS}
         />
         <UserSection
           pickerType={pickerType}
           date={selectedDayjs}
-          status={orderStatus}
+          status={OrderStatus.SUCCESS}
         />
       </main>
     </DashBoardLayout>

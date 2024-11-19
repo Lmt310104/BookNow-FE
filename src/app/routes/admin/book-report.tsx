@@ -1,8 +1,4 @@
 import DashBoardLayout from "@/components/layouts/dashboard-layout";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowDownToLine,
-} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CustomDatePicker, {
   DataSelectProps,
@@ -10,11 +6,10 @@ import CustomDatePicker, {
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/vi";
 import isoWeek from "dayjs/plugin/isoWeek";
-import {  useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "@/config";
-import RevenueSection from "@/components/report/book/revenue-section";
-import SoldSection from "@/components/report/book/sold-section";
+import BookSection from "@/components/report/book/book-section";
 
 dayjs.extend(isoWeek);
 dayjs.locale("vi");
@@ -64,13 +59,8 @@ export default function BookReportRoute() {
             defaultPickerType="week"
             onDateSelect={handleDateSelect}
           />
-          <Button variant={"outline"} className="ml-auto">
-            <ArrowDownToLine className="w-4 h-4" />
-            Tải dữ liệu
-          </Button>
         </div>
-        <RevenueSection date={selectedDayjs} pickerType={pickerType} />
-        <SoldSection date={selectedDayjs} pickerType={pickerType} />
+        <BookSection date={selectedDayjs} pickerType={pickerType} />
       </main>
     </DashBoardLayout>
   );
