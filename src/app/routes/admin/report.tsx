@@ -20,12 +20,34 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "@/config";
 import statisticService from "@/services/statistic.service";
 import { OrderStatus } from "@/common/enums";
-import { StatisticQuery } from "@/types/statistic";
+import {
+  ResGetRevenueStatisticByDateData,
+  StatisticQuery,
+} from "@/types/statistic";
 import Top10Categories from "@/components/report/overall/top-category";
 import Top10Books from "@/components/report/overall/top-books";
+import CustomChart from "@/components/report/custom-chart";
+import { ChartConfig } from "@/components/ui/chart";
+import { getDayRange } from "@/utils/date";
+import { dateToString } from "@/utils/format";
 
 dayjs.extend(isoWeek);
 dayjs.locale("vi");
+
+const overallChartConfig = {
+  totalRevenue: {
+    label: "Doanh Số",
+    color: "#ff871d",
+  },
+  orderSuccess: {
+    label: "Đơn hàng thành công",
+    color: "#136d39",
+  },
+  orderCancelledAndRejected: {
+    label: "Đơn Đã Hủy",
+    color: "#222357",
+  },
+} satisfies ChartConfig;
 
 export default function ReportRoute() {
   const [pickerType, setPickerType] = useState<
@@ -43,35 +65,72 @@ export default function ReportRoute() {
     orders: 0,
     cancelledOrders: 0,
   });
+  const [chartData, setChartData] = useState<
+    Array<ResGetRevenueStatisticByDateData>
+  >([]);
 
   const handleGetOverviewStatistic = async (query: StatisticQuery) => {
     try {
-      const response = await Promise.all([
-        statisticService.getOverviewStatistic({
-          fromDate: query.fromDate,
-          toDate: query.toDate,
-          status: OrderStatus.SUCCESS,
-        }),
-        statisticService.getOverviewStatistic({
-          fromDate: query.fromDate,
-          toDate: query.toDate,
-          status: OrderStatus.REJECT,
-        }),
-        statisticService.getOverviewStatistic({
-          fromDate: query.fromDate,
-          toDate: query.toDate,
-          status: OrderStatus.CANCELLED,
-        }),
-      ]);
-      setOverviewData({
-        sales: response[0].data.data.revenue,
-        orders: response[0].data.data.totalOrders,
-        cancelledOrders:
-          response[1].data.data.totalOrders + response[2].data.data.totalOrders,
+      const response = await statisticService.getRevenueStatisticByDate({
+        fromDate: query.fromDate,
+        toDate: query.toDate,
       });
+      const newOverviewData = response.data.data.reduce(
+        (total, item) => {
+          total.sales += item.totalRevenue;
+          total.orders += item.orderSuccess;
+          total.cancelledOrders += item.orderCancelledAndRejected;
+          return total;
+        },
+        {
+          sales: 0,
+          orders: 0,
+          cancelledOrders: 0,
+        }
+      );
+      setOverviewData(newOverviewData);
+      setChartData(
+        getFullDateRangeData(response.data.data, query.fromDate, query.toDate)
+      );
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const getFullDateRangeData = (
+    data: Array<ResGetRevenueStatisticByDateData>,
+    fromDate: string,
+    toDate: string
+  ) => {
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+    const dataMap = new Map();
+    data.forEach((item) => {
+      dataMap.set(item.date, item);
+    });
+
+    const fullData = [];
+
+    for (
+      let current = new Date(startDate);
+      current <= endDate;
+      current.setDate(current.getDate() + 1)
+    ) {
+      const dateString = dateToString(current);
+
+      if (dataMap.has(dateString)) {
+        fullData.push(dataMap.get(dateString));
+      } else {
+        fullData.push({
+          date: dateString,
+          orderCancelledAndRejected: 0,
+          orderSuccess: 0,
+          totalRevenue: 0,
+        });
+      }
+    }
+
+    return fullData;
   };
 
   const handleDateSelect = (data: DataSelectProps) => {
@@ -80,12 +139,12 @@ export default function ReportRoute() {
   };
 
   useEffect(() => {
+    const { startOfRange, endOfRange } = getDayRange(selectedDayjs, pickerType);
     handleGetOverviewStatistic({
-      fromDate: selectedDayjs.startOf("month").startOf("day").toISOString(),
-      toDate: selectedDayjs.endOf("month").endOf("day").toISOString(),
-      status: OrderStatus.SUCCESS,
+      fromDate: startOfRange.toISOString(),
+      toDate: endOfRange.toISOString(),
     });
-  }, [pickerType]);
+  }, [pickerType, selectedDayjs]);
 
   return (
     <DashBoardLayout>
@@ -120,10 +179,6 @@ export default function ReportRoute() {
             defaultPickerType="week"
             onDateSelect={handleDateSelect}
           />
-          <Button variant={"outline"} className="ml-auto">
-            <ArrowDownToLine className="w-4 h-4" />
-            Tải dữ liệu
-          </Button>
         </div>
         <div className="grid grid-cols-3 gap-4">
           <OptionCard
@@ -136,20 +191,20 @@ export default function ReportRoute() {
             title="Đơn hàng thành công"
             value={overviewData.orders}
             icon={<ClipboardList className="w-4 h-4" />}
-            className="text-[#2ECC71] border-[#2ECC71]"
+            className="text-[#136d39] border-[#136d39]"
           />
           <OptionCard
             title="Đơn đã hủy"
             value={overviewData.cancelledOrders}
             icon={<ClipboardX className="w-4 h-4" />}
-            className="text-[#FF69B4] border-[#FF69B4]"
+            className="text-[#222357] border-[#222357]"
           />
         </div>
-        {/* <CustomChart
+        <CustomChart
           title="Tổng quan"
           config={overallChartConfig}
-          chartData={filteredData(selectedDayjs)}
-        /> */}
+          chartData={chartData}
+        />
         <div className="grid grid-cols-[55%_1fr] gap-4">
           <Top10Books
             pickerType={pickerType}
