@@ -27,9 +27,13 @@ interface TopBooksProps {
   status: string;
 }
 
-export default function TopBooks({ date, pickerType, status }: TopBooksProps) {
+export default function Top10Books({ date, pickerType, status }: TopBooksProps) {
   const [data, setData] = useState<
-    Array<{ book: ResBookDetail; totalRevenue?: number; totalQuantity?: number }>
+    Array<{
+      book: ResBookDetail;
+      totalRevenue?: number;
+      totalQuantity?: number;
+    }>
   >([]);
   const [queryType, setQueryType] = useState<string>("revenue");
   const handleGetProductStatisticByRevenue = async (query: StatisticQuery) => {
@@ -38,6 +42,7 @@ export default function TopBooks({ date, pickerType, status }: TopBooksProps) {
         fromDate: query.fromDate,
         toDate: query.toDate,
         status: query.status,
+        top: 10,
       });
       setData(response.data.data);
     } catch (error) {
@@ -45,13 +50,18 @@ export default function TopBooks({ date, pickerType, status }: TopBooksProps) {
     }
   };
 
-  const handleGetProductStatisticBySoldQuantity = async (query: StatisticQuery) => {
+  const handleGetProductStatisticBySoldQuantity = async (
+    query: StatisticQuery
+  ) => {
     try {
-      const response = await statisticService.getProductStatisticBySoldQuantity({
-        fromDate: query.fromDate,
-        toDate: query.toDate,
-        status: query.status,
-      });
+      const response = await statisticService.getProductStatisticBySoldQuantity(
+        {
+          fromDate: query.fromDate,
+          toDate: query.toDate,
+          status: query.status,
+          top: 10,
+        }
+      );
       setData(response.data.data);
     } catch (error) {
       console.log(error);
@@ -92,7 +102,7 @@ export default function TopBooks({ date, pickerType, status }: TopBooksProps) {
   return (
     <Card className="p-6">
       <div className="flex flex-row justify-between mb-4">
-        <span className="font-medium">Thứ hạng sản phẩm</span>
+        <span className="font-medium">Top 10 sản phẩm</span>
         <Select value={queryType} onValueChange={setQueryType}>
           <SelectTrigger className="w-fit h-7">
             <SelectValue placeholder="Chọn loại đơn hàng" />

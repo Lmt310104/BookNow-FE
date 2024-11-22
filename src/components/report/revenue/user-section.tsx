@@ -7,18 +7,38 @@ import {
   TableRow,
   Table,
 } from "@/components/ui/table";
-import { StatisticQuery } from "@/types/statistic";
+import {
+  ResGetRevenueStatisticByCustomerData,
+  StatisticQuery,
+} from "@/types/statistic";
 import statisticService from "@/services/statistic.service";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Dayjs } from "dayjs";
-import image from "@/assets/placeholder.svg";
-import { Label, Pie, PieChart } from "recharts";
+import { Pie, PieChart } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { getDayRange } from "@/utils/date";
+
+const chartConfig: ChartConfig = {
+  percentageRevenue: {
+    label: "Doanh thu %",
+  },
+  percentage: {
+    label: "Người mua %",
+  },
+  newCustomers: {
+    label: "Người mua mới",
+    color: `hsl(var(--chart-1))`,
+  },
+  oldCustomers: {
+    label: "Người mua cũ",
+    color: `hsl(var(--chart-1))`,
+  },
+};
 
 interface CategorySectionProps {
   date: Dayjs;
@@ -26,155 +46,159 @@ interface CategorySectionProps {
   status: string;
 }
 
-export default function UserSection({
-  date,
-  pickerType,
-  status,
-}: CategorySectionProps) {
-  const [data, setData] = useState<
-    Array<{
-      userId: string;
-      fullName: string;
-      totalRevenue: number;
-      totalOrders: number;
-      percent: number;
-      fill: string;
-      avatarUrl: string;
-    }>
-  >([]);
-  const [config, setConfig] = useState<ChartConfig>({});
+interface UserSectionChartData {
+  group: string;
+  percentageRevenue: number;
+  revenue: number;
+  number: number;
+  percentageNumber: number;
+  fill: string;
+}
 
-  const handleGetRevenueStatisticByCustomer = async (query: StatisticQuery) => {
-    try {
-      const response = await statisticService.getRevenueStatisticByCustomer({
-        fromDate: query.fromDate,
-        toDate: query.toDate,
-        status: query.status,
-      });
-      const totalRevenues = response.data.data.reduce(
-        (total, item) => total + +item.totalRevenue,
-        0
-      );
-      setData(
-        response.data.data.map((item) => ({
-          userId: item.user.id,
-          fullName: item.user.full_name,
-          avatarUrl: item.user.avatar_url || image,
-          totalRevenue: item.totalRevenue,
-          totalOrders: item.totalOrders,
-          percent: Number(
-            ((item.totalRevenue / totalRevenues) * 100).toFixed(2)
-          ),
-          fill: `var(--color-${item.user.id})`,
-        }))
-      );
-      const newChartConfig: ChartConfig = {
-        percent: {
-          label: "Doanh thu %",
-        },
-        totalOrders: {
-          label: "Số đơn hàng",
+export interface UserSectionRef {
+  getData: () => Array<UserSectionChartData>;
+}
+
+const UserSection = forwardRef<UserSectionRef, CategorySectionProps>(
+  function UserSection({ date, pickerType, status }, ref) {
+    const [data, setData] =
+      useState<ResGetRevenueStatisticByCustomerData | null>(null);
+    const [chartData, setChartData] = useState<Array<UserSectionChartData>>([]);
+
+    const handleGetRevenueStatisticByCustomer = async (
+      query: StatisticQuery
+    ) => {
+      try {
+        const response = await statisticService.getRevenueStatisticByCustomer({
+          fromDate: query.fromDate,
+          toDate: query.toDate,
+          status: query.status,
+        });
+        setData(response.data.data);
+
+        const newChartData = [
+          {
+            group: "newCustomers",
+            percentageRevenue:
+              response.data.data.newCustomers.percentageRevenue,
+            percentageNumber: response.data.data.newCustomers.percentage,
+            fill: `var(--color-newCustomers)`,
+            revenue: response.data.data.newCustomers.newCustomerRevenue,
+            number: response.data.data.newCustomers.totalNewCustomers,
+          },
+          {
+            group: "oldCustomers",
+            percentageRevenue:
+              response.data.data.oldCustomers.percentageRevenue,
+            percentageNumber: response.data.data.oldCustomers.percentage,
+            fill: `var(--color-oldCustomers)`,
+            revenue: response.data.data.oldCustomers.oldCustomerRevenue,
+            number: response.data.data.oldCustomers.totalOldCustomers,
+          },
+        ];
+        setChartData(newChartData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    useImperativeHandle(ref, () => {
+      return {
+        getData() {
+          return chartData;
         },
       };
-      response.data.data.forEach((item, index) => {
-        newChartConfig[item.user.id] = {
-          label: item.user.full_name,
-          color: `hsl(var(--chart-${index + 1}))`,
-        };
-      });
-      setConfig(newChartConfig);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    let startOfRange: Dayjs = date;
-    let endOfRange: Dayjs = date;
-    if (pickerType === "week") {
-      startOfRange = date.startOf("isoWeek").startOf("day");
-      endOfRange = startOfRange.add(6, "day").endOf("day");
-    } else if (pickerType === "month") {
-      startOfRange = date.startOf("month").startOf("day");
-      endOfRange = startOfRange.endOf("month").endOf("day");
-    } else if (pickerType === "year") {
-      startOfRange = date.startOf("year").startOf("day");
-      endOfRange = startOfRange.endOf("year").endOf("day");
-    } else {
-      startOfRange = date.startOf("day");
-      endOfRange = startOfRange.endOf("day");
-    }
-    handleGetRevenueStatisticByCustomer({
-      fromDate: startOfRange.toISOString(),
-      toDate: endOfRange.toISOString(),
-      status,
     });
-  }, [date, pickerType, status]);
 
-  return (
-    <Card className="p-6">
-      <div className="flex flex-row justify-between mb-4">
-        <span className="font-medium">Theo người mua</span>
-      </div>
-      <div className="grid grid-cols-[70%_30%] gap-4">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Người mua</TableHead>
-              <TableHead>Số đơn hàng</TableHead>
-              <TableHead>Doanh số</TableHead>
-              <TableHead>Doanh số %</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <div className="flex flex-row gap-2 items-center">
-                    <div className="w-5 h-5 aspect-square rounded-full overflow-hidden">
-                      <img
-                        alt="avt"
-                        className="w-full h-full object-cover"
-                        src={item.avatarUrl}
-                      />
-                    </div>
-                    <span>{item.fullName}</span>
-                  </div>
-                </TableCell>
-                <TableCell>{item.totalOrders}</TableCell>
-                <TableCell>{item.totalRevenue}</TableCell>
-                <TableCell>{item.percent}%</TableCell>
+    useEffect(() => {
+      const { startOfRange, endOfRange } = getDayRange(date, pickerType);
+      handleGetRevenueStatisticByCustomer({
+        fromDate: startOfRange.toISOString(),
+        toDate: endOfRange.toISOString(),
+        status,
+      });
+    }, [date, pickerType, status]);
+
+    return (
+      <Card className="p-6">
+        <div className="flex flex-row justify-between mb-4">
+          <span className="font-medium">Theo người mua</span>
+        </div>
+        <div className="grid grid-cols-[70%_30%] gap-4">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nhóm</TableHead>
+                <TableHead>Người mua</TableHead>
+                <TableHead>% Người mua</TableHead>
+                <TableHead>Doanh số</TableHead>
+                <TableHead>% Doanh số</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <ChartContainer
-          config={config}
-          className="aspect-square max-h-[250px] w-full h-full"
-        >
-          <PieChart>
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  nameKey="userId"
-                  indicator="line"
-                  labelFormatter={(_, payload) => {
-                    return config[payload?.[0].dataKey as keyof typeof config]
-                      .label;
-                  }}
-                />
-              }
-            />
-            <Pie data={data} dataKey="percent" outerRadius={60} />
-            <Pie
-              data={data}
-              dataKey="totalOrders"
-              innerRadius={70}
-              outerRadius={90}
-            />
-          </PieChart>
-        </ChartContainer>
-      </div>
-    </Card>
-  );
-}
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Người mua mới</TableCell>
+                <TableCell>
+                  {data?.newCustomers.totalNewCustomers || 0}
+                </TableCell>
+                <TableCell>{data?.newCustomers.percentage || 0}</TableCell>
+                <TableCell>
+                  {data?.newCustomers.newCustomerRevenue || 0}
+                </TableCell>
+                <TableCell>
+                  {data?.newCustomers.percentageRevenue || 0}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Người mua cũ</TableCell>
+                <TableCell>
+                  {data?.oldCustomers.totalOldCustomers || 0}
+                </TableCell>
+                <TableCell>{data?.oldCustomers.percentage || 0}</TableCell>
+                <TableCell>
+                  {data?.oldCustomers.oldCustomerRevenue || 0}
+                </TableCell>
+                <TableCell>
+                  {data?.oldCustomers.percentageRevenue || 0}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-square max-h-[250px] w-full h-full"
+          >
+            <PieChart>
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    nameKey="group"
+                    indicator="line"
+                    labelFormatter={(_, payload) => {
+                      return chartConfig[
+                        payload?.[0].dataKey as keyof typeof chartConfig
+                      ].label;
+                    }}
+                  />
+                }
+              />
+              <Pie
+                data={chartData}
+                dataKey="percentageRevenue"
+                outerRadius={60}
+              />
+              <Pie
+                data={chartData}
+                dataKey="percentageNumber"
+                innerRadius={70}
+                outerRadius={90}
+              />
+            </PieChart>
+          </ChartContainer>
+        </div>
+      </Card>
+    );
+  }
+);
+
+export default UserSection;
